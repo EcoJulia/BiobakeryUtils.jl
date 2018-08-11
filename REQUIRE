@@ -1,4 +1,5 @@
 Microbiome 0.3
+DataFrames
 FileIO
 CSVFiles
 Reexport

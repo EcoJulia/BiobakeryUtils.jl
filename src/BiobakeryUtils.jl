@@ -1,12 +1,15 @@
 module BiobakeryUtils
 
 export
-    metaphlan_import
+    import_abundance
 
 using Reexport
+using DataFrames
+using FileIO
+using CSVFiles
 @reexport using Microbiome
 
-include("fileimport.jl")
-include("datamodifiers.jl")
+include("general.jl")
+include("metaphlan.jl")
 
 end
