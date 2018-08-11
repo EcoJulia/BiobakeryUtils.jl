@@ -4,28 +4,28 @@ Given a file path or paths to abundance tables (eg humann2 or metaphlan2),
 create abundance table. Table is presumed to have samples in columns and
 features in rows. First column is taken as feature IDs.
 """
-function import_abundance(path::String)
-    df = FileIO.load(path) |> DataFrame
+function import_abundance(path::String; delim='\t')
+    df = CSV.read(path, delim=delim)
     for n in names(df)
         df[n] = coalesce.(df[n], 0)
     end
 
-    return abundancetable(df)
+    return df
 end
 
-function import_abundance(paths::Array{String,1})
-    tax = DataFrame(SampleID=String[])
+function import_abundance(paths::Array{String,1}; delim='\t')
+    df = DataFrame(SampleID=String[])
     for f in paths
-        df = load(f) |> DataFrame
+        df = CSV.read(f, delim=delim)
         rename!(df, names(df[1]), :feature)
-        tax = join(tax, df, on=:feature, kind=:outer)
+        df = join(df, df, on=:feature, kind=:outer)
     end
 
-    for n in names(tax)
-        tax[n] = coalesce.(tax[n], 0)
+    for n in names(df)
+        df[n] = coalesce.(df[n], 0)
     end
 
-    return abundancetable(tax)
+    return df
 end
 
 

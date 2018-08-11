@@ -1,17 +1,20 @@
 using BiobakeryUtils
+using DataFrames
 using Test
 
 @testset "Biobakery Utilities" begin
      abund = import_abundance("metaphlan_test.tsv")
 
-    @test typeof(abund) <: ComMatrix
-    @test size(abund) == (15, 7)
+    @test typeof(abund) <: DataFrame
+    @test size(abund) == (42, 8)
     spec_long = taxfilter(abund, shortnames=false)
-    gen_short = taxfilter(abund, level=:phylum)
+    @test size(spec_long) == (15, 8)
+    phyl_short = taxfilter(abund, :phylum)
+    @test size(phyl_short) == (2, 8)
 
-    @test all(occursin.("|", featurenames(spec_long)))
-    @test !any(occursin.("|", featurenames(gen_short)))
+    @test all(occursin.("|", spec_long[1]))
+    @test !any(occursin.("|", phyl_short[1]))
 
-    taxfilter!(abund, level=6)
-    @test abund == gen_short
+    taxfilter!(abund, 2)
+    @test abund == phyl_short
 end

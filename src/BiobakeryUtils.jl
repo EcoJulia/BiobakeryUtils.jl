@@ -1,12 +1,13 @@
 module BiobakeryUtils
 
 export
-    import_abundance
+    import_abundance,
+    taxfilter,
+    taxfilter!
 
 using Reexport
 using DataFrames
-using FileIO
-using CSVFiles
+using CSV
 @reexport using Microbiome
 
 include("general.jl")
