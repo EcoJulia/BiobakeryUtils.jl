@@ -1,14 +1,15 @@
 module BiobakeryUtils
 
 export
-    import_abundance,
+    import_abundance_tables,
+    import_abundance_table,
+    clean_abundance_tables,
     taxfilter,
-    taxfilter!
+    taxfilter!,
+    rm_strat!
 
-using Reexport
 using DataFrames
 using CSV
-@reexport using Microbiome
 
 include("general.jl")
 include("metaphlan.jl")
