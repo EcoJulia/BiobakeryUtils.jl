@@ -5,15 +5,15 @@ create abundance table. Table is presumed to have samples in columns and
 features in rows. First column is taken as feature IDs.
 """
 function import_abundance_table(file::AbstractString; delim::Char='\t')
-    @info "importing abundance table" file
-    df = CSV.read(file, delim=delim, rows_for_type_detect=5000)
+    @info "Importing abundance table" file
+    df = CSV.File(file, delim=delim) |> DataFrame
     rename!(df, names(df)[1] => :col1)
     return df
 end
 
 
 function import_abundance_tables(files::Array{<:AbstractString, 1}; delim::Char='\t')
-    @info "importing abundance tables"
+    @info "Importing abundance tables"
     fulltable = DataFrame(col1=String[])
     for t in files
         df = import_abundance_table(t, delim=delim)
@@ -21,7 +21,7 @@ function import_abundance_tables(files::Array{<:AbstractString, 1}; delim::Char=
     end
 
     # replace all missing values (from joins) with 0.
-    fulltable = map(c -> eltype(c) <: Number ? collect(Missings.replace(c, 0)) : c, eachcol(fulltable))
+    fulltable = map(c -> eltype(c) <: Union{<:Number, Missing} ? collect(Missings.replace(c, 0)) : c, eachcol(fulltable))
     return fulltable
 end
 
