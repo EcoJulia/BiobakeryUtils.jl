@@ -6,7 +6,9 @@ export
     clean_abundance_tables,
     taxfilter,
     taxfilter!,
-    rm_strat!
+    rm_strat!,
+    present,
+    prevalence
 
 using DataFrames
 using CSV
