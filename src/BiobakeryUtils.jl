@@ -6,11 +6,10 @@ export
     clean_abundance_tables,
     taxfilter,
     taxfilter!,
-    rm_strat!,
-    present,
-    prevalence
+    rm_strat!
 
 using DataFrames
+using Statistics
 using CSV
 
 include("general.jl")

@@ -22,12 +22,4 @@ using Test
     taxfilter!(abund, 2)
     @test abund == phyl_short
 
-    @test present(0.1, 0.001)
-    @test !present(0.001, 0.1)
-    @test present(rand(), 0)
-
-    a = zeros(100)
-    a[randperm(100)[1:10]] .= rand(10)
-
-    @test prevalence(a, 0) == 0.1
 end
