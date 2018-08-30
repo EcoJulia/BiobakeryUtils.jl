@@ -41,7 +41,7 @@ end
 
 
 function rm_strat!(df::DataFrame; col::Union{Int, Symbol}=1)
-    filter!(x->!ismatch(r"\|", x[1]), df)
+    filter!(x->!occursin(r"\|", x[1]), df)
 end
 
 
@@ -57,6 +57,27 @@ function qvalue!(df::DataFrame, q::Float64=0.2; pcol::Symbol=:p_value, qcol::Sym
     end
     m = length(ranks)
     df[qcol] = [i / m * q for i in eachindex(df[pcol])]
+end
+
+
+
+function permanova(dm::DistanceMatrix, metadata::AbstractVector, nperm::Int=999)
+    length(dm.samples) != length(metadata) && error("Metadata does not match the size of distance matrix")
+
+    r_dm = dm.dm
+    @rput r_dm
+    @rput metadata
+
+    R"""
+    library(vegan)
+
+    p <- adonis(r_dm ~ metadata,
+            method = "bray", permutations = $nperm)
+    """
+
+    @rget p
+
+    return p[:aov_tab]
 end
 
 
