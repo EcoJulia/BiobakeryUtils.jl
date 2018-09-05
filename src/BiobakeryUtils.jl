@@ -7,7 +7,10 @@ export
     taxfilter,
     taxfilter!,
     rm_strat!,
-    permanova
+    permanova,
+    humann2_regroup,
+    humann2_rename,
+    humann2_barplot
 
 using DataFrames
 using Statistics
@@ -17,5 +20,6 @@ using Microbiome
 
 include("general.jl")
 include("metaphlan.jl")
+include("humann2.jl")
 
 end
