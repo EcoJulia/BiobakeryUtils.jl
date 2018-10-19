@@ -50,21 +50,18 @@ Given a dataframe with a column that has a pvalue column, perform
 Benjamini Hochberch correction to generate q value column with given Q.
 """
 function qvalue!(df::DataFrame, q::Float64=0.2; pcol::Symbol=:p_value, qcol::Symbol=:q_value)
-    if eltype(df[pcol]) <:StatsBase.PValue
-        ranks = invperm(sortperm(map(x->x.v,df[pcol])))
-    else
-        ranks = invperm(sortperm(map(x->x,df[pcol])))
-    end
+    ranks = invperm(sortperm(map(x->x,df[pcol])))
     m = length(ranks)
     df[qcol] = [i / m * q for i in eachindex(df[pcol])]
 end
 
 
 
-function permanova(dm::DistanceMatrix, metadata::AbstractVector, nperm::Int=999)
+function permanova(dm::DistanceMatrix, metadata::AbstractVector, nperm::Int=999; filter=fill(true, length(metadata)))
     length(dm.samples) != length(metadata) && error("Metadata does not match the size of distance matrix")
 
-    r_dm = dm.dm
+    r_dm = dm.dm[filter, filter]
+    metadata = metadata[filter]
     @rput r_dm
     @rput metadata
 

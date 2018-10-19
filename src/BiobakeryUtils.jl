@@ -10,7 +10,8 @@ export
     permanova,
     humann2_regroup,
     humann2_rename,
-    humann2_barplot
+    humann2_barplot,
+    qvalue!
 
 using DataFrames
 using Statistics
