@@ -1,4 +1,4 @@
-using Documenter, Microbiome
+using Documenter, BiobakeryUtils
 
 makedocs(
     format = :html,
@@ -15,7 +15,7 @@ makedocs(
 )
 
 deploydocs(
-    repo = "github.com/BioJulia/Microbiome.jl.git",
+    repo = "github.com/BioJulia/BiobakeryUtils.jl.git",
     julia = "1.0",
     osname = "linux",
     target = "build",
