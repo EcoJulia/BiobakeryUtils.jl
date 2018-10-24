@@ -11,6 +11,7 @@ export
     humann2_regroup,
     humann2_rename,
     humann2_barplot,
+    humann2_barplots,
     qvalue!
 
 using DataFrames
