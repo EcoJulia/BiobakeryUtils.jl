@@ -1,6 +1,6 @@
 name = "BiobakeryUtils"
 uuid = "fa5322f5-bd84-5069-834a-abf3230fb8f8"
-keywords = ["microbiology", "microbiome", "biology"]
+keywords = ["microbiology", "microbiome", "biology", "metagenomics"]
 license = "MIT"
 desc = "Convenience functions for working with the bioBakery"
 authors = ["kescobo <kevbonham@gmail.com"]
