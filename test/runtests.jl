@@ -23,8 +23,8 @@ using Microbiome
     taxfilter!(abund, 2)
     @test abund == phyl_short
 
-    dm = getdm(abundancetable(rand(100,10)), BrayCurtis())
-    p = permanova(dm, repeat(["a", "b"], 5))
-    @test typeof(p) == DataFrame
-    @test size(p) == (3, 6)
+    # dm = getdm(abundancetable(rand(100,10)), BrayCurtis())
+    # p = permanova(dm, repeat(["a", "b"], 5))
+    # @test typeof(p) == DataFrame
+    # @test size(p) == (3, 6)
 end
