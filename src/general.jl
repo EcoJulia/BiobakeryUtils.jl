@@ -85,14 +85,14 @@ PanPhlAn Utils
 
 function panphlan_calcs(df::DataFrame)
     abun = abundancetable(df)
-    dm = getdm(df, Jaccard())
-    rowdm = getrowdm(df, Jaccard())
-    col_clust = hclust(dm.dm, :single)
-    row_clust = hclust(rowdm.dm, :single)
-    optimalorder!(col_clust, dm.dm)
-    optimalorder!(row_clust, rowdm.dm)
+    dm = pairwise(Jaccard(), abun, dims=2)
+    rowdm = pairwise(Jaccard(), abun, dims=1)
+    col_clust = hclust(dm, :single)
+    row_clust = hclust(rowdm, :single)
+    optimalorder!(col_clust, dm)
+    optimalorder!(row_clust, rowdm)
 
-    pco = pcoa(dm)
+    mds = fit(MDS, dm, distances=true)
 
-    return abun, dm, col_clust, row_clust, pco
+    return abun, dm, col_clust, row_clust, mds
 end
