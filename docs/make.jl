@@ -1,7 +1,8 @@
 using Documenter, BiobakeryUtils
 
 makedocs(
-    format = :html,
+    format = Documenter.HTML(
+        prettyurls = get(ENV, "CI", nothing) == "true",
     sitename = "BiobakeryUtiles.jl",
     pages = [
         "BiobakeryUtils" => "index.md"
@@ -16,7 +17,7 @@ makedocs(
 
 deploydocs(
     repo = "github.com/BioJulia/BiobakeryUtils.jl.git",
-    julia = "1.0",
+    julia = "1.2",
     osname = "linux",
     target = "build",
     deps = nothing,
