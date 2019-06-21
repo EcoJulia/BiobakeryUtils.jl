@@ -4,7 +4,6 @@ os:
   - linux
   - osx
 julia:
-  - 1.0
   - 1.1
   - 1.2
   - nightly
@@ -29,6 +28,15 @@ before_install:
   # but no permalink to release download
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then wget "https://cran.rstudio.com/bin/macosx/$(wget -qO- https://cran.rstudio.com/bin/macosx/ | sed -n 's/.*href="\(R-[^"]*.pkg\)".*/\1/p' | head -n 1)"; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then sudo installer -pkg R-*.pkg -target /; fi
+  - sudo su - -c "R -e \"install.packages('vegan', repos='http://cran.rstudio.com/')\""
+
+
+# comment the following lines to use the default test script
+script:
+  - julia -e 'using Pkg.Registry; Registry.add(Registry.RegistrySpec(url = "https://github.com/BioJulia/BioJuliaRegistry.git"))'
+  - julia -e 'using Pkg.Registry; Registry.add(Registry.RegistrySpec(url = "https://github.com/JuliaRegistries/General.git"))'
+  - julia -e 'using Pkg; Pkg.build(); Pkg.test("MicrobiomePlots", coverage = true)'
+
 
 after_success:
   - julia --project=coverage/ -e 'using Pkg; Pkg.instantiate()'
@@ -37,9 +45,12 @@ after_success:
 jobs:
   include:
     - stage: "Documentation"
-      julia: 1.2
+      julia: 1.1
       os: linux
       script:
+        - julia -e 'using Pkg.Registry; Registry.add(Registry.RegistrySpec(url = "https://github.com/BioJulia/BioJuliaRegistry.git"))'
+        - julia -e 'using Pkg.Registry; Registry.add(Registry.RegistrySpec(url = "https://github.com/JuliaRegistries/General.git"))'
+
         - julia --project=docs/ -e 'using Pkg; Pkg.instantiate();
                                     Pkg.develop(PackageSpec(path=pwd()))'
         - julia --project=docs/ docs/make.jl
