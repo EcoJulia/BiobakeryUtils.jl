@@ -49,7 +49,7 @@ function permanova(dm::Array{<:Real,2}, metadata::AbstractVector, nperm::Int=999
     size(dm,1) != size(dm,2) && throw(ArgumentError("dm must be symetrical distance matrix"))
     size(dm,2) != length(metadata) && throw(ArgumentError("Metadata does not match the size of distance matrix"))
 
-    r_dm = dm[filter, filter]
+    r_dm = d[filter, filter]
     metadata = metadata[filter]
     @rput r_dm
     @rput metadata
