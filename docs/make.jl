@@ -2,7 +2,7 @@ using Documenter, BiobakeryUtils
 
 makedocs(
     format = Documenter.HTML(
-        prettyurls = get(ENV, "CI", nothing) == "true",
+        prettyurls = get(ENV, "CI", nothing) == "true"),
     sitename = "BiobakeryUtiles.jl",
     pages = [
         "BiobakeryUtils" => "index.md"
