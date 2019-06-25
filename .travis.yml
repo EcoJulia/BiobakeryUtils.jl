@@ -35,7 +35,7 @@ before_install:
 script:
   - julia -e 'using Pkg.Registry; Registry.add(Registry.RegistrySpec(url = "https://github.com/BioJulia/BioJuliaRegistry.git"))'
   - julia -e 'using Pkg.Registry; Registry.add(Registry.RegistrySpec(url = "https://github.com/JuliaRegistries/General.git"))'
-  - julia -e 'using Pkg; Pkg.build(); Pkg.test("MicrobiomePlots", coverage = true)'
+  - julia -e 'using Pkg; Pkg.build(); Pkg.test("BiobakeryUtils", coverage = true)'
 
 
 after_success:
