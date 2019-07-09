@@ -17,9 +17,6 @@ makedocs(
 
 deploydocs(
     repo = "github.com/BioJulia/BiobakeryUtils.jl.git",
-    julia = "1.2",
-    osname = "linux",
-    target = "build",
     deps = nothing,
     make = nothing
 )
