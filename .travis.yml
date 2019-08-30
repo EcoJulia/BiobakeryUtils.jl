@@ -53,5 +53,5 @@ notifications:
   email: false
 
 after_success:
-  - julia -e 'import Pkg; Pkg.add("Documenter"); include(joinpath("docs", "make.jl"))'
+  - julia --project=docs/ -e 'include(joinpath("docs", "make.jl"))'
   - julia -e 'import Pkg; Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
