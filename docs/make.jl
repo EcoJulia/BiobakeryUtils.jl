@@ -1,22 +1,11 @@
 using Documenter, BiobakeryUtils
 
 makedocs(
-    format = Documenter.HTML(
-        prettyurls = get(ENV, "CI", nothing) == "true"),
-    sitename = "BiobakeryUtiles.jl",
-    pages = [
-        "BiobakeryUtils" => "index.md"
-        "General Utilities" => "general.md"
-        "Working with HUMAnN2" => "humann2.md"
-        "Working with MetaPhlAn2" => "metaphlan2.md"
-        "Contributing" => "contributing.md"
-        "Licence" => "license.md"
-    ],
-    authors = "Kevin Bonham, PhD"
+    sitename="BioBakery Utilities"
 )
 
 deploydocs(
     repo = "github.com/BioJulia/BiobakeryUtils.jl.git",
+    osname="linux",
     deps = nothing,
-    make = nothing
 )
