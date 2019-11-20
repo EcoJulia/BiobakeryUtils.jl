@@ -15,6 +15,7 @@ notifications:
 # (tests will run but not make your overall status red)
 matrix:
  allow_failures:
+ - os: osx
  - julia:
     - 1.4
     - nightly
@@ -31,7 +32,7 @@ before_install:
   # but no permalink to release download
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then wget "https://cran.rstudio.com/bin/macosx/$(wget -qO- https://cran.rstudio.com/bin/macosx/ | sed -n 's/.*href="\(R-[^"]*.pkg\)".*/\1/p' | head -n 1)"; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then sudo installer -pkg R-*.pkg -target /; fi
-  - sudo su -c "R -e \"install.packages('vegan', repos='http://cran.rstudio.com/')\""
+  - sudo su "R -e \"install.packages('vegan', repos='http://cran.rstudio.com/')\""
 
 
 # comment the following lines to use the default test script
