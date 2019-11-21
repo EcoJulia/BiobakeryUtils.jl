@@ -41,7 +41,7 @@ end
 
 
 function rm_strat!(df::DataFrame; col::Union{Int, Symbol}=1)
-    filter!(x->!occursin(r"\|", x[1]), df)
+    filter!(row->!occursin(r"\|", row[1]), df)
 end
 
 

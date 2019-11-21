@@ -14,11 +14,11 @@ using Microbiome
     phyl_short = taxfilter(abund, :phylum)
     @test size(phyl_short) == (2, 8)
 
-    @test all(occursin.("|", spec_long[1]))
+    @test all(occursin.("|", spec_long[!, 1]))
     rm_strat!(spec_long)
-    @test !any(occursin.("|", spec_long[1]))
+    @test !any(occursin.("|", spec_long[!, 1]))
 
-    @test !any(occursin.("|", phyl_short[1]))
+    @test !any(occursin.("|", phyl_short[!, 1]))
 
     taxfilter!(abund, 2)
     @test abund == phyl_short

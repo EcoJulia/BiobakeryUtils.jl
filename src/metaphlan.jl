@@ -31,8 +31,8 @@ function taxfilter!(taxonomic_profile::DataFrames.DataFrame, level::Int=7; short
     in(level, collect(1:8)) || @error "$level not a valid taxonomic level" taxlevels
     filter!(row->length(split(row[1], '|')) == level, taxonomic_profile)
     if shortnames
-        matches = collect.(map(x->eachmatch(r"[kpcofgst]__(\w+)",x), taxonomic_profile[1]))
-        taxonomic_profile[1] = String.([m[level].captures[1] for m in matches])
+        matches = collect.(map(x->eachmatch(r"[kpcofgst]__(\w+)",x), taxonomic_profile[!,1]))
+        taxonomic_profile[!,1] = String.([m[level].captures[1] for m in matches])
     end
     return taxonomic_profile
 end
