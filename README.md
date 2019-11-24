@@ -5,14 +5,14 @@
 **Latest Release:**
 
 [![Latest Release](https://img.shields.io/github/release/BioJulia/BioBakeryUtils.jl.svg)](https://github.com/BioJulia/BioBakeryUtils.jl/releases/latest)
-[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://biojulia.github.io/BioBakeryUtils.jl/stable)
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](http://biojulia.net/BiobakeryUtils.jl/stable/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/BioJulia/BioBakeryUtils.jl/blob/master/LICENSE)
 ![BioJulia maintainer: kescobo](https://img.shields.io/badge/BioJulia%20Maintainer-kescobo-blue.svg)
 
 **Development Status**
 
 [![Build Status](https://travis-ci.org/BioJulia/BioBakeryUtils.jl.svg?branch=master)](https://travis-ci.org/BioJulia/BioBakeryUtils.jl)
-[![](https://img.shields.io/badge/docs-latest-blue.svg)](https://biojulia.github.io/BioBakeryUtils.jl/latest)
+[![](https://img.shields.io/badge/docs-latest-blue.svg)](http://biojulia.net/BiobakeryUtils.jl/dev/)
 
 ## Description
 
