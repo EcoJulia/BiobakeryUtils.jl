@@ -45,7 +45,8 @@ function rm_strat!(df::DataFrame; col::Union{Int, Symbol}=1)
 end
 
 
-function permanova(dm::Array{<:Real,2}, metadata::AbstractVector, nperm::Int=999; filter=fill(true, length(metadata)))
+function permanova(dm::Array{<:Real,2}, metadata::AbstractVector, nperm::Int=999;
+                    label=nothing, filter=x->true)
     size(dm,1) != size(dm,2) && throw(ArgumentError("dm must be symetrical distance matrix"))
     size(dm,2) != length(metadata) && throw(ArgumentError("Metadata does not match the size of distance matrix"))
 
@@ -63,11 +64,33 @@ function permanova(dm::Array{<:Real,2}, metadata::AbstractVector, nperm::Int=999
 
     @rget p
 
-    return p[:aov_tab]
+    p = p[:aov_tab]
+    if !isnothing(label)
+        p[!,:label] = fill(label, size(p, 1))
+    end
+
+    return p
 end
 
 
+permanova(dm, metadata::AbstractDataFrame, nperm=10000;
+            filter=[true for x in 1:size(metadata,1)],
+            label=nothing)
+    r_meta = disallowmissing!(metadata[filter, :])
+    fields = join(String.(names(r_meta)), " + ")
+    r_dm = dm[filter,filter]
+    @rput r_meta
+    @rput r_dm
+    reval("p <- adonis(r_dm ~ $fields, data=r_meta, permutations = $nperm)")
 
+    @rget p
+    p = p[:aov_tab]
+    if !isnothing(label)
+        p[!,:label] = fill(label, size(p, 1))
+    end
+
+    return p
+end
 #==============
 PanPhlAn Utils
 ==============#
