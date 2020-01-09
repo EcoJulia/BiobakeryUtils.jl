@@ -46,21 +46,22 @@ end
 
 
 function permanova(dm::Array{<:Real,2}, metadata::AbstractVector, nperm::Int=999;
-                    label=nothing, filter=x->true)
+                    label=nothing, datafilter=x->true)
     size(dm,1) != size(dm,2) && throw(ArgumentError("dm must be symetrical distance matrix"))
     size(dm,2) != length(metadata) && throw(ArgumentError("Metadata does not match the size of distance matrix"))
+    let notmissing = map(!ismissing, metadata)
+        metadata = metadata[notmissing]
+        dm = dm[notmissing, notmissing]
+    end
 
-    r_dm = dm[filter, filter]
-    metadata = metadata[filter]
+    filt = map(datafilter, metadata)
+    r_dm = dm[filt, filt]
+    metadata = metadata[filt]
     @rput r_dm
     @rput metadata
+    reval("library(vegan)")
 
-    R"""
-    library(vegan)
-
-    p <- adonis(r_dm ~ metadata,
-            method = "bray", permutations = $nperm)
-    """
+    reval("p <- adonis(r_dm ~ metadata, permutations = $nperm)")
 
     @rget p
 
@@ -73,14 +74,22 @@ function permanova(dm::Array{<:Real,2}, metadata::AbstractVector, nperm::Int=999
 end
 
 
-permanova(dm, metadata::AbstractDataFrame, nperm=10000;
-            filter=[true for x in 1:size(metadata,1)],
+function permanova(dm, metadata::AbstractDataFrame, nperm=10000;
+            datafilter=x->true,
             label=nothing)
-    r_meta = disallowmissing!(metadata[filter, :])
-    fields = join(String.(names(r_meta)), " + ")
-    r_dm = dm[filter,filter]
+    let notmissing = map(row->all(!ismissing, row), eachrow(metadata))
+        metadata = metadata[notmissing, :]
+        dm = dm[notmissing, notmissing]
+    end
+
+    fields = join(String.(names(metadata)), " + ")
+
+    filt = map(datafilter, eachrow(metadata))
+    r_meta = metadata[filt, :]
+    r_dm = dm[filt,filt]
     @rput r_meta
     @rput r_dm
+    reval("library(vegan)")
     reval("p <- adonis(r_dm ~ $fields, data=r_meta, permutations = $nperm)")
 
     @rget p
