@@ -1,6 +1,6 @@
 # General
 
 ```@autodocs
-Modules = [BioBakeryUtils]
+Modules = [BiobakeryUtils]
 Pages = ["general.jl"]
 ```

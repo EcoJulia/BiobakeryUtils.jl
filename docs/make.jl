@@ -10,7 +10,6 @@ makedocs(
         "Working with HUMAnN2" => "humann2.md"
         "Working with MetaPhlAn2" => "metaphlan2.md"
         "Contributing" => "contributing.md"
-        "Licence" => "license.md"
     ],
     authors = "Kevin Bonham, PhD"
 )
