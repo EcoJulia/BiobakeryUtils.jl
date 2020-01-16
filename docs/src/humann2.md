@@ -1,6 +1,6 @@
 # HUMAnN2
 
 ```@autodocs
-Modules = [BioBakeryUtils]
+Modules = [BiobakeryUtils]
 Pages = ["humann2.jl"]
 ```

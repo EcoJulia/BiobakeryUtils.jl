@@ -1,6 +1,6 @@
 # MetaPhlAn2
 
 ```@autodocs
-Modules = [BioBakeryUtils]
+Modules = [BiobakeryUtils]
 Pages = ["metaphlan2.jl"]
 ```
