@@ -3,7 +3,7 @@ using Documenter, BiobakeryUtils
 makedocs(
     format = Documenter.HTML(
         prettyurls = get(ENV, "CI", nothing) == "true"),
-    sitename = "BiobakeryUtiles.jl",
+    sitename = "BiobakeryUtils.jl",
     pages = [
         "BiobakeryUtils" => "index.md"
         "General Utilities" => "general.md"
@@ -17,6 +17,5 @@ makedocs(
 
 deploydocs(
     repo = "github.com/BioJulia/BiobakeryUtils.jl.git",
-    deps = nothing,
-    make = nothing
+    push_preview=true
 )
