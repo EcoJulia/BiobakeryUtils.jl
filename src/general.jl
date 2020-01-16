@@ -76,13 +76,15 @@ end
 
 function permanova(dm, metadata::AbstractDataFrame, nperm=10000;
             datafilter=x->true,
-            label=nothing)
-    let notmissing = map(row->all(!ismissing, row), eachrow(metadata))
+            label=nothing,
+            fields=names(metadata))
+
+    let notmissing = map(row->all(!ismissing, row[fields]), eachrow(metadata))
         metadata = metadata[notmissing, :]
         dm = dm[notmissing, notmissing]
     end
 
-    fields = join(String.(names(metadata)), " + ")
+    fields = join(String.(fields), " + ")
 
     filt = map(datafilter, eachrow(metadata))
     r_meta = metadata[filt, :]
