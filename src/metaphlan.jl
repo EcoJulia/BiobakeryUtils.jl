@@ -12,22 +12,24 @@ const taxlevels = Dict([
     :subspecies => 8])
 
 """
-taxfilter!(df::DataFrame, level::Int=7; shortnames::Bool=true)
+    taxfilter!(df::DataFrame, level::Int=7; shortnames::Bool=true)
 
-Filter a MetaPhlAn table (df) to a particular taxon level.
-1 = Kingdom
-2 = Phylum
-3 = Class
-4 = Order
-5 = Family
-6 = Genus
-7 = Species
-8 = Subspecies
+Filter a MetaPhlAn table (as DataFrame) to a particular taxon level.
+Levels may be given either as numbers or symbols:
+
+- `1` = `:Kingdom`
+- `2` = `:Phylum`
+- `3` = `:Class`
+- `4` = `:Order`
+- `5` = `:Family`
+- `6` = `:Genus`
+- `7` = `:Species`
+- `8` = `:Subspecies`
 
 If shortnames is true (default), also changes names in the first column to
-remove higher order taxa
+remove higher order taxa.
 """
-function taxfilter!(taxonomic_profile::DataFrames.DataFrame, level::Int=7; shortnames::Bool=true)
+function taxfilter!(taxonomic_profile::AbstractDataFrame, level::Int=7; shortnames::Bool=true)
     in(level, collect(1:8)) || @error "$level not a valid taxonomic level" taxlevels
     filter!(row->length(split(row[1], '|')) == level, taxonomic_profile)
     if shortnames
@@ -37,19 +39,36 @@ function taxfilter!(taxonomic_profile::DataFrames.DataFrame, level::Int=7; short
     return taxonomic_profile
 end
 
-function taxfilter!(taxonomic_profile::DataFrames.DataFrame, level::Symbol; shortnames::Bool=true)
+function taxfilter!(taxonomic_profile::AbstractDataFrame, level::Symbol; shortnames::Bool=true)
     in(level, keys(taxlevels)) || @error "$level not a valid taxonomic level" taxlevels
     taxfilter!(taxonomic_profile, taxlevels[level], shortnames=shortnames)
 end
 
+"""
+    taxfilter!(df::DataFrame, level::Int=7; shortnames::Bool=true)
 
-function taxfilter(taxonomic_profile::DataFrames.DataFrame, level::Int=7; shortnames::Bool=true)
+Filter a MetaPhlAn table (as DataFrame) to a particular taxon level.
+Levels may be given either as numbers or symbols:
+
+- `1` = `:Kingdom`
+- `2` = `:Phylum`
+- `3` = `:Class`
+- `4` = `:Order`
+- `5` = `:Family`
+- `6` = `:Genus`
+- `7` = `:Species`
+- `8` = `:Subspecies`
+
+If shortnames is true (default), also changes names in the first column to
+remove higher order taxa.
+"""
+function taxfilter(taxonomic_profile::AbstractDataFrame, level::Int=7; shortnames::Bool=true)
     filt = deepcopy(taxonomic_profile)
     taxfilter!(filt, level, shortnames=shortnames)
     return filt
 end
 
-function taxfilter(taxonomic_profile::DataFrames.DataFrame, level::Symbol; shortnames::Bool=true)
+function taxfilter(taxonomic_profile::AbstractDataFrame, level::Symbol; shortnames::Bool=true)
     filt = deepcopy(taxonomic_profile)
     taxfilter!(filt, level, shortnames=shortnames)
     return filt
