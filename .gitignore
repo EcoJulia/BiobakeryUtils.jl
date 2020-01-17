@@ -6,3 +6,4 @@ scratch*
 docs/build/
 docs/site/
 build/
+Manifest.toml
