@@ -1,15 +1,15 @@
 #==============
 MetaPhlAn Utils
 ==============#
-const taxlevels = Dict([
-    :kingom     => 1,
-    :phylum     => 2,
-    :class      => 3,
-    :order      => 4,
-    :family     => 5,
-    :genus      => 6,
-    :species    => 7,
-    :subspecies => 8])
+const taxlevels = (
+    kingom     = 1,
+    phylum     = 2,
+    class      = 3,
+    order      = 4,
+    family     = 5,
+    genus      = 6,
+    species    = 7,
+    subspecies = 8)
 
 """
     taxfilter!(df::DataFrame, level::Int=7; shortnames::Bool=true)
