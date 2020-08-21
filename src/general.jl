@@ -85,7 +85,7 @@ using RCall
 reval("install.packages('vegan')")
 ```
 """
-function permanova(dm::Array{<:Real,2}, metadata::AbstractVector, nperm::Int=999;
+function permanova(dm::Array{<:Real,2}, metadata::AbstractVector, nperm::Int=9999;
                     datafilter=x->true, label=nothing)
     size(dm,1) != size(dm,2) && throw(ArgumentError("dm must be symetrical distance matrix"))
     size(dm,2) != length(metadata) && throw(ArgumentError("Metadata does not match the size of distance matrix"))
