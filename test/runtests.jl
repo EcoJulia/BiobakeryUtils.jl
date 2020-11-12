@@ -9,19 +9,15 @@ using Microbiome
 
     @test typeof(abund) <: DataFrame
     @test size(abund) == (42, 8)
-    spec_long = taxfilter(abund, shortnames=false)
-    @test size(spec_long) == (15, 8)
-    phyl_short = taxfilter(abund, :phylum)
-    @test size(phyl_short) == (2, 8)
+    spec = taxfilter(abund, keepunidentified=false)
+    @test size(spec) == (15, 8)
+    phyl = taxfilter(abund, :phylum)
+    @test size(phyl) == (2, 8)
 
-    @test all(occursin.("|", spec_long[!, 1]))
-    rm_strat!(spec_long)
-    @test !any(occursin.("|", spec_long[!, 1]))
-
-    @test !any(occursin.("|", phyl_short[!, 1]))
+    @test !any(occursin.("|", phyl[!, 1]))
 
     taxfilter!(abund, 2)
-    @test abund == phyl_short
+    @test abund == phyl
 
     d = rand(10, 10)
     dm = d + d'

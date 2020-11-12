@@ -6,6 +6,8 @@ export
     clean_abundance_tables,
     taxfilter,
     taxfilter!,
+    parsetaxa,
+    parsetaxon,
     rm_strat!,
     permanova,
     humann2_regroup,
