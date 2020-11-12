@@ -1,18 +1,29 @@
 #==============
 MetaPhlAn Utils
 ==============#
-const taxlevels = Dict([
-    :kingom     => 1,
-    :phylum     => 2,
-    :class      => 3,
-    :order      => 4,
-    :family     => 5,
-    :genus      => 6,
-    :species    => 7,
-    :subspecies => 8])
+const taxonlevels = (
+    kingdom      = 1,
+    phylum       = 2,
+    class        = 3,
+    order        = 4,
+    family       = 5,
+    genus        = 6,
+    species      = 7,
+    subspecies   = 8,
+    unidentified = 0)
+
+const shortlevels = (
+    k = :kingdom,
+    p = :phylum,
+    c = :class,
+    o = :order,
+    f = :family,
+    g = :genus,
+    s = :species,
+    t = :subspecies)
 
 """
-    taxfilter!(df::DataFrame, level::Int=7; shortnames::Bool=true)
+    taxfilter!(df::DataFrame, level::Union{Int, Symbol}; keepunidentified::Bool)
 
 Filter a MetaPhlAn table (as DataFrame) to a particular taxon level.
 Levels may be given either as numbers or symbols:
@@ -26,28 +37,44 @@ Levels may be given either as numbers or symbols:
 - `7` = `:Species`
 - `8` = `:Subspecies`
 
-If shortnames is true (default), also changes names in the first column to
-remove higher order taxa.
+Taxon level is removed from resulting taxon string, eg.
+`g__Bifidobacterium` becomes `Bifidobacterium`.
+
+Set `keepunidentified` flag to `false` to remove `UNIDENTIFIED` rows.
 """
-function taxfilter!(taxonomic_profile::AbstractDataFrame, level::Int=7; shortnames::Bool=true)
-    in(level, collect(1:8)) || @error "$level not a valid taxonomic level" taxlevels
-    filter!(row->length(split(row[1], '|')) == level, taxonomic_profile)
-    if shortnames
-        matches = collect.(map(x->eachmatch(r"[kpcofgst]__(\w+)",x), taxonomic_profile[!,1]))
-        taxonomic_profile[!,1] = String.([m[level].captures[1] for m in matches])
+function taxfilter!(taxonomic_profile::AbstractDataFrame, level::Int=7; keepunidentified=true)
+    in(level, collect(1:8)) || @error "$level not a valid taxonomic level" taxonlevels
+    
+    taxonomic_profile[!, 1] = last.(parsetaxa.(taxonomic_profile[!, 1]; throw=false))
+    filter!(taxonomic_profile) do row
+        tlev = taxonlevels[row[1][2]]
+        keepunidentified ? in(tlev, (0, level)) : level == tlev
     end
+
+    taxonomic_profile[!, 1] = map(t-> t[1], taxonomic_profile[!, 1])
     return taxonomic_profile
 end
 
-function taxfilter!(taxonomic_profile::AbstractDataFrame, level::Symbol; shortnames::Bool=true)
-    in(level, keys(taxlevels)) || @error "$level not a valid taxonomic level" taxlevels
-    taxfilter!(taxonomic_profile, taxlevels[level], shortnames=shortnames)
+function taxfilter!(taxonomic_profile::AbstractDataFrame, level::Symbol; keepunidentified=true)
+    in(level, keys(taxonlevels)) || @error "$level not a valid taxonomic level" taxonlevels
+    taxfilter!(taxonomic_profile, taxonlevels[level]; keepunidentified=keepunidentified)
+end
+
+function taxfilter(taxonomic_profile::AbstractDataFrame, level::Int=7; keepunidentified=true)
+    filt = deepcopy(taxonomic_profile)
+    taxfilter!(filt, level; keepunidentified=keepunidentified)
+    return filt
+end
+
+function taxfilter(taxonomic_profile::AbstractDataFrame, level::Symbol; keepunidentified=true)
+    filt = deepcopy(taxonomic_profile)
+    taxfilter!(filt, level; keepunidentified=keepunidentified)
+    return filt
 end
 
 """
-    taxfilter!(df::DataFrame, level::Int=7; shortnames::Bool=true)
+    parsetaxon(taxstring::AbstractString, taxlevel::Union{Int, Symbol})
 
-Filter a MetaPhlAn table (as DataFrame) to a particular taxon level.
 Levels may be given either as numbers or symbols:
 
 - `1` = `:Kingdom`
@@ -58,18 +85,27 @@ Levels may be given either as numbers or symbols:
 - `6` = `:Genus`
 - `7` = `:Species`
 - `8` = `:Subspecies`
-
-If shortnames is true (default), also changes names in the first column to
-remove higher order taxa.
 """
-function taxfilter(taxonomic_profile::AbstractDataFrame, level::Int=7; shortnames::Bool=true)
-    filt = deepcopy(taxonomic_profile)
-    taxfilter!(filt, level, shortnames=shortnames)
-    return filt
+function parsetaxon(taxstring::AbstractString, taxlevel::Int=7; throw=true)
+    taxa = parsetaxa(taxstring, throw=throw)
+    length(taxa) <= taxlevel || throw(ArgumentError("Taxonomy does not contain level $taxlevel"))
+
+    return taxa[taxlevel]
 end
 
-function taxfilter(taxonomic_profile::AbstractDataFrame, level::Symbol; shortnames::Bool=true)
-    filt = deepcopy(taxonomic_profile)
-    taxfilter!(filt, level, shortnames=shortnames)
-    return filt
+parsetaxon(taxstring::AbstractString, taxlevel::Symbol) = parsetaxon(taxstring, taxonlevels[taxlevel])
+
+function parsetaxa(taxstring::AbstractString; throw=true)
+    taxa = split(taxstring, '|')
+    return shortname.(taxa, throw=throw)
+end
+
+function shortname(taxon::AbstractString; throw=true)
+    m = match(r"[kpcofgst]__(\w+)", taxon)  
+    
+    if isnothing(m)
+        throw ? throw(ArgumentError("Improperly formated taxon $taxon")) : return (string(taxon), :unidentified)
+    end
+
+    return (string(m.captures[1]), shortlevels[Symbol(first(taxon))])
 end
