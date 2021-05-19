@@ -109,3 +109,39 @@ function shortname(taxon::AbstractString; throw=true)
 
     return (string(m.captures[1]), shortlevels[Symbol(first(taxon))])
 end
+
+"""
+    findclade(taxstring::AbstractString, taxlevel::Union{Symbol})
+
+    Takes string and taxa level as arguments finds level in string
+"""
+
+taxon_conversion = (k = :kingdom, 
+                    p = :phylum, 
+                    c = :class,
+                    o = :order,
+                    f = :family,
+                    g = :genus,
+                    s = :species)
+
+                    
+function gettaxon(elt)
+           pieces = split(elt, "__")
+           length(pieces) == 2 || error("incorrectly formatted name string: $elt")
+           (lev, name) = pieces
+           lev_abr = Symbol(lev)
+           lev_abr in keys(taxon_conversion) || error("Invalid taxon abbreviation: $lev_abr in name $elt")
+           return Taxon(name, taxon_conversion[lev_abr])
+       end
+
+
+
+function findclade(taxstring, taxlevel)
+    splitStr = split(taxstring, "|")
+    for elt in splitStr
+        t = gettaxon(elt)
+        if taxlevel == clade(t)
+            return t
+        end
+    end
+end
