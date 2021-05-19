@@ -25,3 +25,4 @@ using Microbiome
     @test typeof(p) == DataFrame
     @test size(p) == (3, 6)
 end
+ 

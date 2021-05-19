@@ -13,6 +13,7 @@ function import_abundance_table(file::AbstractString; delim::Char='\t')
     return df
 end
 
+foo() = "hello"
 
 function import_abundance_tables(files::Array{<:AbstractString, 1}; delim::Char='\t')
     @info "Importing abundance tables"

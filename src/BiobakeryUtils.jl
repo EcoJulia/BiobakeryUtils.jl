@@ -14,7 +14,8 @@ export
     humann2_rename,
     humann2_barplot,
     humann2_barplots,
-    qvalue!
+    qvalue!,
+    foo
 
 using DataFrames
 using Statistics
