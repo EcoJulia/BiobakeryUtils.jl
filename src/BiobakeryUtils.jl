@@ -15,7 +15,6 @@ export
     humann2_barplot,
     humann2_barplots,
     qvalue!,
-    foo
 
 using DataFrames
 using Statistics
