@@ -116,7 +116,7 @@ end
     Takes string and taxa level as arguments finds level in string
 """
 
-taxon_conversion = (k = :kingdom, 
+const _taxon_conversion = (k = :kingdom, 
                     p = :phylum, 
                     c = :class,
                     o = :order,
