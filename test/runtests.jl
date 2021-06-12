@@ -3,9 +3,12 @@ using DataFrames
 using Random
 using Test
 using Microbiome
+using RCall
+
+reval("install.packages('vegan')")
 
 @testset "Biobakery Utilities" begin
-    abund = import_abundance_table("metaphlan_test.tsv")
+    abund = import_abundance_table("dev/BiobakeryUtils/test/metaphlan_test.tsv")
 
     @test typeof(abund) <: DataFrame
     @test size(abund) == (42, 8)
@@ -25,4 +28,3 @@ using Microbiome
     @test typeof(p) == DataFrame
     @test size(p) == (3, 6)
 end
- 
