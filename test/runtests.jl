@@ -4,9 +4,9 @@ using Test
 using Microbiome
 using RCall
 
-reval("install.packages('vegan')")
 
-@testset "Biobakery Utilities" begin
+
+@testset "Data Import" begin
     abund = import_abundance_table("metaphlan_test.tsv")
 
     @test typeof(abund) <: DataFrame
@@ -21,6 +21,10 @@ reval("install.packages('vegan')")
     taxfilter!(abund, 2)
     @test abund == phyl
 
+end
+
+@testset "Permanova" begin
+    reval("install.packages('vegan')")
     d = rand(10, 10)
     dm = d + d'
     p = permanova(dm, repeat(["a", "b"], 5))
