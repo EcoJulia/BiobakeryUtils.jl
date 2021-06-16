@@ -22,6 +22,26 @@ const shortlevels = (
     s = :species,
     t = :subspecies)
 
+    function _split_clades(clade_string)
+        clades = split(clade_string, '|')
+        taxa = Taxon[]
+        for clade in clades
+            (level, name) = split(clade, "__")
+            push!(taxa, Taxon(name, _shortclades[Symbol(level)]))
+        end
+        return taxa
+    end
+    function metaphlan_profile(path::AbstractString; sample=basename(first(splitext(path))), level=:all)
+        profile = CSV.read(path, datarow=5, header=["clade", "NCBI_taxid", "abundance", "additional_species"], Tables.columntable)
+        taxa = [last(_split_clades(c)) for c in profile.clade]
+        mat = sparse(reshape(profile.abundance, length(profile.abundance), 1))
+        sample = sample isa Microbiome.AbstractSample ? sample : MicrobiomeSample(sample)
+        keep = level == :all ? Colon() : [ismissing(c) || c == level for c in clade.(taxa)]
+        return CommunityProfile(mat[keep, :], taxa[keep], [sample])
+    end
+    function metaphlan_profiles(table)
+    end
+        
 """
     taxfilter!(df::DataFrame, level::Union{Int, Symbol}; keepunidentified::Bool)
 
@@ -139,9 +159,7 @@ end
 
 """
     parsetaxon(taxstring::AbstractString, taxlevel::Union{Int, Symbol})
-
 Levels may be given either as numbers or symbols:
-
 - `1` = `:Kingdom`
 - `2` = `:Phylum`
 - `3` = `:Class`
@@ -150,44 +168,34 @@ Levels may be given either as numbers or symbols:
 - `6` = `:Genus`
 - `7` = `:Species`
 - `8` = `:Subspecies`
-
 ```jldoctest parsetaxon
+
 Examples
 ≡≡≡≡≡≡≡≡≡≡
-
  julia> parsetaxa("k__Archaea|p__Euryarchaeota|c__Methanobacteria";throw = true)
  3-element Vector{Tuple{String, Symbol}}:
  ("Archaea", :kingdom)
  ("Euryarchaeota", :phylum)
  ("Methanobacteria", :class)
-
 ```
-
 """
-function parsetaxon(taxstring::AbstractString, taxlevel::Int=7; throw=true)
-    taxa = parsetaxa(taxstring, throw=throw)
+function parsetaxon(taxstring::AbstractString, taxlevel::Int=7; throw_error=true)
+    taxa = parsetaxa(taxstring, throw_error=throw_error)
     length(taxa) <= taxlevel || throw(ArgumentError("Taxonomy does not contain level $taxlevel"))
-
     return taxa[taxlevel]
 end
-
 parsetaxon(taxstring::AbstractString, taxlevel::Symbol) = parsetaxon(taxstring, taxonlevels[taxlevel])
-
-function parsetaxa(taxstring::AbstractString; throw=true)
+function parsetaxa(taxstring::AbstractString; throw_error=true)
     taxa = split(taxstring, '|')
-    return shortname.(taxa, throw=throw)
+    return shortname.(taxa, throw_error=throw_error)
 end
-
-function shortname(taxon::AbstractString; throw=true)
-    m = match(r"[kpcofgst]__(\w+)", taxon)  
-    
+function shortname(taxon::AbstractString; throw_error=true)
+    m = match(r"^[kpcofgst]__(\w+)$", taxon)  
     if isnothing(m)
-        throw ? throw(ArgumentError("Improperly formated taxon $taxon")) : return (string(taxon), :unidentified)
+        throw_error ? throw(ArgumentError("Improperly formated taxon $taxon")) : return (string(taxon), :unidentified)
     end
-
     return (string(m.captures[1]), shortlevels[Symbol(first(taxon))])
 end
-
 """
     findclade(taxstring::AbstractString, taxlevel::Union{Symbol})
 
