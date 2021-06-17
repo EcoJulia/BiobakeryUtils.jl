@@ -177,6 +177,9 @@ Examples
  ("Archaea", :kingdom)
  ("Euryarchaeota", :phylum)
  ("Methanobacteria", :class)
+
+ julia> parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria", 3)
+ ("Methanobacteria", :class)
 ```
 """
 function parsetaxon(taxstring::AbstractString, taxlevel::Int=7; throw_error=true)
