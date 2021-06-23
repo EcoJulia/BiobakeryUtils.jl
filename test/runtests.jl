@@ -7,19 +7,19 @@ using BiobakeryUtils
 using SparseArrays
 using DelimitedFiles
 
-# @testset "Data Import" begin
-#     abund = import_abundance_table("test/metaphlan_test.tsv")
-#     @test typeof(abund) <: DataFrame
-#     @test size(abund) == (42, 8)
-#     spec = taxfilter(abund, :kingdom, keepunidentified=true)
-#     @test size(spec) == (15, 8)
-#     phyl = taxfilter(abund, :phylum)
-#     @test size(phyl) == (2, 8)
-#     @test !any(occursin.("|", phyl[!, 1]))
-#     taxfilter!(abund, 2)
-#     @test abund == phyl
+@testset "Data Import" begin
+    abund = import_abundance_table("test/metaphlan_test.tsv")
+    @test typeof(abund) <: DataFrame
+    @test size(abund) == (42, 8)
+    spec = taxfilter(abund, :kingdom, keepunidentified=true)
+    @test size(spec) == (15, 8)
+    phyl = taxfilter(abund, :phylum)
+    @test size(phyl) == (2, 8)
+    @test !any(occursin.("|", phyl[!, 1]))
+    taxfilter!(abund, 2)
+    @test abund == phyl
 
-# end
+end
 
 @testset "CommunityProfile Testing" begin
     table = CSV.read("test/metaphlan_test.tsv", DataFrame, delim='\t',
