@@ -130,7 +130,7 @@ julia> taxfilter!(df,1; keepunidentified=true)
 function taxfilter!(taxonomic_profile::AbstractDataFrame, level::Int=7; keepunidentified=true)
     in(level, collect(1:8)) || @error "$level not a valid taxonomic level" taxonlevels
     
-    taxonomic_profile[!, 1] = last.(parsetaxa.(taxonomic_profile[!, 1]; throw=false))
+    taxonomic_profile[!, 1] = last.(parsetaxa.(taxonomic_profile[!, 1]; throw_error=false))
     filter!(taxonomic_profile) do row
         tlev = taxonlevels[row[1][2]]
         keepunidentified ? in(tlev, (0, level)) : level == tlev
@@ -171,7 +171,7 @@ Levels may be given either as numbers or symbols:
 ```jldoctest parsetaxa
 Examples
 ≡≡≡≡≡≡≡≡≡≡
- julia> parsetaxa("k__Archaea|p__Euryarchaeota|c__Methanobacteria";throw = true)
+ julia> parsetaxa("k__Archaea|p__Euryarchaeota|c__Methanobacteria"; throw_error = true)
  3-element Vector{Tuple{String, Symbol}}:
  ("Archaea", :kingdom)
  ("Euryarchaeota", :phylum)
