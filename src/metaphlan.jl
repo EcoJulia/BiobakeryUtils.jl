@@ -27,7 +27,7 @@ const shortlevels = (
         taxa = Taxon[]
         for clade in clades
             (level, name) = split(clade, "__")
-            push!(taxa, Taxon(name, _shortclades[Symbol(level)]))
+            push!(taxa, Taxon(name, shortlevels[Symbol(level)]))
         end
         return taxa
     end
@@ -168,8 +168,7 @@ Levels may be given either as numbers or symbols:
 - `6` = `:Genus`
 - `7` = `:Species`
 - `8` = `:Subspecies`
-```jldoctest parsetaxon
-
+```jldoctest parsetaxa
 Examples
 ≡≡≡≡≡≡≡≡≡≡
  julia> parsetaxa("k__Archaea|p__Euryarchaeota|c__Methanobacteria";throw = true)
@@ -177,7 +176,9 @@ Examples
  ("Archaea", :kingdom)
  ("Euryarchaeota", :phylum)
  ("Methanobacteria", :class)
-
+ ```
+ 
+ ```jldoctest parsetaxon
  julia> parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria", 3)
  ("Methanobacteria", :class)
 ```
