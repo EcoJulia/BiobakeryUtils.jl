@@ -41,11 +41,11 @@ end
 
 
 
-@testset "Permanova" begin
-    reval("install.packages('vegan')")
-    d = rand(10, 10)
-    dm = d + d'
-    p = permanova(dm, repeat(["a", "b"], 5))
-    @test typeof(p) == DataFrame
-    @test size(p) == (3, 6)
-end
+# @testset "Permanova" begin
+#     reval("install.packages('vegan')")
+#     d = rand(10, 10)
+#     dm = d + d'
+#     p = permanova(dm, repeat(["a", "b"], 5))
+#     @test typeof(p) == DataFrame
+#     @test size(p) == (3, 6)
+# end
