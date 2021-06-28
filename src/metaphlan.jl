@@ -233,7 +233,7 @@ function findclade(taxstring, taxlevel)
     end
 end
 
-function addmetadata!(comm, "some_metadata.csv")
+function addmetadata!(comm, some_metadata)
     
 
 end
