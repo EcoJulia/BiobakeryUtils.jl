@@ -3,20 +3,21 @@ uuid = "fa5322f5-bd84-5069-834a-abf3230fb8f8"
 keywords = ["microbiology", "microbiome", "biology", "metagenomics"]
 license = "MIT"
 desc = "Convenience functions for working with the bioBakery"
-authors = ["kescobo <kevbonham@gmail.com"]
-version = "0.4.0"
+authors = ["kescobo <kevbonham@gmail.com>", "annelle-abatoni <aa1@wellesley.edu>"]
+version = "0.5.0-dev"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 Microbiome = "3bd8f0ae-a0f2-5238-a5af-e1b399a4940c"
 RCall = "6f49c342-dc21-5d91-9882-a32aef131414"
+SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 
 [compat]
 CSV = "0.8"
-DataFrames = "0.19, 0.20, 0.21, 0.22"
-Microbiome = "0.6"
+DataFrames = "1"
+Microbiome = "0.7"
 RCall = "0.13"
 julia = "1.1"
 
