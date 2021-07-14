@@ -8,14 +8,23 @@ using SparseArrays
 using DelimitedFiles
 using CSV
 
+@testset "Metaphlan" begin
+    @test parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria", 2) == Taxon("Euryarchaeota", :phylum)
+    @test parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria") == Taxon("Methanobacteria", :class)
+end
+
 @testset "CommunityProfile Testing" begin
-    table = CSV.read("metaphlan_test.tsv", DataFrame, delim='\t',
+    table = CSV.read("test/metaphlan_test.tsv", DataFrame, delim='\t',
     header=["#SampleID", "sample1_taxonomic_profile", "sample2_taxonomic_profile", "sample3_taxonomic_profile",	"sample4_taxonomic_profile", "sample5_taxonomic_profile", "sample6_taxonomic_profile", "sample7_taxonomic_profile"], datarow = 8)
     rename!(table, "#SampleID" => "taxname")
     mat = Matrix(select(table, Not("taxname")))
     tax = Taxon.(table.taxname)
+    # tax = parsetaxon.(table.taxname, throw_error=true)
+    # tax = parsetaxon(table.taxname, throw_error=true) = last(parsetaxa(table.taxname, throw_error=true))
     mss = MicrobiomeSample.(names(table)[2:end])
     cp = CommunityProfile(sparse(mat), tax, mss) # sparse turns matrix into sparse matrix
+
+    # @test metaphlan_profiles("metaphlan_multi_test.tsv") <: CommunityProfile
     @test typeof(cp) <: CommunityProfile
     @test size(cp) == (36,7)
     @test cp[tax[5], mss[5]] == 0.0

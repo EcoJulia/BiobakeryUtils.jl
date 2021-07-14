@@ -21,6 +21,7 @@ using Statistics
 using CSV
 using RCall
 using Microbiome
+using SparseArrays
 
 include("general.jl")
 include("metaphlan.jl")
