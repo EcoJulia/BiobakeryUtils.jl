@@ -19,11 +19,12 @@ end
     rename!(table, "#SampleID" => "taxname")
     mat = Matrix(select(table, Not("taxname")))
     tax = Taxon.(table.taxname)
-    # tax = parsetaxon.(table.taxname, throw_error=true)
-    # tax = parsetaxon(table.taxname, throw_error=true) = last(parsetaxa(table.taxname, throw_error=true))
     mss = MicrobiomeSample.(names(table)[2:end])
-    cp = CommunityProfile(sparse(mat), tax, mss) # sparse turns matrix into sparse matrix
-
+    cp = CommunityProfile(sparse(mat), tax, mss) 
+    samples(cp)
+    # sparse turns matrix into sparse matrix
+# tax = parsetaxon.(table.taxname, throw_error=true)
+    # tax = parsetaxon(table.taxname, throw_error=true) = last(parsetaxa(table.taxname, throw_error=true))
     # @test metaphlan_profiles("metaphlan_multi_test.tsv") <: CommunityProfile
     @test typeof(cp) <: CommunityProfile
     @test size(cp) == (36,7)
