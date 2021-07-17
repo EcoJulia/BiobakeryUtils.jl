@@ -67,8 +67,11 @@ Taxon level is removed from resulting taxon string, eg.
 `g__Bifidobacterium` becomes `Bifidobacterium`.
 Set `keepunidentified` flag to `false` to remove `UNIDENTIFIED` rows.
 `taxfilter!()` modifies the dataframe that you pass to it and `taxfilter()` doesn't.
+
 This function will also rename the taxa in the first column.
+
 ```jldoctest taxfilter
+
 Examples
 ≡≡≡≡≡≡≡≡≡≡
 julia> df
@@ -157,7 +160,9 @@ end
 
 """
     parsetaxon(taxstring::AbstractString, taxlevel::Union{Int, Symbol})
+
     Levels may be given either as numbers or symbols:
+
 - `1` = `:Kingdom`
 - `2` = `:Phylum`
 - `3` = `:Class`
@@ -166,8 +171,10 @@ end
 - `6` = `:Genus`
 - `7` = `:Species`
 - `8` = `:Subspecies`
+
 Examples
 ≡≡≡≡≡≡≡≡≡≡
+
 ```jldoctest parsetaxa
  julia> parsetaxa("k__Archaea|p__Euryarchaeota|c__Methanobacteria"; throw_error = true)
  3-element Vector{Tuple{String, Symbol}}:
