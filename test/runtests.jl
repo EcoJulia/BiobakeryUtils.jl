@@ -14,7 +14,7 @@ using CSV
 end
 
 @testset "CommunityProfile Testing" begin
-    table = CSV.read("files/metaphlan_multi_test.tsv", DataFrame, delim='\t',
+    table = CSV.read("test/files/metaphlan_multi_test.tsv", DataFrame, delim='\t',
     header=["#SampleID", "sample1_taxonomic_profile", "sample2_taxonomic_profile", "sample3_taxonomic_profile",	"sample4_taxonomic_profile", "sample5_taxonomic_profile", "sample6_taxonomic_profile", "sample7_taxonomic_profile"], datarow = 8)
     rename!(table, "#SampleID" => "taxname")
     mat = Matrix(select(table, Not("taxname")))
