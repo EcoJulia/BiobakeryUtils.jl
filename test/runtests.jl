@@ -14,7 +14,7 @@ using CSV
 end
 
 @testset "CommunityProfile Testing" begin
-    table = CSV.read("test/files/metaphlan_multi_test.tsv", DataFrame, delim='\t',
+    table = CSV.read("metaphlan_multi_test.tsv", DataFrame, delim='\t',
     header=["#SampleID", "sample1_taxonomic_profile", "sample2_taxonomic_profile", "sample3_taxonomic_profile",	"sample4_taxonomic_profile", "sample5_taxonomic_profile", "sample6_taxonomic_profile", "sample7_taxonomic_profile"], datarow = 8)
     rename!(table, "#SampleID" => "taxname")
     mat = Matrix(select(table, Not("taxname")))
@@ -22,15 +22,13 @@ end
     mss = MicrobiomeSample.(names(table)[2:end])
     cp = CommunityProfile(sparse(mat), tax, mss) # sparse turns matrix into sparse matrix
     
-    # @test metaphlan_profiles("metaphlan_multi_test.tsv") <: CommunityProfile
+    @test metaphlan_profiles("metaphlan_multi_test.tsv") <: CommunityProfile
     @test size(cp) == (36,7)
     @test cp[tax[5], mss[5]] == 0.0
-    #@test cp[:,[mss[1], mss[4]] ==
-    #@test comm[Taxon(tax[1], :kingdom),  sample4_taxonomic_profile] ==
 end
 
 @testset "Data Import" begin
-    abund = import_abundance_table("files/metaphlan_multi_test.tsv")
+    abund = import_abundance_table("metaphlan_multi_test.tsv")
     @test typeof(abund) <: DataFrame
     @test size(abund) == (42, 8)
     spec = taxfilter(abund, keepunidentified=true)
