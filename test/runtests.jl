@@ -14,7 +14,7 @@ using CSV
 end
 
 @testset "CommunityProfile Testing" begin
-    table = CSV.read("metaphlan_multi_test.tsv", DataFrame, delim='\t',
+    table = CSV.read("files/metaphlan_multi_test.tsv", DataFrame, delim='\t',
     header=["#SampleID", "sample1_taxonomic_profile", "sample2_taxonomic_profile", "sample3_taxonomic_profile",	"sample4_taxonomic_profile", "sample5_taxonomic_profile", "sample6_taxonomic_profile", "sample7_taxonomic_profile"], datarow = 8)
     rename!(table, "#SampleID" => "taxname")
     mat = Matrix(select(table, Not("taxname")))
@@ -22,7 +22,7 @@ end
     mss = MicrobiomeSample.(names(table)[2:end])
     cp = CommunityProfile(sparse(mat), tax, mss) # sparse turns matrix into sparse matrix
     
-    @test metaphlan_profiles("metaphlan_multi_test.tsv") <: CommunityProfile
+    @test metaphlan_profiles("files/metaphlan_multi_test.tsv") <: CommunityProfile
     @test size(cp) == (36,7)
     @test cp[tax[5], mss[5]] == 0.0
 end
