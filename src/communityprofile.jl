@@ -10,7 +10,7 @@ function add_metadata!(comm, file, colname) #how to get the names of the columns
     end
 end
 
-add_metadata!(cp, "test/files/metadata_test.csv", )
+#add_metadata!(cp, "test/files/metadata_test.csv", )
 
 
 
