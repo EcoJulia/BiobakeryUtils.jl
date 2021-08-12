@@ -204,20 +204,13 @@ end
 
 Examples
 ≡≡≡≡≡≡≡≡≡≡
-
-```jldoctest parsetaxa
- julia> parsetaxa("k__Archaea|p__Euryarchaeota|c__Methanobacteria"; throw_error = true)
- 3-element Vector{Tuple{String, Symbol}}:
- ("Archaea", :kingdom)
- ("Euryarchaeota", :phylum)
- ("Methanobacteria", :class)
- ```
  
- ```jldoctest parsetaxon
- julia> parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria", 2)
- ("Euryarchaeota", :phylum)
- julia> parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria")
- ("Methanobacteria", :class)
+```jldoctest parsetaxon
+julia> parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria", 2)
+("Euryarchaeota", :phylum)
+
+julia> parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria")
+("Methanobacteria", :class)
 ```
 """
 function parsetaxon(taxstring::AbstractString; throw_error=true)
@@ -225,13 +218,37 @@ function parsetaxon(taxstring::AbstractString; throw_error=true)
     return last(taxa)
 end
 
-function parsetaxon(taxstring::AbstractString, taxlevel::Int; throw_error=true)
-    taxa = parsetaxa(taxstring, throw_error=throw_error)
-    taxlevel <= length(taxa) || throw(ArgumentError("Taxonomy does not contain level $taxlevel"))
-    return taxa[taxlevel]
-end
+# function parsetaxon(taxstring::AbstractString, taxlevel::Int; throw_error=true)
+#     taxa = parsetaxa(taxstring, throw_error=throw_error)
+#     taxlevel <= length(taxa) || throw(ArgumentError("Taxonomy does not contain level $taxlevel"))
+#     return taxa[taxlevel]
+# end
 
-parsetaxon(taxstring::AbstractString, taxlevel::Symbol) = parsetaxon(taxstring, taxonlevels[taxlevel])
+#parsetaxon(taxstring::AbstractString, taxlevel::Symbol) = parsetaxon(taxstring, taxonlevels[taxlevel])
+
+"""
+    parsetaxa(taxstring::AbstractString; throw_error=true)
+
+- `1` = `:Kingdom`
+- `2` = `:Phylum`
+- `3` = `:Class`
+- `4` = `:Order`
+- `5` = `:Family`
+- `6` = `:Genus`
+- `7` = `:Species`
+- `8` = `:Subspecies`
+
+Examples
+≡≡≡≡≡≡≡≡≡≡
+
+```jldoctest parsetaxa
+julia> parsetaxa("k__Archaea|p__Euryarchaeota|c__Methanobacteria"; throw_error = true)
+3-element Vector{Tuple{String, Symbol}}:
+("Archaea", :kingdom)
+("Euryarchaeota", :phylum)
+("Methanobacteria", :class)
+```
+"""
 
 function parsetaxa(taxstring::AbstractString; throw_error=true)
     taxa = split(taxstring, '|')
@@ -256,9 +273,9 @@ function gettaxon(elt)
     return Taxon(name, shortlevels[lev_abr])
 end
 
-
 """
     findclade(taxstring::AbstractString, taxlevel::Union{Symbol})
+
     Takes string and taxa level as arguments finds level in string:
     k = :kingdom,
     p = :phylum,
@@ -268,6 +285,14 @@ end
     g = :genus,
     s = :species,
     t = :subspecies)
+
+Examples
+≡≡≡≡≡≡≡≡≡≡
+ 
+```jldoctest parsetaxon
+julia> findclade("k__Archaea|p__Euryarchaeota|c__Methanobacteria", :kingdom)
+Taxon("Archaea", :kingdom)
+```
 """
 function findclade(taxstring, taxlevel)
     splitStr = split(taxstring, "|")
