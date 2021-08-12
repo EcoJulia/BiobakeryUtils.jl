@@ -23,7 +23,6 @@ end
     comm = CommunityProfile(sparse(mat), tax , mss) # sparse turns matrix into sparse matrix
     @test size(comm) == (36,7)
     @test comm[tax[5], mss[5]] == 0.0    
-#   @test type(metaphlan_profiles("files/metaphlan_multi_test.tsv")) <: CommunityProfile
 end
 
 

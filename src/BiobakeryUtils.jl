@@ -15,6 +15,7 @@ export
     humann2_barplot,
     humann2_barplots,
     qvalue!
+    findclade
 
 using DataFrames
 using Statistics
