@@ -20,7 +20,7 @@ end
     mat = Matrix(select(table, Not("taxname")))
     tax = [parsetaxon.(str) for str in table.taxname]
     mss = MicrobiomeSample.(names(table)[2:end])
-    cp = CommunityProfile(sparse(mat), tax , mss) # sparse turns matrix into sparse matrix
+    comm = CommunityProfile(sparse(mat), tax , mss) # sparse turns matrix into sparse matrix
     @test size(cp) == (36,7)
     @test cp[tax[5], mss[5]] == 0.0    
 #   @test type(metaphlan_profiles("files/metaphlan_multi_test.tsv")) <: CommunityProfile
