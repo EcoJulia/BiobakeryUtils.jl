@@ -251,11 +251,19 @@ end
     g = :genus,
     s = :species,
     t = :subspecies)
+
+Examples
+≡≡≡≡≡≡≡≡≡≡
+
+```jldoctest findclade
+julia> findclade("k__Archaea|p__Euryarchaeota|c__Methanobacteria|o__Methanobacteriales|f__Methanobacteriaceae|g__Methanosphaera|s__Methanosphaera_stadtmanae|t__GCF_000012545", :kingdom)
+Taxon("Archaea", :kingdom)
+```
 """
 function findclade(taxstring::AbstractString, taxlevel::Symbol)
     splitStr = split(taxstring, "|")
-    for elt in splitStr
-        t = gettaxon(elt)
+    for element in splitStr
+        t = gettaxon(element)
         if taxlevel == clade(t)
             return t
         end
@@ -263,4 +271,11 @@ function findclade(taxstring::AbstractString, taxlevel::Symbol)
 end
 
 function findclade(taxstring::AbstractString, taxlevel::Int)
+    splitStr = split(taxstring, "|")
+    for element in splitStr
+        t = gettaxon(element)
+        if taxlevel == taxonlevels[clade(t)]
+            return t
+        end
+    end
 end
