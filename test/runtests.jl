@@ -55,19 +55,19 @@ end
 
 
 
-for t in ["test/files/metaphlan_single1.tsv","test/files/metaphlan_single2.tsv"]
-    fulltable = DataFrame(col1=String[])
-    df = import_abundance_table(t, delim='\t')
-    #println(t)
-    #println(df)
-    fulltable = outerjoin(fulltable,df,on=:col1)
-    println("Fulltable")
-    println(fulltable)
-end
+# for t in ["test/files/metaphlan_single1.tsv","test/files/metaphlan_single2.tsv"]
+#     fulltable = DataFrame(col1=String[])
+#     df = import_abundance_table(t, delim='\t')
+#     #println(t)
+#     #println(df)
+#     fulltable = outerjoin(fulltable,df,on=:col1)
+#     println("Fulltable")
+#     println(fulltable)
+# end
 
-fulltable = map(c -> eltype(c) <: Union{<:Number, Missing} ? collect(Missings.replace(c, 0)) : c, eachcol(fulltable))
-return fulltable
+# fulltable = map(c -> eltype(c) <: Union{<:Number, Missing} ? collect(Missings.replace(c, 0)) : c, eachcol(fulltable))
+# return fulltable
 
-import_abundance_table("test/files/metaphlan_single1.tsv")
-import_abundance_tables(["test/files/metaphlan_single1.tsv","test/files/metaphlan_single2.tsv"])
-clean_abundance_tables(["test/files/metaphlan_single1.tsv","test/files/metaphlan_single2.tsv"])
+# import_abundance_table("test/files/metaphlan_single1.tsv")
+# import_abundance_tables(["test/files/metaphlan_single1.tsv","test/files/metaphlan_single2.tsv"])
+# clean_abundance_tables(["test/files/metaphlan_single1.tsv","test/files/metaphlan_single2.tsv"])
