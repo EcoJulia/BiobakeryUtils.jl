@@ -2,9 +2,21 @@
 """
     import_abundance_table(file::AbstractString; delim::Char='\t')
 
-Given a file path or paths to abundance tables (eg humann2 or metaphlan2),
-create abundance table. Table is presumed to have samples in columns and
-features in rows. First column is taken as feature IDs.
+Given a file path (eg humann2 or metaphlan2), creates an abundance table. 
+A table is presumed to have samples in columns and features in rows. 
+First column is taken as feature IDs.
+```jldoctest taxfilter
+Examples
+≡≡≡≡≡≡≡≡≡≡
+julia> abund = import_abundance_table("filename.tsv")
+┌ Info: Importing abundance table
+└   file = "filename.tsv"
+1×1 DataFrame
+ Row │ colname                              
+     │ String                            
+─────┼────────────────────────────────────────────────────────
+   1 │ k__Bacteria
+```
 """
 function import_abundance_table(file::AbstractString; delim::Char='\t')
     @info "Importing abundance table" file
@@ -13,26 +25,70 @@ function import_abundance_table(file::AbstractString; delim::Char='\t')
     return df
 end
 
+"""
+    import_abundance_tables(files::Array{<:AbstractString, 1}; delim::Char='\t')
+
+Given file paths (eg humann2 or metaphlan2), create abundance table. 
+A table is presumed to have samples in columns and features in rows. 
+First column is taken as feature IDs.
+```jldoctest taxfilter
+Examples
+≡≡≡≡≡≡≡≡≡≡
+julia> abund = import_abundance_tables(["filename1.tsv", "filename2.tsv"])
+[ Info: Importing abundance tables
+┌ Info: Importing abundance table
+└   file = "filename1.tsv"
+┌ Info: Importing abundance table
+└   file = "filename2.tsv"
+2×1 DataFrame
+ Row │ col1                              
+     │ String                            
+─────┼───────────────────────────────────
+   1 │ k__Bacteria
+   2 │ k__Archaea
+```
+"""
+
 function import_abundance_tables(files::Array{<:AbstractString, 1}; delim::Char='\t')
     @info "Importing abundance tables"
     fulltable = DataFrame(col1=String[])
     for t in files
         df = import_abundance_table(t, delim=delim)
-        fulltable = join(fulltable, df, on=:col1, kind=:outer)
+        # Qn: kept getting the "ERROR: LoadError: ArgumentError: join function for data frames is not supported" 
+        # Changed join to outerjoin and removed kind=:outer (changed line 59 into line 60)
+        # fulltable = join(fulltable, df, on=:col1, kind=:outer) 
+        fulltable = outerjoin(fulltable, df, on=:col1)
     end
 
     # replace all missing values (from joins) with 0.
-    fulltable = map(c -> eltype(c) <: Union{<:Number, Missing} ? collect(Missings.replace(c, 0)) : c, eachcol(fulltable))
+    fulltable = map(c -> eltype(c) <: Union{<:Number, Missing} ? collect(Missings.replace(c, 0)) : c, eachcol(fulltable)) # Qn: this turns the table into a vector - not sure if this is how it should work
     return fulltable
 end
 
+"""
+    clean_abundance_tables(files::Array{String, 1};
+                            delim::Char='\t',
+                            col1::Symbol=:taxon,
+                            suffix::String="_taxonomic_profile")
+                            
+Given file paths (eg humann2 or metaphlan2), renames tables. 
+A table is presumed to have samples in columns and features in rows.
+```jldoctest taxfilter
+Examples
+≡≡≡≡≡≡≡≡≡≡
+julia> clean = clean_abundance_tables(["filename1.tsv", "filename2.tsv"])
+
+
+```
+"""
 
 function clean_abundance_tables(files::Array{String, 1};
                         delim::Char='\t',
                         col1::Symbol=:taxon,
                         suffix::String="_taxonomic_profile")
     @info "Cleaning"
-    t = import_abundance_tables(files, delim=delim)
+    t = import_abundance_tables(files, delim=delim) 
+    # since import_abundance_tables returns a vector, this gives the "ERROR: MethodError: no method matching rename!(::Vector{Vector{String}}, ::Pair{Symbol, Symbol})"
 
     rename!(t, :col1 => col1)
     rename!(n-> Symbol(replace(String(n), suffix => "")), t)
@@ -40,6 +96,29 @@ function clean_abundance_tables(files::Array{String, 1};
     return t
 end
 
+"""
+    rm_strat!(df::DataFrame; col::Union{Int, Symbol}=1)
+
+Given an abundance table, classifies each feature into its own row.
+```jldoctest taxfilter
+Examples
+≡≡≡≡≡≡≡≡≡≡
+julia> t = import_abundance_table("filename.tsv")
+┌ Info: Importing abundance table
+└   file = "filename.tsv"
+1×1 DataFrame
+ Row │ col1                               sample1_taxonomic_profile 
+     │ String                             Float64                   
+─────┼────────────────────────────────────────────────────────────────────────────────
+   1 │ k__Archaea                                           0.0
+julia> rm_strat!(t)
+1×1 DataFrame
+ Row │ col1         sample1_taxonomic_profile  sample2_taxonomic_profile  sample3_taxonomic_profile  sample4_taxonomic_profile  sample5_taxonomic_profile  sample6_taxonomic_profile  sample7_t ⋯
+     │ String       Float64                    Float64                    Float64                    Float64                    Float64                    Float64                    Float64   ⋯
+─────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ k__Archaea                         0.0                        0.0                     0.0                        0.0                           0.0                     0.0               ⋯
+```
+"""
 
 function rm_strat!(df::DataFrame; col::Union{Int, Symbol}=1)
     filter!(row->!occursin(r"\|", row[1]), df)

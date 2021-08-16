@@ -8,6 +8,22 @@ using SparseArrays
 using DelimitedFiles
 using CSV
 
+@testset "Data Import" begin
+    abund = import_abundance_table("test/files/metaphlan_multi_test.tsv")
+    abund = import_abundance_tables(["test/files/metaphlan_single1.tsv","test/files/metaphlan_single2.tsv"])
+    @test typeof(abund) <: DataFrame
+    @test size(abund) == (42, 8)
+    spec = taxfilter(abund, keepunidentified=true)
+    @test size(spec) == (15, 8)
+    phyl = taxfilter(abund, :phylum)
+    @test size(phyl) == (2, 8)
+    @test !any(occursin.("|", phyl[!, 1]))
+    taxfilter!(abund, 2)
+    @test abund == phyl
+
+end
+
+
 @testset "Metaphlan" begin
     @test parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria", 2) == Taxon("Euryarchaeota", :phylum)
     @test parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria") == Taxon("Methanobacteria", :class)
@@ -26,19 +42,7 @@ end
 end
 
 
-@testset "Data Import" begin
-    abund = import_abundance_table("files/metaphlan_multi_test.tsv")
-    @test typeof(abund) <: DataFrame
-    @test size(abund) == (42, 8)
-    spec = taxfilter(abund, keepunidentified=true)
-    @test size(spec) == (15, 8)
-    phyl = taxfilter(abund, :phylum)
-    @test size(phyl) == (2, 8)
-    @test !any(occursin.("|", phyl[!, 1]))
-    taxfilter!(abund, 2)
-    @test abund == phyl
 
-end
 
 # @testset "Permanova" begin
 #     reval("install.packages('vegan')")
@@ -48,3 +52,22 @@ end
 #     @test typeof(p) == DataFrame
 #     @test size(p) == (3, 6)
 # end
+
+
+
+for t in ["test/files/metaphlan_single1.tsv","test/files/metaphlan_single2.tsv"]
+    fulltable = DataFrame(col1=String[])
+    df = import_abundance_table(t, delim='\t')
+    #println(t)
+    #println(df)
+    fulltable = outerjoin(fulltable,df,on=:col1)
+    println("Fulltable")
+    println(fulltable)
+end
+
+fulltable = map(c -> eltype(c) <: Union{<:Number, Missing} ? collect(Missings.replace(c, 0)) : c, eachcol(fulltable))
+return fulltable
+
+import_abundance_table("test/files/metaphlan_single1.tsv")
+import_abundance_tables(["test/files/metaphlan_single1.tsv","test/files/metaphlan_single2.tsv"])
+clean_abundance_tables(["test/files/metaphlan_single1.tsv","test/files/metaphlan_single2.tsv"])

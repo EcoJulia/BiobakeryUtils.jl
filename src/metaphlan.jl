@@ -298,7 +298,6 @@ function findclade(taxstring, taxlevel)
     end
 end
 
-             
 function gettaxon(elt)
     pieces = split(elt, "__")
     length(pieces) == 2 || error("incorrectly formatted name string: $elt")
