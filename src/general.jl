@@ -141,20 +141,3 @@ function permanova(dm::Array{<:Real,2}, metadata::AbstractDataFrame, nperm=999;
 
     return p
 end
-#==============
-PanPhlAn Utils
-==============#
-
-function panphlan_calcs(df::DataFrame)
-    abun = abundancetable(df)
-    dm = pairwise(Jaccard(), abun, dims=2)
-    rowdm = pairwise(Jaccard(), abun, dims=1)
-    col_clust = hclust(dm, :single)
-    row_clust = hclust(rowdm, :single)
-    optimalorder!(col_clust, dm)
-    optimalorder!(row_clust, rowdm)
-
-    mds = fit(MDS, dm, distances=true)
-
-    return abun, dm, col_clust, row_clust, mds
-end
