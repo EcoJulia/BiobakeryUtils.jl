@@ -19,7 +19,7 @@
 ## Description
 
 BiobakeryUtils.jl is a companion package for [Microbiome.jl](https://github.com/BioJulia/Microbiome.jl)
-for interacting with the [bioBakery](https://bitbucket.org/biobakery/biobakery/wiki/Home)
+for interacting with the [bioBakery](https://github.com/biobakery/biobakery/wiki)
 family of computational tools
 authored by the [Huttenhower Lab](http://huttenhower.sph.harvard.edu/) at Harvard.
 
