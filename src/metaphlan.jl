@@ -242,16 +242,19 @@ end
 """
     findclade(taxstring::AbstractString, taxlevel::Union{Int, Symbol})
 
-    Takes string and taxa level as arguments finds level in string:
-    k = :kingdom,
-    p = :phylum,
-    c = :class,
-    o = :order,
-    f = :family,
-    g = :genus,
-    s = :species,
-    t = :subspecies)
+Finds given taxon level in taxa string.
+    
+Levels may be given either as numbers or symbols:
 
+- `1` = `:Kingdom`
+- `2` = `:Phylum`
+- `3` = `:Class`
+- `4` = `:Order`
+- `5` = `:Family`
+- `6` = `:Genus`
+- `7` = `:Species`
+- `8` = `:Subspecies`
+    
 Examples
 ≡≡≡≡≡≡≡≡≡≡
 
