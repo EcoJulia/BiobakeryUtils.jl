@@ -9,8 +9,8 @@ using DelimitedFiles
 using CSV
 
 @testset "Data Import" begin
-    abund = import_abundance_table("test/files/metaphlan_multi_test.tsv")
-    abund = import_abundance_tables(["test/files/metaphlan_single1.tsv","test/files/metaphlan_single2.tsv"])
+    abund = import_abundance_table(joinpath(@__DIR__, "files/metaphlan_multi_test.tsv"))
+    abund = import_abundance_tables([joinpath(@__DIR__, "files/metaphlan_single1.tsv"), joinpath(@__DIR__, "files/metaphlan_single2.tsv")])
     @test typeof(abund) <: DataFrame
     @test size(abund) == (42, 8)
     spec = taxfilter(abund, keepunidentified=true)
@@ -55,7 +55,7 @@ end
 
 
 
-# for t in ["test/files/metaphlan_single1.tsv","test/files/metaphlan_single2.tsv"]
+# for t in [joinpath(__DIR__, "files/metaphlan_single1.tsv","test/files/metaphlan_single2.tsv"]
 #     fulltable = DataFrame(col1=String[])
 #     df = import_abundance_table(t, delim='\t')
 #     #println(t)
