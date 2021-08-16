@@ -243,6 +243,7 @@ end
     findclade(taxstring::AbstractString, taxlevel::Union{Int, Symbol})
 
 Finds given taxon level in taxa string.
+If taxon level not given, function will return last level.
     
 Levels may be given either as numbers or symbols:
 
@@ -264,6 +265,9 @@ Taxon("Archaea", :kingdom)
 
 julia> findclade("k__Archaea|p__Euryarchaeota|c__Methanobacteria", 2)
 Taxon("Euryarchaeota", :phylum)
+
+julia> findclade("k__Archaea|p__Euryarchaeota|c__Methanobacteria")
+Taxon("Methanobacteria", :class)
 ```
 """
 function findclade(taxstring::AbstractString, taxlevel::Union{Int, Symbol})
@@ -275,3 +279,5 @@ function findclade(taxstring::AbstractString, taxlevel::Union{Int, Symbol})
         end
     end
 end
+
+findclade(taxstring::AbstractString) = findclade(taxstring, length(split(taxstring, '|')))
