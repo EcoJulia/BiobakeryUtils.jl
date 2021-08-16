@@ -50,6 +50,10 @@ Option2: take vector of paths to single tables (eg ["test/files/metaphlan_single
     and make CommunityProfile
 """
 function metaphlan_profiles(tables)
+    for table in tables
+        #something 
+    end
+    return cp
 end
         
 """
