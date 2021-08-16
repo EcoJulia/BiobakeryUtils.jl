@@ -240,7 +240,7 @@ end
 
 
 """
-    findclade(taxstring::AbstractString, taxlevel::Union{Symbol})
+    findclade(taxstring::AbstractString, taxlevel::Union{Int, Symbol})
 
     Takes string and taxa level as arguments finds level in string:
     k = :kingdom,
@@ -252,7 +252,7 @@ end
     s = :species,
     t = :subspecies)
 """
-function findclade(taxstring, taxlevel)
+function findclade(taxstring::AbstractString, taxlevel::Symbol)
     splitStr = split(taxstring, "|")
     for elt in splitStr
         t = gettaxon(elt)
@@ -260,4 +260,7 @@ function findclade(taxstring, taxlevel)
             return t
         end
     end
+end
+
+function findclade(taxstring::AbstractString, taxlevel::Int)
 end
