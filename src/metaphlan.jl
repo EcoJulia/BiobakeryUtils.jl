@@ -256,25 +256,18 @@ Examples
 ≡≡≡≡≡≡≡≡≡≡
 
 ```jldoctest findclade
-julia> findclade("k__Archaea|p__Euryarchaeota|c__Methanobacteria|o__Methanobacteriales|f__Methanobacteriaceae|g__Methanosphaera|s__Methanosphaera_stadtmanae|t__GCF_000012545", :kingdom)
+julia> findclade("k__Archaea|p__Euryarchaeota|c__Methanobacteria", :kingdom)
 Taxon("Archaea", :kingdom)
+
+julia> findclade("k__Archaea|p__Euryarchaeota|c__Methanobacteria", 2)
+Taxon("Euryarchaeota", :phylum)
 ```
 """
-function findclade(taxstring::AbstractString, taxlevel::Symbol)
+function findclade(taxstring::AbstractString, taxlevel::Union{Int, Symbol})
     splitStr = split(taxstring, "|")
     for element in splitStr
         t = gettaxon(element)
-        if taxlevel == clade(t)
-            return t
-        end
-    end
-end
-
-function findclade(taxstring::AbstractString, taxlevel::Int)
-    splitStr = split(taxstring, "|")
-    for element in splitStr
-        t = gettaxon(element)
-        if taxlevel == taxonlevels[clade(t)]
+        if taxlevel == clade(t) || taxlevel == taxonlevels[clade(t)]
             return t
         end
     end
