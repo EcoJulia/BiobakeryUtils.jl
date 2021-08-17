@@ -11,6 +11,11 @@ using CSV
 @testset "Metaphlan" begin
     @test parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria", 2) == Taxon("Euryarchaeota", :phylum)
     @test parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria") == Taxon("Methanobacteria", :class)
+
+    taxstring = "k__Archaea|p__Euryarchaeota|c__Methanobacteria|o__Methanobacteriales|f__Methanobacteriaceae|g__Methanobrevibacter|s__Methanobrevibacter_smithii|t__Methanobrevibacter_smithii_unclassified"
+    @test findclade(taxstring) == Taxon("Methanobrevibacter_smithii_unclassified", :subspecies)
+    @test findclade(taxstring, 4) == Taxon("Methanobacteriales", :order)
+    @test findclade(taxstring, :genus) == Taxon("Methanobrevibacter", :genus)
 end
 
 @testset "CommunityProfile Testing" begin

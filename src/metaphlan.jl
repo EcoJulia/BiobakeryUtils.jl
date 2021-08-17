@@ -240,24 +240,44 @@ end
 
 
 """
-    findclade(taxstring::AbstractString, taxlevel::Union{Symbol})
+    findclade(taxstring::AbstractString, taxlevel::Union{Int, Symbol})
 
-    Takes string and taxa level as arguments finds level in string:
-    k = :kingdom,
-    p = :phylum,
-    c = :class,
-    o = :order,
-    f = :family,
-    g = :genus,
-    s = :species,
-    t = :subspecies)
+Finds given taxon level in taxa string.
+If taxon level not given, function will return last level.
+    
+Levels may be given either as numbers or symbols:
+
+- `1` = `:Kingdom`
+- `2` = `:Phylum`
+- `3` = `:Class`
+- `4` = `:Order`
+- `5` = `:Family`
+- `6` = `:Genus`
+- `7` = `:Species`
+- `8` = `:Subspecies`
+    
+Examples
+≡≡≡≡≡≡≡≡≡≡
+
+```jldoctest findclade
+julia> findclade("k__Archaea|p__Euryarchaeota|c__Methanobacteria", :kingdom)
+Taxon("Archaea", :kingdom)
+
+julia> findclade("k__Archaea|p__Euryarchaeota|c__Methanobacteria", 2)
+Taxon("Euryarchaeota", :phylum)
+
+julia> findclade("k__Archaea|p__Euryarchaeota|c__Methanobacteria")
+Taxon("Methanobacteria", :class)
+```
 """
-function findclade(taxstring, taxlevel)
+function findclade(taxstring::AbstractString, taxlevel::Union{Int, Symbol})
     splitStr = split(taxstring, "|")
-    for elt in splitStr
-        t = gettaxon(elt)
-        if taxlevel == clade(t)
+    for element in splitStr
+        t = gettaxon(element)
+        if taxlevel == clade(t) || taxlevel == taxonlevels[clade(t)]
             return t
         end
     end
 end
+
+findclade(taxstring::AbstractString) = findclade(taxstring, length(split(taxstring, '|')))
