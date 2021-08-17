@@ -13,6 +13,14 @@ using CSV
     @test length(clades) == 8
     @test clades[3] == Taxon("Methanobacteria", :class)
 
+    taxstring = "k__Archaea|p__Euryarchaeota|c__Methanobacteria|o__Methanobacteriales|f__Methanobacteriaceae|g__Methanobrevibacter|s__Methanobrevibacter_smithii"
+    taxa = parsetaxa(taxstring)
+    @test length(taxa) == 7
+    @test parsetaxon(taxstring, 1) == Taxon("Archaea", :kingdom)
+    @test parsetaxon(taxstring, :family) == Taxon("Methanobacteriaceae", :family)
+    @test parsetaxon(taxstring) == Taxon("Methanobrevibacter_smithii", :species)
+    @test_throws ArgumentError parsetaxon(taxstring, 8)
+
     @test parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria", 2) == Taxon("Euryarchaeota", :phylum)
     @test parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria") == Taxon("Methanobacteria", :class)
 end
