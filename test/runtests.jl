@@ -9,6 +9,10 @@ using DelimitedFiles
 using CSV
 
 @testset "Metaphlan" begin
+    clades = _split_clades("k__Archaea|p__Euryarchaeota|c__Methanobacteria|o__Methanobacteriales|f__Methanobacteriaceae|g__Methanosphaera|s__Methanosphaera_stadtmanae|t__GCF_000012545")
+    @test length(clades) == 8
+    @test clades[3] == Taxon("Methanobacteria", :class)
+
     @test parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria", 2) == Taxon("Euryarchaeota", :phylum)
     @test parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria") == Taxon("Methanobacteria", :class)
 end

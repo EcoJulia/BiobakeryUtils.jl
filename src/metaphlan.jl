@@ -22,6 +22,24 @@ const shortlevels = (
     s = :species,
     t = :subspecies)
 
+"""
+    _split_clades(clade_string::AbstractString)
+
+Given a string of taxa, separates taxon levels into elements of type Taxon in a vector.
+
+Examples
+≡≡≡≡≡≡≡≡≡≡
+
+```jldoctest _split_clades
+julia> _split_clades("k__Bacteria|p__Actinobacteria|c__Actinobacteria|o__Actinomycetales")
+4-element Vector{Taxon}:
+ Taxon("Bacteria", :kingdom)
+ Taxon("Actinobacteria", :phylum)
+ Taxon("Actinobacteria", :class)
+ Taxon("Actinomycetales", :order)
+```
+"""
+
 function _split_clades(clade_string)
     clades = split(clade_string, '|')
     taxa = Taxon[]

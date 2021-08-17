@@ -4,6 +4,7 @@ export
     import_abundance_tables,
     import_abundance_table,
     clean_abundance_tables,
+    _split_clades,
     taxfilter,
     taxfilter!,
     parsetaxa,
