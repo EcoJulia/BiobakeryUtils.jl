@@ -58,14 +58,14 @@ end
 Filter a MetaPhlAn table (as DataFrame) to a particular taxon level.
 Levels may be given either as numbers or symbols:
 
-- `1` = `:Kingdom`
-- `2` = `:Phylum`
-- `3` = `:Class`
-- `4` = `:Order`
-- `5` = `:Family`
-- `6` = `:Genus`
-- `7` = `:Species`
-- `8` = `:Subspecies`
+- `1` = `:kingdom`
+- `2` = `:phylum`
+- `3` = `:class`
+- `4` = `:order`
+- `5` = `:family`
+- `6` = `:genus`
+- `7` = `:species`
+- `8` = `:subspecies`
 
 Taxon level is removed from resulting taxon string, eg.
 `g__Bifidobacterium` becomes `Bifidobacterium`.
@@ -172,34 +172,32 @@ end
 """
     parsetaxon(taxstring::AbstractString, taxlevel::Union{Int, Symbol})
 
-    Levels may be given either as numbers or symbols:
+Finds given taxonomic level in a string (as formatted by MetaPhlAn (eg "k__Bacteria|p__Proteobacteria...")) and returns the clade and taxonomic level as a Taxon.
+If taxon level not given, function will return the most specific (lowest) taxonomic level available.
 
-- `1` = `:Kingdom`
-- `2` = `:Phylum`
-- `3` = `:Class`
-- `4` = `:Order`
-- `5` = `:Family`
-- `6` = `:Genus`
-- `7` = `:Species`
-- `8` = `:Subspecies`
+Levels may be given either as numbers or symbols:
+
+- `1` = `:kingdom`
+- `2` = `:phylum`
+- `3` = `:class`
+- `4` = `:order`
+- `5` = `:family`
+- `6` = `:genus`
+- `7` = `:species`
+- `8` = `:subspecies`
 
 Examples
 ≡≡≡≡≡≡≡≡≡≡
-
-```jldoctest parsetaxa
- julia> parsetaxa("k__Archaea|p__Euryarchaeota|c__Methanobacteria"; throw_error = true)
- 3-element Vector{Tuple{String, Symbol}}:
- ("Archaea", :kingdom)
- ("Euryarchaeota", :phylum)
- ("Methanobacteria", :class)
- ```
  
- ```jldoctest parsetaxon
- julia> parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria", 2)
- ("Euryarchaeota", :phylum)
+```jldoctest parsetaxon
+julia> parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria", 2)
+Taxon("Euryarchaeota", :phylum)
 
- julia> parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria")
- ("Methanobacteria", :class)
+julia> parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria", :kingdom)
+Taxon("Archaea", :kingdom)
+
+julia> parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria")
+Taxon("Methanobacteria", :class)
 ```
 """
 function parsetaxon(taxstring::AbstractString; throw_error=true)
@@ -215,6 +213,22 @@ end
 
 parsetaxon(taxstring::AbstractString, taxlevel::Symbol) = parsetaxon(taxstring, taxonlevels[taxlevel])
 
+"""
+    parsetaxa(taxstring::AbstractString; throw_error=true)
+
+Given a string representing taxonmic levels as formatted by MetaPhlAn (eg "k__Bacteria|p__Proteobacteria..."), separates taxonomic levels into elements of type Taxon in a vector.
+
+Examples
+≡≡≡≡≡≡≡≡≡≡
+
+```jldoctest parsetaxa
+julia> parsetaxa("k__Archaea|p__Euryarchaeota|c__Methanobacteria"; throw_error = true)
+3-element Vector{Taxon}:
+ Taxon("Archaea", :kingdom)
+ Taxon("Euryarchaeota", :phylum)
+ Taxon("Methanobacteria", :class)
+```
+"""
 function parsetaxa(taxstring::AbstractString; throw_error=true)
     taxa = split(taxstring, '|')
     return map(t-> Taxon(t...), _shortname.(taxa, throw_error=throw_error))
