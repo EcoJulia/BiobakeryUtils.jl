@@ -58,14 +58,14 @@ end
 Filter a MetaPhlAn table (as DataFrame) to a particular taxon level.
 Levels may be given either as numbers or symbols:
 
-- `1` = `:Kingdom`
-- `2` = `:Phylum`
-- `3` = `:Class`
-- `4` = `:Order`
-- `5` = `:Family`
-- `6` = `:Genus`
-- `7` = `:Species`
-- `8` = `:Subspecies`
+- `1` = `:kingdom`
+- `2` = `:phylum`
+- `3` = `:class`
+- `4` = `:order`
+- `5` = `:family`
+- `6` = `:genus`
+- `7` = `:species`
+- `8` = `:subspecies`
 
 Taxon level is removed from resulting taxon string, eg.
 `g__Bifidobacterium` becomes `Bifidobacterium`.
@@ -172,19 +172,19 @@ end
 """
     parsetaxon(taxstring::AbstractString, taxlevel::Union{Int, Symbol})
 
-Finds given taxon level in taxa string and returns the clade and level as a Taxon.
-If taxon level not given, function will return last level.
+Finds given taxonomic level in a string (as formatted by MetaPhlAn (eg "k__Bacteria|p__Proteobacteria...")) and returns the clade and taxonomic level as a Taxon.
+If taxon level not given, function will return the most specific (lowest) taxonomic level available.
 
 Levels may be given either as numbers or symbols:
 
-- `1` = `:Kingdom`
-- `2` = `:Phylum`
-- `3` = `:Class`
-- `4` = `:Order`
-- `5` = `:Family`
-- `6` = `:Genus`
-- `7` = `:Species`
-- `8` = `:Subspecies`
+- `1` = `:kingdom`
+- `2` = `:phylum`
+- `3` = `:class`
+- `4` = `:order`
+- `5` = `:family`
+- `6` = `:genus`
+- `7` = `:species`
+- `8` = `:subspecies`
 
 Examples
 ≡≡≡≡≡≡≡≡≡≡
@@ -216,7 +216,7 @@ parsetaxon(taxstring::AbstractString, taxlevel::Symbol) = parsetaxon(taxstring, 
 """
     parsetaxa(taxstring::AbstractString; throw_error=true)
 
-Given a string of taxa, separates taxon levels into elements of type Taxon in a vector.
+Given a string representing taxonmic levels as formatted by MetaPhlAn (eg "k__Bacteria|p__Proteobacteria..."), separates taxonomic levels into elements of type Taxon in a vector.
 
 Examples
 ≡≡≡≡≡≡≡≡≡≡
@@ -229,7 +229,6 @@ julia> parsetaxa("k__Archaea|p__Euryarchaeota|c__Methanobacteria"; throw_error =
  Taxon("Methanobacteria", :class)
 ```
 """
-
 function parsetaxa(taxstring::AbstractString; throw_error=true)
     taxa = split(taxstring, '|')
     return map(t-> Taxon(t...), _shortname.(taxa, throw_error=throw_error))
