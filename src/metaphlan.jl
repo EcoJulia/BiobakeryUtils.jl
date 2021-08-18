@@ -290,19 +290,19 @@ Taxon("Archaea", :kingdom)
 """
 function findclade(taxstring, taxlevel)
     splitStr = split(taxstring, "|")
-    for elt in splitStr
-        t = gettaxon(elt)
+    for string in splitStr
+        t = gettaxon(string)
         if taxlevel == clade(t)
             return t
         end
     end
 end
 
-function gettaxon(elt)
-    pieces = split(elt, "__")
-    length(pieces) == 2 || error("incorrectly formatted name string: $elt")
-    (lev, name) = pieces
+function gettaxon(string)
+    clades = split(string, "__")
+    length(clades) == 2 || error("incorrectly formatted name string: $string")
+    (lev, name) = clades
     lev_abr = Symbol(lev)
-    lev_abr in keys(shortlevels) || error("Invalid taxon abbreviation: $lev_abr in name $elt")
+    lev_abr in keys(shortlevels) || error("Invalid taxon abbreviation: $lev_abr in name $string")
     return Taxon(name, shortlevels[lev_abr])
 end
