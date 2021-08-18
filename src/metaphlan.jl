@@ -43,13 +43,19 @@ end
 
 
 """
-Option1: take a path to merged table (eg test/files/metaphlan_multi_profile.tsv)
+Option1: take a path to merged table (eg test/files/metaphlan_multi_test.tsv)
     and make CommunityProfile
 
-Option2: take vector of paths to single tables (eg ["test/files/metaphlan_single1_profile.tsv", "test/files/metaphlan_single2_profile.tsv"])
+Option2: take vector of paths to single tables (eg ["test/files/metaphlan_single1.tsv", "test/files/metaphlan_single2.tsv"])
     and make CommunityProfile
 """
-function metaphlan_profiles(tables)
+function metaphlan_profiles(path::AbstractString; level=:all)
+    profiles = CSV.read(path, DataFrame)
+    taxa = [last(_split_clades(c)) for c in profiles[:, "#SampleID"]]
+    mat = sparse(Matrix(profiles[:, 2:end]))
+    samples = MicrobiomeSample.(first.(split.(names(profiles[:, 2:end]), "_")))
+    keep = level == :all ? Colon() : [ismissing(c) || c == level for c in clade.(taxa)]
+    return CommunityProfile(mat[keep, :], taxa[keep], samples)
 end
         
 """
