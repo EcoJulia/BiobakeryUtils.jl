@@ -242,19 +242,19 @@ end
 """
     findclade(taxstring::AbstractString, taxlevel::Union{Int, Symbol})
 
-Finds given taxon level in taxa string.
-If taxon level not given, function will return last level.
-    
+Finds given taxonomic level in a string (as formatted by MetaPhlAn (eg "k__Bacteria|p__Proteobacteria...")) and returns the clade and taxonomic level as a Taxon.
+If taxon level not given, function will return the most specific (lowest) taxonomic level available.
+
 Levels may be given either as numbers or symbols:
 
-- `1` = `:Kingdom`
-- `2` = `:Phylum`
-- `3` = `:Class`
-- `4` = `:Order`
-- `5` = `:Family`
-- `6` = `:Genus`
-- `7` = `:Species`
-- `8` = `:Subspecies`
+- `1` = `:kingdom`
+- `2` = `:phylum`
+- `3` = `:class`
+- `4` = `:order`
+- `5` = `:family`
+- `6` = `:genus`
+- `7` = `:species`
+- `8` = `:subspecies`
     
 Examples
 ≡≡≡≡≡≡≡≡≡≡
