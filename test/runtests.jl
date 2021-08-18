@@ -8,6 +8,11 @@ using SparseArrays
 using DelimitedFiles
 using CSV
 
+@testset "Metaphlan" begin
+    @test parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria", 2) == Taxon("Euryarchaeota", :phylum)
+    @test parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria") == Taxon("Methanobacteria", :class)
+end
+
 @testset "Data Import" begin
     abund = import_abundance_table("test/files/metaphlan_multi_test.tsv")
     abund = import_abundance_tables(["test/files/metaphlan_single1.tsv","test/files/metaphlan_single2.tsv"])
