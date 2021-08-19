@@ -57,6 +57,14 @@ function metaphlan_profiles(path::AbstractString, level=:all)
     keep = level == :all ? Colon() : [ismissing(c) || c == level for c in clade.(taxa)]
     return CommunityProfile(mat[keep, :], taxa[keep], samples)
 end
+
+function metaphlan_profiles(paths::Array{<:AbstractString, 1})
+    profiles = []
+    for t in paths 
+        push!(profiles, metaphlan_profile(t))
+    end
+    commjoin(profiles...)
+end
         
 """
     taxfilter!(df::DataFrame, level::Union{Int, Symbol}; keepunidentified::Bool)
