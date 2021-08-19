@@ -98,29 +98,36 @@ end
 """
     rm_strat!(df::DataFrame; col::Union{Int, Symbol}=1)
 
-Given an abundance table, classifies each feature into its own row.
+Given an abundance table, makes a CommunityProfile that shows the total abundances at the kingdom taxonomic-level.
 ```jldoctest taxfilter
 Examples
 ≡≡≡≡≡≡≡≡≡≡
-julia> t = import_abundance_table("filename.tsv")
-┌ Info: Importing abundance table
-└   file = "filename.tsv"
-1×1 DataFrame
- Row │ col1                               sample1_taxonomic_profile 
-     │ String                             Float64                   
-─────┼────────────────────────────────────────────────────────────────────────────────
-   1 │ k__Archaea                                           0.0
-julia> rm_strat!(t)
-1×1 DataFrame
- Row │ col1         sample1_taxonomic_profile  sample2_taxonomic_profile  sample3_taxonomic_profile  sample4_taxonomic_profile  sample5_taxonomic_profile  sample6_taxonomic_profile  sample7_t ⋯
-     │ String       Float64                    Float64                    Float64                    Float64                    Float64                    Float64                    Float64   ⋯
-─────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-   1 │ k__Archaea                         0.0                        0.0                     0.0                        0.0                           0.0                     0.0               ⋯
+julia> table
+2×4 DataFrame
+ Row │ taxname      sample1_taxonomic_profile  sample2_taxonomic_profile  sample3_taxonomic_profile  
+     │ String       Float64                    Float64                    Float64                                      
+─────┼───────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ taxa1                         0.0                        0.0                   14.13558                                              
+   2 │ taxa2                       100.0                      100.0                          0                             
+
+julia> rm_strat!(table)
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 2 things in 3 places
+   
+Thing names:
+taxa1, taxa2
+   
+Place names:
+sample1_taxonomic_profile, sample2_taxonomic_profile, sample3_taxonomic_profile
+   
 ```
 """
 
 function rm_strat!(df::DataFrame; col::Union{Int, Symbol}=1)
-    filter!(row->!occursin(r"\|", row[1]), df)
+    table=filter!(row->!occursin(r"\|", row[1]), df)
+    mat = Matrix(select(table, Not(col)))
+    tax = [parsetaxon.(str) for str in table.taxname]
+    mss = MicrobiomeSample.(names(table)[2:end])
+    comm = CommunityProfile(sparse(mat), tax , mss)
 end
 
 

@@ -40,7 +40,7 @@ function metaphlan_profile(path::AbstractString; sample=basename(first(splitext(
     keep = level == :all ? Colon() : [ismissing(c) || c == level for c in clade.(taxa)]
     return CommunityProfile(mat[keep, :], taxa[keep], [sample])
 end
-
+#Qn - are the headers always going to be the same
 
 """
 Option1: take a path to merged table (eg test/files/metaphlan_multi_profile.tsv)
@@ -262,47 +262,5 @@ function parsetaxa(taxstring::AbstractString; throw_error=true)
     taxa = split(taxstring, '|')
     return map(t-> Taxon(t...), _shortname.(taxa, throw_error=throw_error))
 end
-# Question? 
-# I kept getting an "ERROR: error in method definition: function BiobakeryUtils.parsetaxa must be explicitly imported to be extended"
-# And I resolved it by running import BiobakeryUtils.parsetaxa in the terminal
-# Why did this error only come on this function and not the others? 
 
-"""
-    findclade(taxstring::AbstractString, taxlevel::Union{Symbol})
 
-    Takes string and taxa level as arguments finds level in string:
-    k = :kingdom,
-    p = :phylum,
-    c = :class,
-    o = :order,
-    f = :family,
-    g = :genus,
-    s = :species,
-    t = :subspecies)
-
-Examples
-≡≡≡≡≡≡≡≡≡≡
- 
-```jldoctest findclade
-julia> findclade("k__Archaea|p__Euryarchaeota|c__Methanobacteria", :kingdom)
-Taxon("Archaea", :kingdom)
-```
-"""
-function findclade(taxstring, taxlevel)
-    splitStr = split(taxstring, "|")
-    for string in splitStr
-        t = gettaxon(string)
-        if taxlevel == clade(t)
-            return t
-        end
-    end
-end
-
-function gettaxon(string)
-    clades = split(string, "__")
-    length(clades) == 2 || error("incorrectly formatted name string: $string")
-    (lev, name) = clades
-    lev_abr = Symbol(lev)
-    lev_abr in keys(shortlevels) || error("Invalid taxon abbreviation: $lev_abr in name $string")
-    return Taxon(name, shortlevels[lev_abr])
-end
