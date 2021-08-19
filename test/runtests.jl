@@ -14,8 +14,8 @@ using CSV
 end
 
 @testset "Data Import" begin
-    abund = import_abundance_table("test/files/metaphlan_multi_test.tsv")
-    abund = import_abundance_tables(["test/files/metaphlan_single1.tsv","test/files/metaphlan_single2.tsv"])
+    abund = import_abundance_table("files/metaphlan_multi_test.tsv")
+    abund = import_abundance_tables(["files/metaphlan_single1.tsv","test/files/metaphlan_single2.tsv"])
     @test typeof(abund) <: DataFrame
     @test size(abund) == (42, 8)
     spec = taxfilter(abund, keepunidentified=true)
@@ -34,8 +34,8 @@ end
 end
 
 @testset "add_metadata!" begin
-    comm=metaphlan_profile("test/files/metaphlan_single1.tsv")    
-    add_metadata!(comm, "test/files/metaphlan_single2.tsv")    
+    comm=metaphlan_profile("files/metaphlan_single1.tsv")    
+    add_metadata!(comm, "files/metaphlan_single2.tsv")    
     @test typeof(comm) <: CommunityProfile
 end
 
@@ -43,7 +43,7 @@ end
     
 #Replace all this with metaphlanprofile
     
-    table = CSV.read("test/files/metaphlan_multi_test.tsv", DataFrame, delim = "\t",
+    table = CSV.read("files/metaphlan_multi_test.tsv", DataFrame, delim = "\t",
     header =["#SampleID", "sample1_taxonomic_profile", "sample2_taxonomic_profile", "sample3_taxonomic_profile", "sample4_taxonomic_profile", "sample5_taxonomic_profile", "sample6_taxonomic_profile", "sample7_taxonomic_profile"], datarow = 2)
     rename!(table, "#SampleID" => "taxname")
     mat = Matrix(select(table, Not("taxname")))
