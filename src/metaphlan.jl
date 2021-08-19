@@ -32,7 +32,7 @@ function _split_clades(clade_string)
     return taxa
 end
 
-function metaphlan_profile(path::AbstractString; sample=basename(first(splitext(path))), level=:all)
+function metaphlan_profile(path::AbstractString, level=:all; sample=basename(first(splitext(path))))
     profile = CSV.read(path, datarow=5, header=["clade", "NCBI_taxid", "abundance", "additional_species"], Tables.columntable)
     taxa = [last(_split_clades(c)) for c in profile.clade]
     mat = sparse(reshape(profile.abundance, length(profile.abundance), 1))
