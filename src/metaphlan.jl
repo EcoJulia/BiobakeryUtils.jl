@@ -49,7 +49,7 @@ Option1: take a path to merged table (eg test/files/metaphlan_multi_test.tsv)
 Option2: take vector of paths to single tables (eg ["test/files/metaphlan_single1.tsv", "test/files/metaphlan_single2.tsv"])
     and make CommunityProfile
 """
-function metaphlan_profiles(path::AbstractString, level=:all)
+function metaphlan_profiles(path::AbstractString, level=:all; keepunidentified=false)
     profiles = CSV.read(path, DataFrame)
     taxa = [last(_split_clades(c)) for c in profiles[:, "#SampleID"]]
     mat = sparse(Matrix(profiles[:, 2:end]))
