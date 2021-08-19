@@ -53,7 +53,7 @@ function metaphlan_profiles(path::AbstractString; level=:all)
     profiles = CSV.read(path, DataFrame)
     taxa = [last(_split_clades(c)) for c in profiles[:, "#SampleID"]]
     mat = sparse(Matrix(profiles[:, 2:end]))
-    samples = MicrobiomeSample.(first.(split.(names(profiles[:, 2:end]), "_")))
+    samples = MicrobiomeSample.(replace.(names(profiles[:, 2:end]), Ref("_profile" => "")))
     keep = level == :all ? Colon() : [ismissing(c) || c == level for c in clade.(taxa)]
     return CommunityProfile(mat[keep, :], taxa[keep], samples)
 end
