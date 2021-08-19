@@ -28,19 +28,20 @@ end
 
 end
 
+@testset "rm_strat!" begin
+    comm = rm_strat!(abund, col=1)
+    @test typeof(comm) <: CommunityProfile
+end
 
-# @testset "rm_strat!" begin
-    
-#     end
-
-# @testset "addmetadata!" begin
-    
-#     end
+@testset "add_metadata!" begin
+    comm=metaphlan_profile("test/files/metaphlan_single1.tsv")    
+    add_metadata!(comm, "test/files/metaphlan_single2.tsv")    
+    @test typeof(comm) <: CommunityProfile
+end
 
 @testset "CommunityProfile Testing" begin
     
 #Replace all this with metaphlanprofile
-    ###
     
     table = CSV.read("test/files/metaphlan_multi_test.tsv", DataFrame, delim = "\t",
     header =["#SampleID", "sample1_taxonomic_profile", "sample2_taxonomic_profile", "sample3_taxonomic_profile", "sample4_taxonomic_profile", "sample5_taxonomic_profile", "sample6_taxonomic_profile", "sample7_taxonomic_profile"], datarow = 2)
@@ -49,9 +50,6 @@ end
     tax = [parsetaxon.(str) for str in table.taxname]
     mss = MicrobiomeSample.(names(table)[2:end])
     comm = CommunityProfile(sparse(mat), tax , mss) # sparse turns matrix into sparse matrix
-
-    ####
-
     @test size(comm) == (42,7)
     @test comm[tax[5], mss[5]] == 0.0    
 end

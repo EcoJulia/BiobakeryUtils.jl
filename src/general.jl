@@ -125,7 +125,7 @@ sample1_taxonomic_profile, sample2_taxonomic_profile, sample3_taxonomic_profile
 function rm_strat!(df::DataFrame; col::Union{Int, Symbol}=1)
     table=filter!(row->!occursin(r"\|", row[1]), df)
     mat = Matrix(select(table, Not(col)))
-    tax = [parsetaxon.(str) for str in table.taxname]
+    tax = [parsetaxon.(str) for str in table.col]
     mss = MicrobiomeSample.(names(table)[2:end])
     comm = CommunityProfile(sparse(mat), tax , mss)
 end
