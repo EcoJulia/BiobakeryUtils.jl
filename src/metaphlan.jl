@@ -64,8 +64,6 @@ function metaphlan_profiles(path::AbstractString, level=:all; keepunidentified=f
     return CommunityProfile(mat[keep, :], taxa[keep], samples)
 end
 
-keepunidentified ? ismissing(cl) || taxonlevels[cl] == level : level == taxonlevels[cl]
-
 function metaphlan_profiles(paths::Array{<:AbstractString, 1})
     profiles = []
     for t in paths 
