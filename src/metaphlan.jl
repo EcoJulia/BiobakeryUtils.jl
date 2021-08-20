@@ -20,13 +20,15 @@ const shortlevels = (
     f = :family,
     g = :genus,
     s = :species,
-    t = :subspecies)
+    t = :subspecies,
+    u = missing)
 
 function _split_clades(clade_string)
     clades = split(clade_string, '|')
     taxa = Taxon[]
     for clade in clades
-        (level, name) = split(clade, "__")
+        spl = split(clade, "__")
+        (level, name) = length(spl) == 1 ? ("u", spl[1]) : spl
         push!(taxa, Taxon(name, shortlevels[Symbol(level)]))
     end
     return taxa
@@ -59,7 +61,7 @@ function metaphlan_profiles(path::AbstractString, level=:all; keepunidentified=f
     elseif keepunidentified
         keep = [ismissing(c) || c == level for c in clade.(taxa)]
     else
-        keep = [c == level for c in clade.(taxa)]
+        keep = [!ismissing(c) && c == level for c in clade.(taxa)]
     end
     return CommunityProfile(mat[keep, :], taxa[keep], samples)
 end
