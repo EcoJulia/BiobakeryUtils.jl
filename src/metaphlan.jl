@@ -54,9 +54,17 @@ function metaphlan_profiles(path::AbstractString, level=:all; keepunidentified=f
     taxa = [last(_split_clades(c)) for c in profiles[:, "#SampleID"]]
     mat = sparse(Matrix(profiles[:, 2:end]))
     samples = MicrobiomeSample.(replace.(names(profiles[:, 2:end]), Ref("_profile" => "")))
-    keep = level == :all ? Colon() : [ismissing(c) || c == level for c in clade.(taxa)]
+    if level == :all
+        keep = Colon()
+    elseif keepunidentified
+        keep = [ismissing(c) || c == level for c in clade.(taxa)]
+    else
+        keep = [c == level for c in clade.(taxa)]
+    end
     return CommunityProfile(mat[keep, :], taxa[keep], samples)
 end
+
+keepunidentified ? ismissing(cl) || taxonlevels[cl] == level : level == taxonlevels[cl]
 
 function metaphlan_profiles(paths::Array{<:AbstractString, 1})
     profiles = []
