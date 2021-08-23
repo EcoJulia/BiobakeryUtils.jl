@@ -265,7 +265,7 @@ metaphlan_single1, metaphlan_single2
 function metaphlan_profiles(paths::Array{<:AbstractString, 1}, level=:all)
     profiles = []
     for path in paths 
-        push!(profiles, metaphlan_profile(path, level))
+        push!(profiles, metaphlan_profile(path, level;))
     end
     commjoin(profiles...)
 end
