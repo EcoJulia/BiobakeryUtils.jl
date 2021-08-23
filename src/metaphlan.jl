@@ -35,6 +35,23 @@ function _split_clades(clade_string)
 end
 
 """
+    metaphlan_profile(path::AbstractString, level::Union{Int, Symbol}=:all; sample::AbstractString=basename(first(splitext(path))))
+
+Compiles a MetaPhlAn file into a CommunityProfile.
+Can select data according to taxonomic level. If level not given, all data is compiled.
+"Place name" of the CommunityProfile can be specified by passing a `sample` argument. If name not given, the name of the file becomes the "Place name".
+
+Levels may be given either as numbers or symbols:
+
+- `1` = `:kingdom`
+- `2` = `:phylum`
+- `3` = `:class`
+- `4` = `:order`
+- `5` = `:family`
+- `6` = `:genus`
+- `7` = `:species`
+- `8` = `:subspecies`
+
 ```jldoctest metaphlan_profile
 
 Examples
