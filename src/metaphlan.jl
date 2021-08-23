@@ -34,6 +34,43 @@ function _split_clades(clade_string)
     return taxa
 end
 
+"""
+```jldoctest metaphlan_profile
+
+Examples
+≡≡≡≡≡≡≡≡≡≡
+julia> metaphlan_profile("test/files/metaphlan_single1.tsv")
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 96 things in 1 places
+
+Thing names:
+Bacteria, Firmicutes, Bacteroidetes...Lachnospira_pectinoschiza, Bacteroides_caccae
+
+Place names:
+metaphlan_single1
+
+
+
+julia> metaphlan_profile("test/files/metaphlan_single2.tsv", :genus)
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 40 things in 1 places
+
+Thing names:
+Prevotella, Roseburia, Faecalibacterium...Haemophilus, Lactococcus
+
+Place names:
+metaphlan_single2
+
+
+
+julia> metaphlan_profile("test/files/metaphlan_single2.tsv", :genus, sample = "sample2")
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 40 things in 1 places
+
+Thing names:
+Prevotella, Roseburia, Faecalibacterium...Haemophilus, Lactococcus
+
+Place names:
+sample2
+```
+"""
 function metaphlan_profile(path::AbstractString, level=:all; sample=basename(first(splitext(path))))
     profile = CSV.read(path, datarow=5, header=["clade", "NCBI_taxid", "abundance", "additional_species"], Tables.columntable)
     taxa = [last(_split_clades(c)) for c in profile.clade]
