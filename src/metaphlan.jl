@@ -51,28 +51,24 @@ Option2: take vector of paths to single tables (eg ["test/files/metaphlan_single
 """
 function metaphlan_profiles(tables)
 end
-        
+
 """
     taxfilter!(df::DataFrame, level::Union{Int, Symbol}; keepunidentified::Bool)
-
 Filter a MetaPhlAn table (as DataFrame) to a particular taxon level.
 Levels may be given either as numbers or symbols:
-
-- `1` = `:kingdom`
-- `2` = `:phylum`
-- `3` = `:class`
-- `4` = `:order`
-- `5` = `:family`
-- `6` = `:genus`
-- `7` = `:species`
-- `8` = `:subspecies`
-
+- `1` = `:Kingdom`
+- `2` = `:Phylum`
+- `3` = `:Class`
+- `4` = `:Order`
+- `5` = `:Family`
+- `6` = `:Genus`
+- `7` = `:Species`
+- `8` = `:Subspecies`
 Taxon level is removed from resulting taxon string, eg.
 `g__Bifidobacterium` becomes `Bifidobacterium`.
-
 Set `keepunidentified` flag to `false` to remove `UNIDENTIFIED` rows.
 
-`taxfilter!()` modifies the dataframe that you pass to it and `taxfilter()` doesn't.
+`taxfilter!()` modifies the dataframe.
 
 This function will also rename the taxa in the first column.
 
@@ -80,26 +76,6 @@ This function will also rename the taxa in the first column.
 
 Examples
 ≡≡≡≡≡≡≡≡≡≡
-julia> df
-4×2 DataFrame
- Row │ taxon                          abundance 
-     │ String                         Float64   
-─────┼──────────────────────────────────────────
-   1 │ k__Bacteria                     100.0
-   2 │ k__Bacteria|p__Firmicutes        63.1582
-   3 │ k__Bacteria|p__Bacteroidetes     25.6038
-   4 │ k__Bacteria|p__Actinobacteria    11.0898
-
-julia> taxfilter(df,2; keepunidentified=true)
-4×2 DataFrame
- Row │ taxon            abundance 
-     │ String           Float64   
-─────┼────────────────────────────
-   1 │ Firmicutes         63.1582
-   2 │ Bacteroidetes      25.6038
-   3 │ Actinobacteria     11.0898
-   4 │ Verrucomicrobia     0.1482
-
 julia> df
 4×2 DataFrame
  Row │ taxon                          abundance 
@@ -127,16 +103,6 @@ julia> df
    1 │ Firmicutes        63.1582
    2 │ Bacteroidetes     25.6038
    3 │ Actinobacteria    11.0898
-
-julia> taxfilter!(df,1; keepunidentified=true)
-3×2 DataFrame
- Row │ taxon           abundance 
-     │ String          Float64   
-─────┼───────────────────────────
-   1 │ Firmicutes        63.1582
-   2 │ Bacteroidetes     25.6038
-   3 │ Actinobacteria    11.0898
-   
 ```
 """
 function taxfilter!(taxonomic_profile::AbstractDataFrame, level::Int=7; keepunidentified=true)
@@ -157,6 +123,60 @@ function taxfilter!(taxonomic_profile::AbstractDataFrame, level::Symbol; keepuni
     taxfilter!(taxonomic_profile, taxonlevels[level]; keepunidentified=keepunidentified)
 end
 
+"""
+    taxfilter(df::DataFrame, level::Union{Int, Symbol}; keepunidentified::Bool)
+Filter a MetaPhlAn table (as DataFrame) to a particular taxon level.
+Levels may be given either as numbers or symbols:
+- `1` = `:Kingdom`
+- `2` = `:Phylum`
+- `3` = `:Class`
+- `4` = `:Order`
+- `5` = `:Family`
+- `6` = `:Genus`
+- `7` = `:Species`
+- `8` = `:Subspecies`
+Taxon level is removed from resulting taxon string, eg.
+`g__Bifidobacterium` becomes `Bifidobacterium`.
+Set `keepunidentified` flag to `false` to remove `UNIDENTIFIED` rows.
+
+`taxfilter()` doesn't modify the dataframe that you pass to it.
+
+This function will also rename the taxa in the first column.
+
+```jldoctest taxfilter
+
+Examples
+≡≡≡≡≡≡≡≡≡≡
+julia> df
+4×2 DataFrame
+ Row │ taxon                          abundance 
+     │ String                         Float64   
+─────┼──────────────────────────────────────────
+   1 │ k__Bacteria                     100.0
+   2 │ k__Bacteria|p__Firmicutes        63.1582
+   3 │ k__Bacteria|p__Bacteroidetes     25.6038
+   4 │ k__Bacteria|p__Actinobacteria    11.0898
+   
+julia> taxfilter(df,2; keepunidentified=true)
+3×2 DataFrame
+ Row │ taxon            abundance 
+     │ String           Float64   
+─────┼────────────────────────────
+   1 │ Firmicutes         63.1582
+   2 │ Bacteroidetes      25.6038
+   3 │ Actinobacteria     11.0898
+   
+julia> df
+4×2 DataFrame
+ Row │ taxon                          abundance 
+     │ String                         Float64   
+─────┼──────────────────────────────────────────
+   1 │ k__Bacteria                     100.0
+   2 │ k__Bacteria|p__Firmicutes        63.1582
+   3 │ k__Bacteria|p__Bacteroidetes     25.6038
+   4 │ k__Bacteria|p__Actinobacteria    11.0898   
+```
+"""
 function taxfilter(taxonomic_profile::AbstractDataFrame, level::Int=7; keepunidentified=true)
     filt = deepcopy(taxonomic_profile)
     taxfilter!(filt, level; keepunidentified=keepunidentified)
