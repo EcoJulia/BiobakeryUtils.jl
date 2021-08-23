@@ -61,3 +61,6 @@ end
 # end
 
 
+table = CSV.read("test/files/humann2:SRS014459-Stool_genefamilies.tsv", DataFrame, delim='\t',
+    header=["#GeneFamily", "SRS014459-Stool_Abundance"], datarow = 2
+    

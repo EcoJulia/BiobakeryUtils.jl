@@ -44,27 +44,27 @@ end
 """
     rm_strat!(df::DataFrame; col::Union{Int, Symbol}=1)
 
-Given an abundance table, makes a CommunityProfile that shows the total abundances at the kingdom taxonomic-level.
-```jldoctest taxfilter
+Given an abundance table of functional profiles ex. humann2 file, removes stratification to show total abundances.
+```jldoctest rm_strat!
 Examples
 ≡≡≡≡≡≡≡≡≡≡
-julia> table
-2×4 DataFrame
- Row │ taxname      sample1_taxonomic_profile  sample2_taxonomic_profile  sample3_taxonomic_profile  
-     │ String       Float64                    Float64                    Float64                                      
-─────┼───────────────────────────────────────────────────────────────────────────────────────────────
-   1 │ taxa1                         0.0                        0.0                   14.13558                                              
-   2 │ taxa2                       100.0                      100.0                          0                             
+julia> table = CSV.read("test/files/humanntestfile.tsv", DataFrame)
+5×2 DataFrame
+ Row │ #GeneFamily                        SRS014459-Stool_Abundance 
+     │ String                             Float64                   
+─────┼──────────────────────────────────────────────────────────────
+   1 │ UniRef50_unknown|g__Parabacteroi…                   24.9493
+   2 │ UniRef50_unknown|g__Bacteroides|…                   21.9066
+   3 │ UniRef50_unknown|g__Bacteroides|…                   14.1214
+   4 │ UniRef50_unknown|g__Eubacterium|…                    8.04484
+   5 │ UniRef50_unknown                                    69.0221   
 
 julia> rm_strat!(table)
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 2 things in 3 places
-   
-Thing names:
-taxa1, taxa2
-   
-Place names:
-sample1_taxonomic_profile, sample2_taxonomic_profile, sample3_taxonomic_profile
-   
+1×2 DataFrame
+ Row │ #GeneFamily                        SRS014459-Stool_Abundance 
+     │ String                             Float64                   
+─────┼──────────────────────────────────────────────────────────────
+   1 │ UniRef50_unknown                                     69.0221
 ```
 """
 function rm_strat!(df::DataFrame; col::Union{Int, Symbol}=1)
