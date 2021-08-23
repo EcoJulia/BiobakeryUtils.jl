@@ -39,14 +39,25 @@ end
 
 Examples
 ≡≡≡≡≡≡≡≡≡≡
-julia> metaphlan_profile("test/files/metaphlan_single1.tsv")
+julia> metaphlan_profile("test/files/metaphlan_single2.tsv")
 CommunityProfile{Float64, Taxon, MicrobiomeSample} with 96 things in 1 places
 
 Thing names:
-Bacteria, Firmicutes, Bacteroidetes...Lachnospira_pectinoschiza, Bacteroides_caccae
+Bacteria, Archaea, Firmicutes...Ruminococcus_bromii, Bacteroides_vulgatus
 
 Place names:
-metaphlan_single1
+metaphlan_single2
+
+
+
+julia> metaphlan_profile("test/files/metaphlan_single2.tsv", 4)
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 11 things in 1 places
+
+Thing names:
+Clostridiales, Bacteroidales, Coriobacteriales...Firmicutes_unclassified, Pasteurellales
+
+Place names:
+metaphlan_single2
 
 
 
@@ -80,6 +91,10 @@ function metaphlan_profile(path::AbstractString, level=:all; sample=basename(fir
     return CommunityProfile(mat[keep, :], taxa[keep], [sample])
 end
 
+function metaphlan_profile(path::AbstractString, level::Int; sample=basename(first(splitext(path))))
+    level = keys(taxonlevels)[level]
+    metaphlan_profile(path, level; sample)
+end
 
 """
 Option1: take a path to merged table (eg test/files/metaphlan_multi_test.tsv)
