@@ -9,6 +9,17 @@ using DelimitedFiles
 using CSV
 
 @testset "Metaphlan" begin
+    profile_1 = metaphlan_profile("files/metaphlan_single1.tsv")
+    @test profile_1["Bacteria", "metaphlan_single1"] == 100.0
+    @test profile_1["Coriobacteriia", "metaphlan_single1"] == 0.24757
+    @test size(profile_1) == (96, 1)
+    profile_2 = metaphlan_profile("files/metaphlan_single1.tsv", 3)
+    @test size(profile_2) == (9, 1)
+    @test profile_2["Actinobacteria", "metaphlan_single1"] == 10.84221
+    profile_3 = metaphlan_profile("files/metaphlan_single1.tsv", :phylum)
+    @test size(profile_3) == (4, 1)
+    @test profile_3["Bacteroidetes", "metaphlan_single1"] == 25.60381
+    
     taxstring = "k__Archaea|p__Euryarchaeota|c__Methanobacteria|o__Methanobacteriales|f__Methanobacteriaceae|g__Methanobrevibacter|s__Methanobrevibacter_smithii"
     taxa = parsetaxa(taxstring)
     @test length(taxa) == 7
