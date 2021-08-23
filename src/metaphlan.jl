@@ -120,6 +120,82 @@ Option1: take a path to merged table (eg test/files/metaphlan_multi_test.tsv)
 Option2: take vector of paths to single tables (eg ["test/files/metaphlan_single1.tsv", "test/files/metaphlan_single2.tsv"])
     and make CommunityProfile
 """
+"""
+    metaphlan_profiles(path::AbstractString, level::Union{Int, Symbol}=:all; keepunidentified=false)
+
+Compiles multiple MetaPhlAn profiles (either from a merged table or from multiple single tables) into a CommunityProfile.
+Can select data according to taxonomic level. If level not given, all data is compiled.
+Set `keepunidentified` flag to `true` to keep `UNIDENTIFIED` data.
+
+Levels may be given either as numbers or symbols:
+
+- `1` = `:kingdom`
+- `2` = `:phylum`
+- `3` = `:class`
+- `4` = `:order`
+- `5` = `:family`
+- `6` = `:genus`
+- `7` = `:species`
+- `8` = `:subspecies`
+
+```jldoctest metaphlan_profiles
+
+Examples
+≡≡≡≡≡≡≡≡≡≡
+julia> metaphlan_profiles("test/files/metaphlan_multi_test.tsv")
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 42 things in 7 places
+
+Thing names:
+Archaea, Euryarchaeota, Methanobacteria...Actinomyces_viscosus, GCF_000175315
+
+Place names:
+sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
+
+
+
+julia> metaphlan_profiles("test/files/metaphlan_multi_test.tsv", :genus)
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 3 things in 7 places
+
+Thing names:
+Methanobrevibacter, Methanosphaera, Actinomyces
+
+Place names:
+sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
+
+
+
+julia> metaphlan_profiles("test/files/metaphlan_multi_test.tsv", 3)
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 2 things in 7 places
+
+Thing names:
+Methanobacteria, Actinobacteria
+
+Place names:
+sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
+
+
+
+julia> metaphlan_profiles("test/files/metaphlan_multi_test_unidentified.tsv")
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 43 things in 7 places
+
+Thing names:
+UNIDENTIFIED, Archaea, Euryarchaeota...Actinomyces_viscosus, GCF_000175315
+
+Place names:
+sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
+
+
+
+julia> metaphlan_profiles("test/files/metaphlan_multi_test_unidentified.tsv", keepunidentified = true)
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 43 things in 7 places
+
+Thing names:
+UNIDENTIFIED, Archaea, Euryarchaeota...Actinomyces_viscosus, GCF_000175315
+
+Place names:
+sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
+```
+"""
 function metaphlan_profiles(path::AbstractString, level=:all; keepunidentified=false)
     profiles = CSV.read(path, DataFrame)
     taxa = [last(_split_clades(c)) for c in profiles[:, "#SampleID"]]
@@ -133,6 +209,11 @@ function metaphlan_profiles(path::AbstractString, level=:all; keepunidentified=f
         keep = [!ismissing(c) && c == level for c in clade.(taxa)]
     end
     return CommunityProfile(mat[keep, :], taxa[keep], samples)
+end
+
+function metaphlan_profiles(path::AbstractString, level::Int; keepunidentified=false)
+    level = keys(taxonlevels)[level]
+    metaphlan_profiles(path, level; keepunidentified)
 end
 
 function metaphlan_profiles(paths::Array{<:AbstractString, 1})
