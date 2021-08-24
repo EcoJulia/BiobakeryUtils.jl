@@ -213,19 +213,7 @@ end
     metaphlan_profiles(paths::Array{<:AbstractString, 1}, level::Union{Int, Symbol}=:all)
 
 Compiles multiple MetaPhlAn profiles from multiple single tables into a CommunityProfile.
-Can select data according to taxonomic level. If level not given, all data is compiled.
     
-Levels may be given either as numbers or symbols:
-
-- `1` = `:kingdom`
-- `2` = `:phylum`
-- `3` = `:class`
-- `4` = `:order`
-- `5` = `:family`
-- `6` = `:genus`
-- `7` = `:species`
-- `8` = `:subspecies`
-
 ```jldoctest metaphlan_profiles
 
 Examples
