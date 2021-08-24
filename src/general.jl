@@ -45,9 +45,10 @@ end
     rm_strat!(df::DataFrame; col::Union{Int, Symbol}=1)
 
 Given an abundance table of functional profiles ex. humann2 file, removes stratification to show total abundances.
-```jldoctest rm_strat!
 Examples
 ≡≡≡≡≡≡≡≡≡≡
+
+```jldoctest rm_strat!
 julia> table = CSV.read("test/files/humanntestfile.tsv", DataFrame)
 5×2 DataFrame
  Row │ #GeneFamily                        SRS014459-Stool_Abundance 
