@@ -39,7 +39,7 @@ end
 
 Compiles a MetaPhlAn file into a CommunityProfile.
 Can select data according to taxonomic level. If level not given, all data is compiled.
-"Place name" of the CommunityProfile can be specified by passing a `sample` argument. If name not given, the name of the file becomes the "Place name".
+`Place name` of the CommunityProfile can be specified by passing a `sample` argument. If name not given, the name of the file becomes the `Place name`.
 
 Levels may be given either as numbers or symbols:
 
@@ -116,7 +116,7 @@ end
 """
     metaphlan_profiles(path::AbstractString, level::Union{Int, Symbol}=:all; keepunidentified=false)
 
-Compiles multiple MetaPhlAn profiles from a merged table into a CommunityProfile.
+Compiles MetaPhlAn profiles from a merged table into a CommunityProfile.
 Can select data according to taxonomic level. If level not given, all data is compiled.
 Set `keepunidentified` flag to `true` to keep `UNIDENTIFIED` data.
 
@@ -212,7 +212,7 @@ end
 """
     metaphlan_profiles(paths::Array{<:AbstractString, 1}, level::Union{Int, Symbol}=:all)
 
-Compiles multiple MetaPhlAn profiles from multiple single tables into a CommunityProfile.
+Compiles MetaPhlAn profiles from multiple single tables into a CommunityProfile.
     
 ```jldoctest metaphlan_profiles
 
