@@ -68,7 +68,7 @@ julia> rm_strat!(table)
 ```
 """
 function rm_strat!(df::DataFrame; col::Union{Int, Symbol}=1)
-    table=filter!(row->!occursin(r"\|", row[1]), df)
+    filter!(row->!occursin(r"\|", row[1]), df)
 end
 
 
