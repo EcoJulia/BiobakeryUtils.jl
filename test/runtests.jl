@@ -51,6 +51,15 @@ end
 
 end
 
+@testset "rm_strat" begin
+table = CSV.read("files/humanntestfile.tsv", DataFrame, delim='\t',
+    header=["#GeneFamily", "SRS014459-Stool_Abundance"], datarow = 2)
+    @test size(table) == (9, 2)
+    rm_strat!(table)
+    @test size(table) == (4, 2)
+    @test !any(occursin.("|", table[!, 1]))
+end
+
 # @testset "Permanova" begin
 #     reval("install.packages('vegan')")
 #     d = rand(10, 10)
@@ -59,8 +68,3 @@ end
 #     @test typeof(p) == DataFrame
 #     @test size(p) == (3, 6)
 # end
-
-
-table = CSV.read("test/files/humann2:SRS014459-Stool_genefamilies.tsv", DataFrame, delim='\t',
-    header=["#GeneFamily", "SRS014459-Stool_Abundance"], datarow = 2
-    
