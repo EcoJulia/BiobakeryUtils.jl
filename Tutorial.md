@@ -51,7 +51,7 @@ Place names:
 metaphlan_single1, metaphlan_single2
 ```
 
-### More specific CommunityProfile creation
+### Creating more specific CommunityProfiles
 
 When creating a CommunityProfile, data to be compiled can be selected by specifying taxonomic level.
 
@@ -92,6 +92,65 @@ When creating a CommunityProfile from a merged table, data from unidentified tax
 
 ```julia
 # EXAMPLES WITH KEEPUNIDENTIFIED = TRUE AND FALSE
+```
+
+### Indexing CommunityProfiles
+CommunityProfiles can be indexed using items in "Thing names" and "Place names".
+
+```julia
+julia> profile = metaphlan_profiles("test/files/metaphlan_multi_test.tsv")CommunityProfile{Float64, Taxon, MicrobiomeSample} with 42 things in 7 places
+Thing names:
+Archaea, Euryarchaeota, Methanobacteria...Actinomyces_viscosus, GCF_000175315
+
+Place names:
+sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
+
+
+
+julia> profile[:, "sample1_taxonomic"]
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 42 things in 1 places
+
+Thing names:
+Archaea, Euryarchaeota, Methanobacteria...Actinomyces_viscosus, GCF_000175315
+
+Place names:
+sample1_taxonomic
+
+
+
+julia> profile["Archaea", :]
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 1 things in 7 places
+
+Thing names:
+Archaea
+
+Place names:
+sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
+
+
+
+julia> profile["Actinomycetales", "sample3_taxonomic"]
+0.08487
+
+julia> profile["Actinobacteria", ["sample1_taxonomic", "sample3_taxonomic"]]
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 1 things in 2 places
+
+Thing names:
+Actinobacteria
+
+Place names:
+sample1_taxonomic, sample3_taxonomic
+
+
+
+julia> profile[["Actinobacteria", "Methanobacteria"], "sample1_taxonomic"]
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 2 things in 1 places
+
+Thing names:
+Actinobacteria, Methanobacteria
+
+Place names:
+sample1_taxonomic
 ```
 
 ### Parsing taxa
