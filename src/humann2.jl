@@ -35,7 +35,13 @@ function humann2_rename(df::DataFrame; kind::String="ec")
     return new_df[!,1]
 end
 
+"""
+    humann2_barplots(df::DataFrame, metadata::AbstractArray{<:AbstractString,1}, outpath::String)
 
+Wrapper for `humann2_barplots` script,
+sorts and filters through a humann2 DataFrame, matches it with its respective metadata,
+and plots them together.
+"""
 function humann2_barplots(df::DataFrame, metadata::AbstractArray{<:AbstractString,1}, outpath::String)
     length(metadata) == size(df, 2) - 1 || @error "Must have metadata for each column"
     nostrat = df[map(x-> !occursin(r"\|", x), df[!,1]), 1]
