@@ -8,6 +8,15 @@ using SparseArrays
 using DelimitedFiles
 using CSV
 
+@testset "Humann2" begin
+    df = CSV.read("files/humanntestfile.tsv", DataFrame, delim='\t', header=["#GeneFamily", "SRS014459-Stool_Abundance"], datarow = 2)
+    metadata = CSV.File("files/metadata_test_humann.csv") |> Tables.Array
+#    @test humann2_regroup(df) == 
+#    @test humann2_rename(df) == 
+#    @test humann2_barplots(df, metadata) == 
+#    @test humann2_barplot(df, metadata) == 
+end
+
 @testset "Metaphlan" begin
     taxstring = "k__Archaea|p__Euryarchaeota|c__Methanobacteria|o__Methanobacteriales|f__Methanobacteriaceae|g__Methanobrevibacter|s__Methanobrevibacter_smithii"
     taxa = parsetaxa(taxstring)
