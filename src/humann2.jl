@@ -1,11 +1,11 @@
 """
-    function humann2_regroup(df::DataFrame; inkind="uniref90", outkind::String="ec")
+    function humann2_regroup(df::AbstractDataFrame; inkind="uniref90", outkind::String="ec")
 
 Wrapper for `humann2_regroup` script,
 replaces first column of a DataFrame with results from
 regrouping `inkind` to `outkind`.
 """
-function humann2_regroup(df::DataFrame; inkind::String="uniref90", outkind::String="ec")
+function humann2_regroup(df::AbstractDataFrame; inkind::String="uniref90", outkind::String="ec")
     in_path = tempname()
     out_path = tempname()
     CSV.write(in_path, df)
@@ -18,13 +18,13 @@ function humann2_regroup(df::DataFrame; inkind::String="uniref90", outkind::Stri
 end
 
 """
-    humann2_rename(df::DataFrame; kind::String="ec")
+    humann2_rename(df::AbstractDataFrame; kind::String="ec")
 
 Wrapper for `humann2_rename` script,
 replaces first column of a DataFrame with results from
 renaming `inkind` to `outkind`.
 """
-function humann2_rename(df::DataFrame; kind::String="ec")
+function humann2_rename(df::AbstractDataFrame; kind::String="ec")
     in_path = tempname()
     out_path = tempname()
     CSV.write(in_path, df[!, [1]], delim='\t')
@@ -36,7 +36,7 @@ function humann2_rename(df::DataFrame; kind::String="ec")
 end
 
 
-function humann2_barplots(df::DataFrame, metadata::AbstractArray{<:AbstractString,1}, outpath::String)
+function humann2_barplots(df::AbstractDataFrame, metadata::AbstractArray{<:AbstractString,1}, outpath::String)
     length(metadata) == size(df, 2) - 1 || @error "Must have metadata for each column"
     nostrat = df[map(x-> !occursin(r"\|", x), df[!,1]), 1]
     for p in nostrat
