@@ -1,16 +1,19 @@
 """
-    function humann2_regroup(df::AbstractDataFrame; inkind="uniref90", outkind::String="ec")
+    function humann_regroup(df::AbstractDataFrame; inkind="uniref90", outkind::String="ec")
 
-Wrapper for `humann2_regroup` script,
+Wrapper for `humann_regroup` script,
 replaces first column of a DataFrame with results from
 regrouping `inkind` to `outkind`.
+
+Requires installation of [`humann`](https://github.com/biobakery/humann) available in `ENV["PATH"]`.
+See ["Using Conda"](@ref) for more information.
 """
-function humann2_regroup(df::AbstractDataFrame; inkind::String="uniref90", outkind::String="ec")
+function humann_regroup(df::AbstractDataFrame; inkind::String="uniref90", outkind::String="ec")
     in_path = tempname()
     out_path = tempname()
     CSV.write(in_path, df)
     run(```
-        humann2_regroup_table -i $in_path -g $(inkind)_$outkind -o $out_path
+        humann_regroup_table -i $in_path -g $(inkind)_$outkind -o $out_path
         ```)
 
     new_df = CSV.File(out_path) |> DataFrame
@@ -18,25 +21,28 @@ function humann2_regroup(df::AbstractDataFrame; inkind::String="uniref90", outki
 end
 
 """
-    humann2_rename(df::AbstractDataFrame; kind::String="ec")
+    humann_rename(df::AbstractDataFrame; kind::String="ec")
 
-Wrapper for `humann2_rename` script,
+Wrapper for `humann_rename` script,
 replaces first column of a DataFrame with results from
 renaming `inkind` to `outkind`.
+
+Requires installation of [`humann`](https://github.com/biobakery/humann) available in `ENV["PATH"]`.
+See ["Using Conda"](@ref) for more information.
 """
-function humann2_rename(df::AbstractDataFrame; kind::String="ec")
+function humann_rename(df::AbstractDataFrame; kind::String="ec")
     in_path = tempname()
     out_path = tempname()
     CSV.write(in_path, df[!, [1]], delim='\t')
     run(```
-        humann2_rename_table -i $in_path -n $kind -o $out_path
+        humann_rename_table -i $in_path -n $kind -o $out_path
         ```)
     new_df = CSV.File(out_path, delim='\t') |> DataFrame
     return new_df[!,1]
 end
 
 
-function humann2_barplots(df::AbstractDataFrame, metadata::AbstractArray{<:AbstractString,1}, outpath::String)
+function humann_barplots(df::AbstractDataFrame, metadata::AbstractArray{<:AbstractString,1}, outpath::String)
     length(metadata) == size(df, 2) - 1 || @error "Must have metadata for each column"
     nostrat = df[map(x-> !occursin(r"\|", x), df[!,1]), 1]
     for p in nostrat
@@ -51,11 +57,11 @@ function humann2_barplots(df::AbstractDataFrame, metadata::AbstractArray{<:Abstr
         end
         @info "plotting $p"
 
-        BiobakeryUtils.humann2_barplot(current, metadata, outpath)
+        BiobakeryUtils.humann_barplot(current, metadata, outpath)
     end
 end
 
-function humann2_barplot(df::AbstractDataFrame, metadata::AbstractArray{<:AbstractString,1}, outpath::AbstractString)
+function humann_barplot(df::AbstractDataFrame, metadata::AbstractArray{<:AbstractString,1}, outpath::AbstractString)
     sum(x-> !occursin(r"\|", x), df[!,1]) == 1 || @error "Multipl unstratified rows in dataframe"
     matches = map(x-> match(r"^([^:|]+):?([^|]+)?", x),  df[!,1])
     all(x-> !isa(x, Nothing), matches) || @error "something is wrong!"
@@ -75,9 +81,9 @@ function humann2_barplot(df::AbstractDataFrame, metadata::AbstractArray{<:Abstra
     @debug "file closed"
 
     out = joinpath(outpath, "$ec.png")
-    @debug "humann2_barplot --i $fl_path -o $out --focal-feature $ec --focal-metadatum metadatum --last-metadatum metadatum --sort sum metadata"
+    @debug "humann_barplot --i $fl_path -o $out --focal-feature $ec --focal-metadatum metadatum --last-metadatum metadatum --sort sum metadata"
     run(```
-        humann2_barplot --i $fl_path -o "$out" --focal-feature "$ec" --focal-metadatum metadatum --last-metadatum metadatum --sort sum metadata
+        humann_barplot --i $fl_path -o "$out" --focal-feature "$ec" --focal-metadatum metadatum --last-metadatum metadatum --sort sum metadata
         ```)
 
 end
