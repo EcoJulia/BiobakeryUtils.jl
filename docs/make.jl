@@ -5,10 +5,11 @@ makedocs(
         prettyurls = get(ENV, "CI", nothing) == "true"),
     sitename = "BiobakeryUtils.jl",
     pages = [
-        "BiobakeryUtils" => "index.md"
-        "General Utilities" => "general.md"
-        "Working with HUMAnN2" => "humann2.md"
-        "Working with MetaPhlAn2" => "metaphlan2.md"
+        "BiobakeryUtils" => "index.md",
+        "General Utilities" => "general.md",
+        "Installing tools with Conda" => "conda.md"
+        "Working with HUMAnN" => "humann.md",
+        "Working with MetaPhlAn" => "metaphlan.md",
         "Contributing" => "contributing.md"
     ],
     authors = "Kevin Bonham, PhD"
