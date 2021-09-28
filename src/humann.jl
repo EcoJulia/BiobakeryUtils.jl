@@ -1,4 +1,41 @@
 """
+Stratified import currently non-functional
+"""
+function humann_profile(path::AbstractString; sample=basename(first(splitext(path))), stratified=false)
+    gfs = GeneFunction[]
+    abundances = Float64[]
+    
+    for (i, (gf, abundance)) in enumerate(CSV.File(path, datarow=2, header=["function", "abundance"]))
+        if occursin('|', gf) # indicates a taxon-stratified entry
+            stratified || continue
+            (gf, tax) = split(gf, '|')
+            if tax == "unclassified"
+                tax = Taxon("unclassified")
+            else
+                tm = match(r"s__(\w+)", tax)
+                cld = :species
+                if isnothing(tm)
+                    tm = match(r"g__(\d+)", tax)
+                    cld = :genus
+                    isnothing(tm) && error("Incorrectly formatted taxon stratification: $tax")
+                end
+                tax = Taxon(string(tm.captures[1]), cld)
+            end
+            push!(gfs, GeneFunction(gf, tax))
+        else
+            push!(gfs, GeneFunction(gf))
+        end
+        push!(abundances, abundance)
+    end
+    mat = sparse(reshape(abundances, length(abundances), 1))
+    sample = sample isa Microbiome.AbstractSample ? sample : MicrobiomeSample(sample)
+
+    return CommunityProfile(mat, gfs, [sample])
+end
+
+
+
+"""
     function humann_regroup(df::AbstractDataFrame; inkind="uniref90", outkind::String="ec")
 
 Wrapper for `humann_regroup` script,

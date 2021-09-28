@@ -27,4 +27,8 @@ include("general.jl")
 include("metaphlan.jl")
 include("humann.jl")
 
+function __init__()
+    
+end
+
 end
