@@ -6,6 +6,8 @@ export
     clean_abundance_tables,
     metaphlan_profile,
     metaphlan_profiles,
+    humann_profile,
+    humann_profiles,
     taxfilter,
     taxfilter!,
     parsetaxa,
