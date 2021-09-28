@@ -20,19 +20,86 @@ const shortlevels = (
     f = :family,
     g = :genus,
     s = :species,
-    t = :subspecies)
+    t = :subspecies,
+    u = missing)
 
 function _split_clades(clade_string)
     clades = split(clade_string, '|')
     taxa = Taxon[]
     for clade in clades
-        (level, name) = split(clade, "__")
+        spl = split(clade, "__")
+        (level, name) = length(spl) == 1 ? ("u", spl[1]) : spl
         push!(taxa, Taxon(name, shortlevels[Symbol(level)]))
     end
     return taxa
 end
 
-function metaphlan_profile(path::AbstractString; sample=basename(first(splitext(path))), level=:all)
+"""
+    metaphlan_profile(path::AbstractString, level::Union{Int, Symbol}=:all; sample::AbstractString=basename(first(splitext(path))))
+
+Compiles a MetaPhlAn file into a CommunityProfile.
+Can select data according to taxonomic level. If level not given, all data is compiled.
+`Place name` of the CommunityProfile can be specified by passing a `sample` argument. If name not given, the name of the file becomes the `Place name`.
+
+Levels may be given either as numbers or symbols:
+
+- `1` = `:kingdom`
+- `2` = `:phylum`
+- `3` = `:class`
+- `4` = `:order`
+- `5` = `:family`
+- `6` = `:genus`
+- `7` = `:species`
+- `8` = `:subspecies`
+
+```jldoctest metaphlan_profile
+
+Examples
+≡≡≡≡≡≡≡≡≡≡
+julia> metaphlan_profile("test/files/metaphlan_single2.tsv")
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 96 things in 1 places
+
+Thing names:
+Bacteria, Archaea, Firmicutes...Ruminococcus_bromii, Bacteroides_vulgatus
+
+Place names:
+metaphlan_single2
+
+
+
+julia> metaphlan_profile("test/files/metaphlan_single2.tsv", 4)
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 11 things in 1 places
+
+Thing names:
+Clostridiales, Bacteroidales, Coriobacteriales...Firmicutes_unclassified, Pasteurellales
+
+Place names:
+metaphlan_single2
+
+
+
+julia> metaphlan_profile("test/files/metaphlan_single2.tsv", :genus)
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 40 things in 1 places
+
+Thing names:
+Prevotella, Roseburia, Faecalibacterium...Haemophilus, Lactococcus
+
+Place names:
+metaphlan_single2
+
+
+
+julia> metaphlan_profile("test/files/metaphlan_single2.tsv", :genus, sample = "sample2")
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 40 things in 1 places
+
+Thing names:
+Prevotella, Roseburia, Faecalibacterium...Haemophilus, Lactococcus
+
+Place names:
+sample2
+```
+"""
+function metaphlan_profile(path::AbstractString, level=:all; sample=basename(first(splitext(path))))
     profile = CSV.read(path, datarow=5, header=["clade", "NCBI_taxid", "abundance", "additional_species"], Tables.columntable)
     taxa = [last(_split_clades(c)) for c in profile.clade]
     mat = sparse(reshape(profile.abundance, length(profile.abundance), 1))
@@ -41,15 +108,159 @@ function metaphlan_profile(path::AbstractString; sample=basename(first(splitext(
     return CommunityProfile(mat[keep, :], taxa[keep], [sample])
 end
 
+function metaphlan_profile(path::AbstractString, level::Int; sample=basename(first(splitext(path))))
+    level = keys(taxonlevels)[level]
+    metaphlan_profile(path, level; sample)
+end
 
 """
-Option1: take a path to merged table (eg test/files/metaphlan_multi_profile.tsv)
-    and make CommunityProfile
+    metaphlan_profiles(path::AbstractString, level::Union{Int, Symbol}=:all; keepunidentified=false)
 
-Option2: take vector of paths to single tables (eg ["test/files/metaphlan_single1_profile.tsv", "test/files/metaphlan_single2_profile.tsv"])
-    and make CommunityProfile
+Compiles MetaPhlAn profiles from a merged table into a CommunityProfile.
+Can select data according to taxonomic level. If level not given, all data is compiled.
+Set `keepunidentified` flag to `true` to keep `UNIDENTIFIED` data.
+
+Levels may be given either as numbers or symbols:
+
+- `1` = `:kingdom`
+- `2` = `:phylum`
+- `3` = `:class`
+- `4` = `:order`
+- `5` = `:family`
+- `6` = `:genus`
+- `7` = `:species`
+- `8` = `:subspecies`
+
+```jldoctest metaphlan_profiles
+
+Examples
+≡≡≡≡≡≡≡≡≡≡
+julia> metaphlan_profiles("test/files/metaphlan_multi_test.tsv")
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 42 things in 7 places
+
+Thing names:
+Archaea, Euryarchaeota, Methanobacteria...Actinomyces_viscosus, GCF_000175315
+
+Place names:
+sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
+
+
+
+julia> metaphlan_profiles("test/files/metaphlan_multi_test.tsv", :genus)
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 3 things in 7 places
+
+Thing names:
+Methanobrevibacter, Methanosphaera, Actinomyces
+
+Place names:
+sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
+
+
+
+julia> metaphlan_profiles("test/files/metaphlan_multi_test.tsv", 3)
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 2 things in 7 places
+
+Thing names:
+Methanobacteria, Actinobacteria
+
+Place names:
+sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
+
+
+
+# julia> metaphlan_profiles("test/files/metaphlan_multi_test_unidentified.tsv")
+# CommunityProfile{Float64, Taxon, MicrobiomeSample} with 43 things in 7 places
+
+# Thing names:
+# UNIDENTIFIED, Archaea, Euryarchaeota...Actinomyces_viscosus, GCF_000175315
+
+# Place names:
+# sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
+
+
+
+# julia> metaphlan_profiles("test/files/metaphlan_multi_test_unidentified.tsv", keepunidentified = true)
+# CommunityProfile{Float64, Taxon, MicrobiomeSample} with 43 things in 7 places
+
+# Thing names:
+# UNIDENTIFIED, Archaea, Euryarchaeota...Actinomyces_viscosus, GCF_000175315
+
+# Place names:
+# sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
+```
 """
-function metaphlan_profiles(tables)
+function metaphlan_profiles(path::AbstractString, level=:all; keepunidentified=false)
+    profiles = CSV.read(path, DataFrame)
+    taxa = [last(_split_clades(c)) for c in profiles[:, "#SampleID"]]
+    mat = sparse(Matrix(profiles[:, 2:end]))
+    samples = MicrobiomeSample.(replace.(names(profiles[:, 2:end]), Ref("_profile" => "")))
+    if level == :all
+        keep = Colon()
+    elseif keepunidentified
+        keep = [ismissing(c) || c == level for c in clade.(taxa)]
+    else
+        keep = [!ismissing(c) && c == level for c in clade.(taxa)]
+    end
+    return CommunityProfile(mat[keep, :], taxa[keep], samples)
+end
+
+function metaphlan_profiles(path::AbstractString, level::Int; keepunidentified=false)
+    level = keys(taxonlevels)[level]
+    metaphlan_profiles(path, level; keepunidentified)
+end
+
+"""
+    metaphlan_profiles(paths::Array{<:AbstractString, 1}, level::Union{Int, Symbol}=:all)
+
+Compiles MetaPhlAn profiles from multiple single tables into a CommunityProfile.
+    
+```jldoctest metaphlan_profiles
+
+Examples
+≡≡≡≡≡≡≡≡≡≡
+julia> metaphlan_profiles(["test/files/metaphlan_single1.tsv", "test/files/metaphlan_single2.tsv"])
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 129 things in 2 places
+
+Thing names:
+Bacteria, Firmicutes, Bacteroidetes...Coprococcus_eutactus, Ruminococcus_bromii
+
+Place names:
+metaphlan_single1, metaphlan_single2
+
+
+
+julia> metaphlan_profiles(["test/files/metaphlan_single1.tsv", "test/files/metaphlan_single2.tsv"], :genus)
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 46 things in 2 places
+
+Thing names:
+Bacteroides, Roseburia, Faecalibacterium...Ruthenibacterium, Haemophilus
+
+Place names:
+metaphlan_single1, metaphlan_single2
+
+
+
+julia> metaphlan_profiles(["test/files/metaphlan_single1.tsv", "test/files/metaphlan_single2.tsv"], 5)
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 24 things in 2 places
+
+Thing names:
+Lachnospiraceae, Ruminococcaceae, Bacteroidaceae...Clostridiales_unclassified, Pasteurellaceae
+
+Place names:
+metaphlan_single1, metaphlan_single2
+```
+"""
+function metaphlan_profiles(paths::Array{<:AbstractString, 1}, level=:all)
+    profiles = []
+    for path in paths 
+        push!(profiles, metaphlan_profile(path, level;))
+    end
+    commjoin(profiles...)
+end
+
+function metaphlan_profiles(paths::Array{<:AbstractString, 1}, level::Int)
+    level = keys(taxonlevels)[level]
+    metaphlan_profiles(paths, level)
 end
         
 """
