@@ -1,6 +1,7 @@
 # Welcome to the BiobakeryUtils tutorial
 
 ## Using BiobakeryUtils with [MetaPhlAn](https://github.com/biobakery/MetaPhlAn/wiki/MetaPhlAn-3.0) files
+Note: BiobakeryUtils currently only works with MetaPhlAn 3.0.
 
 ### Input file format
 
