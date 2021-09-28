@@ -10,7 +10,7 @@ Example files that are used in this tutorial can be found in [BiobakeryUtils.jl/
 
 ### Creating CommunityProfiles
 
-A CommunityProfile can be created from MetaPhlAn file(s) using `metaphlan_profile` and `metaphlan_profiles`.
+A [`CommunityProfile`](@ref) can be created from MetaPhlAn file(s) using [`metaphlan_profile`](@ref) and [`metaphlan_profiles`](@ref).
 
 From one file with a single table:
 
