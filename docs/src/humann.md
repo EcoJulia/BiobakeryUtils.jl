@@ -1,4 +1,4 @@
-# HUMAnN2
+# HUMAnN
 
 ```@autodocs
 Modules = [BiobakeryUtils]

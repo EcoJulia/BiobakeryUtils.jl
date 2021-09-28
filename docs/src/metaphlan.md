@@ -1,4 +1,4 @@
-# MetaPhlAn2
+# MetaPhlAn
 
 ```@autodocs
 Modules = [BiobakeryUtils]
