@@ -25,6 +25,6 @@ using SparseArrays
 
 include("general.jl")
 include("metaphlan.jl")
-include("humann2.jl")
+include("humann.jl")
 
 end

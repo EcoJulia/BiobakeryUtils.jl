@@ -2,5 +2,5 @@
 
 ```@autodocs
 Modules = [BiobakeryUtils]
-Pages = ["metaphlan2.jl"]
+Pages = ["metaphlan.jl"]
 ```
