@@ -1,16 +1,145 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Working with MetaPhlAn · BiobakeryUtils.jl</title><script data-outdated-warner src="../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.039/juliamono-regular.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../">BiobakeryUtils.jl</a></span></div><form class="docs-search" action="../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../">BiobakeryUtils</a></li><li><a class="tocitem" href="../general/">General Utilities</a></li><li><a class="tocitem" href="../conda/">Installing tools with Conda</a></li><li><a class="tocitem" href="../humann/">Working with HUMAnN</a></li><li class="is-active"><a class="tocitem" href>Working with MetaPhlAn</a></li><li><a class="tocitem" href="../contributing/">Contributing</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Working with MetaPhlAn</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Working with MetaPhlAn</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/BioJulia/BiobakeryUtils.jl/blob/master/docs/src/metaphlan.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="MetaPhlAn"><a class="docs-heading-anchor" href="#MetaPhlAn">MetaPhlAn</a><a id="MetaPhlAn-1"></a><a class="docs-heading-anchor-permalink" href="#MetaPhlAn" title="Permalink"></a></h1><article class="docstring"><header><a class="docstring-binding" id="BiobakeryUtils.metaphlan_profiles-Tuple{Any}" href="#BiobakeryUtils.metaphlan_profiles-Tuple{Any}"><code>BiobakeryUtils.metaphlan_profiles</code></a> — <span class="docstring-category">Method</span></header><section><div><p>Option1: take a path to merged table (eg test/files/metaphlan<em>multi</em>profile.tsv)     and make CommunityProfile</p><p>Option2: take vector of paths to single tables (eg [&quot;test/files/metaphlan<em>single1</em>profile.tsv&quot;, &quot;test/files/metaphlan<em>single2</em>profile.tsv&quot;])     and make CommunityProfile</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/BioJulia/BiobakeryUtils.jl/blob/96d1646d40f4e74fdc3f667667591d557ebc38ee/src/metaphlan.jl#L45-L51">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BiobakeryUtils.parsetaxa-Tuple{AbstractString}" href="#BiobakeryUtils.parsetaxa-Tuple{AbstractString}"><code>BiobakeryUtils.parsetaxa</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">parsetaxa(taxstring::AbstractString; throw_error=true)</code></pre><p>Given a string representing taxonmic levels as formatted by MetaPhlAn (eg &quot;k<strong>Bacteria|p</strong>Proteobacteria...&quot;), separates taxonomic levels into elements of type Taxon in a vector.</p><p>Examples ≡≡≡≡≡≡≡≡≡≡</p><pre><code class="language-julia-repl hljs">julia&gt; parsetaxa(&quot;k__Archaea|p__Euryarchaeota|c__Methanobacteria&quot;; throw_error = true)
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Working with MetaPhlAn · BiobakeryUtils.jl</title><script data-outdated-warner src="../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.039/juliamono-regular.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../">BiobakeryUtils.jl</a></span></div><form class="docs-search" action="../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../">BiobakeryUtils</a></li><li><a class="tocitem" href="../general/">General Utilities</a></li><li><a class="tocitem" href="../conda/">Installing tools with Conda</a></li><li><a class="tocitem" href="../humann/">Working with HUMAnN</a></li><li class="is-active"><a class="tocitem" href>Working with MetaPhlAn</a></li><li><a class="tocitem" href="../contributing/">Contributing</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Working with MetaPhlAn</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Working with MetaPhlAn</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/BioJulia/BiobakeryUtils.jl/blob/master/docs/src/metaphlan.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="MetaPhlAn"><a class="docs-heading-anchor" href="#MetaPhlAn">MetaPhlAn</a><a id="MetaPhlAn-1"></a><a class="docs-heading-anchor-permalink" href="#MetaPhlAn" title="Permalink"></a></h1><article class="docstring"><header><a class="docstring-binding" id="BiobakeryUtils.metaphlan_profile" href="#BiobakeryUtils.metaphlan_profile"><code>BiobakeryUtils.metaphlan_profile</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">metaphlan_profile(path::AbstractString, level::Union{Int, Symbol}=:all; sample::AbstractString=basename(first(splitext(path))))</code></pre><p>Compiles a MetaPhlAn file into a CommunityProfile. Can select data according to taxonomic level. If level not given, all data is compiled. <code>Place name</code> of the CommunityProfile can be specified by passing a <code>sample</code> argument. If name not given, the name of the file becomes the <code>Place name</code>.</p><p>Levels may be given either as numbers or symbols:</p><ul><li><code>1</code> = <code>:kingdom</code></li><li><code>2</code> = <code>:phylum</code></li><li><code>3</code> = <code>:class</code></li><li><code>4</code> = <code>:order</code></li><li><code>5</code> = <code>:family</code></li><li><code>6</code> = <code>:genus</code></li><li><code>7</code> = <code>:species</code></li><li><code>8</code> = <code>:subspecies</code></li></ul><pre><code class="language-julia-repl hljs">
+Examples
+≡≡≡≡≡≡≡≡≡≡
+julia&gt; metaphlan_profile(&quot;test/files/metaphlan_single2.tsv&quot;)
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 96 things in 1 places
+
+Thing names:
+Bacteria, Archaea, Firmicutes...Ruminococcus_bromii, Bacteroides_vulgatus
+
+Place names:
+metaphlan_single2
+
+
+
+julia&gt; metaphlan_profile(&quot;test/files/metaphlan_single2.tsv&quot;, 4)
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 11 things in 1 places
+
+Thing names:
+Clostridiales, Bacteroidales, Coriobacteriales...Firmicutes_unclassified, Pasteurellales
+
+Place names:
+metaphlan_single2
+
+
+
+julia&gt; metaphlan_profile(&quot;test/files/metaphlan_single2.tsv&quot;, :genus)
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 40 things in 1 places
+
+Thing names:
+Prevotella, Roseburia, Faecalibacterium...Haemophilus, Lactococcus
+
+Place names:
+metaphlan_single2
+
+
+
+julia&gt; metaphlan_profile(&quot;test/files/metaphlan_single2.tsv&quot;, :genus, sample = &quot;sample2&quot;)
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 40 things in 1 places
+
+Thing names:
+Prevotella, Roseburia, Faecalibacterium...Haemophilus, Lactococcus
+
+Place names:
+sample2</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/BioJulia/BiobakeryUtils.jl/blob/dfddf82e7d64ba9b12e79c40950f241e27e4b4a9/src/metaphlan.jl#L37-L101">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BiobakeryUtils.metaphlan_profiles" href="#BiobakeryUtils.metaphlan_profiles"><code>BiobakeryUtils.metaphlan_profiles</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">metaphlan_profiles(paths::Array{&lt;:AbstractString, 1}, level::Union{Int, Symbol}=:all)</code></pre><p>Compiles MetaPhlAn profiles from multiple single tables into a CommunityProfile.</p><pre><code class="language-julia-repl hljs">
+Examples
+≡≡≡≡≡≡≡≡≡≡
+julia&gt; metaphlan_profiles([&quot;test/files/metaphlan_single1.tsv&quot;, &quot;test/files/metaphlan_single2.tsv&quot;])
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 129 things in 2 places
+
+Thing names:
+Bacteria, Firmicutes, Bacteroidetes...Coprococcus_eutactus, Ruminococcus_bromii
+
+Place names:
+metaphlan_single1, metaphlan_single2
+
+
+
+julia&gt; metaphlan_profiles([&quot;test/files/metaphlan_single1.tsv&quot;, &quot;test/files/metaphlan_single2.tsv&quot;], :genus)
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 46 things in 2 places
+
+Thing names:
+Bacteroides, Roseburia, Faecalibacterium...Ruthenibacterium, Haemophilus
+
+Place names:
+metaphlan_single1, metaphlan_single2
+
+
+
+julia&gt; metaphlan_profiles([&quot;test/files/metaphlan_single1.tsv&quot;, &quot;test/files/metaphlan_single2.tsv&quot;], 5)
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 24 things in 2 places
+
+Thing names:
+Lachnospiraceae, Ruminococcaceae, Bacteroidaceae...Clostridiales_unclassified, Pasteurellaceae
+
+Place names:
+metaphlan_single1, metaphlan_single2</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/BioJulia/BiobakeryUtils.jl/blob/dfddf82e7d64ba9b12e79c40950f241e27e4b4a9/src/metaphlan.jl#L212-L252">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BiobakeryUtils.metaphlan_profiles" href="#BiobakeryUtils.metaphlan_profiles"><code>BiobakeryUtils.metaphlan_profiles</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">metaphlan_profiles(path::AbstractString, level::Union{Int, Symbol}=:all; keepunidentified=false)</code></pre><p>Compiles MetaPhlAn profiles from a merged table into a CommunityProfile. Can select data according to taxonomic level. If level not given, all data is compiled. Set <code>keepunidentified</code> flag to <code>true</code> to keep <code>UNIDENTIFIED</code> data.</p><p>Levels may be given either as numbers or symbols:</p><ul><li><code>1</code> = <code>:kingdom</code></li><li><code>2</code> = <code>:phylum</code></li><li><code>3</code> = <code>:class</code></li><li><code>4</code> = <code>:order</code></li><li><code>5</code> = <code>:family</code></li><li><code>6</code> = <code>:genus</code></li><li><code>7</code> = <code>:species</code></li><li><code>8</code> = <code>:subspecies</code></li></ul><pre><code class="language-julia-repl hljs">
+Examples
+≡≡≡≡≡≡≡≡≡≡
+julia&gt; metaphlan_profiles(&quot;test/files/metaphlan_multi_test.tsv&quot;)
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 42 things in 7 places
+
+Thing names:
+Archaea, Euryarchaeota, Methanobacteria...Actinomyces_viscosus, GCF_000175315
+
+Place names:
+sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
+
+
+
+julia&gt; metaphlan_profiles(&quot;test/files/metaphlan_multi_test.tsv&quot;, :genus)
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 3 things in 7 places
+
+Thing names:
+Methanobrevibacter, Methanosphaera, Actinomyces
+
+Place names:
+sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
+
+
+
+julia&gt; metaphlan_profiles(&quot;test/files/metaphlan_multi_test.tsv&quot;, 3)
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 2 things in 7 places
+
+Thing names:
+Methanobacteria, Actinobacteria
+
+Place names:
+sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
+
+
+
+# julia&gt; metaphlan_profiles(&quot;test/files/metaphlan_multi_test_unidentified.tsv&quot;)
+# CommunityProfile{Float64, Taxon, MicrobiomeSample} with 43 things in 7 places
+
+# Thing names:
+# UNIDENTIFIED, Archaea, Euryarchaeota...Actinomyces_viscosus, GCF_000175315
+
+# Place names:
+# sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
+
+
+
+# julia&gt; metaphlan_profiles(&quot;test/files/metaphlan_multi_test_unidentified.tsv&quot;, keepunidentified = true)
+# CommunityProfile{Float64, Taxon, MicrobiomeSample} with 43 things in 7 places
+
+# Thing names:
+# UNIDENTIFIED, Archaea, Euryarchaeota...Actinomyces_viscosus, GCF_000175315
+
+# Place names:
+# sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/BioJulia/BiobakeryUtils.jl/blob/dfddf82e7d64ba9b12e79c40950f241e27e4b4a9/src/metaphlan.jl#L116-L191">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BiobakeryUtils.parsetaxa-Tuple{AbstractString}" href="#BiobakeryUtils.parsetaxa-Tuple{AbstractString}"><code>BiobakeryUtils.parsetaxa</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">parsetaxa(taxstring::AbstractString; throw_error=true)</code></pre><p>Given a string representing taxonmic levels as formatted by MetaPhlAn (eg &quot;k<strong>Bacteria|p</strong>Proteobacteria...&quot;), separates taxonomic levels into elements of type Taxon in a vector.</p><p>Examples ≡≡≡≡≡≡≡≡≡≡</p><pre><code class="language-julia-repl hljs">julia&gt; parsetaxa(&quot;k__Archaea|p__Euryarchaeota|c__Methanobacteria&quot;; throw_error = true)
 3-element Vector{Taxon}:
  Taxon(&quot;Archaea&quot;, :kingdom)
  Taxon(&quot;Euryarchaeota&quot;, :phylum)
- Taxon(&quot;Methanobacteria&quot;, :class)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/BioJulia/BiobakeryUtils.jl/blob/96d1646d40f4e74fdc3f667667591d557ebc38ee/src/metaphlan.jl#L216-L231">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BiobakeryUtils.parsetaxon-Tuple{AbstractString}" href="#BiobakeryUtils.parsetaxon-Tuple{AbstractString}"><code>BiobakeryUtils.parsetaxon</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">parsetaxon(taxstring::AbstractString, taxlevel::Union{Int, Symbol})</code></pre><p>Finds given taxonomic level in a string (as formatted by MetaPhlAn (eg &quot;k<strong>Bacteria|p</strong>Proteobacteria...&quot;)) and returns the clade and taxonomic level as a Taxon. If taxon level not given, function will return the most specific (lowest) taxonomic level available.</p><p>Levels may be given either as numbers or symbols:</p><ul><li><code>1</code> = <code>:kingdom</code></li><li><code>2</code> = <code>:phylum</code></li><li><code>3</code> = <code>:class</code></li><li><code>4</code> = <code>:order</code></li><li><code>5</code> = <code>:family</code></li><li><code>6</code> = <code>:genus</code></li><li><code>7</code> = <code>:species</code></li><li><code>8</code> = <code>:subspecies</code></li></ul><p>Examples ≡≡≡≡≡≡≡≡≡≡</p><pre><code class="language-julia-repl hljs">julia&gt; parsetaxon(&quot;k__Archaea|p__Euryarchaeota|c__Methanobacteria&quot;, 2)
+ Taxon(&quot;Methanobacteria&quot;, :class)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/BioJulia/BiobakeryUtils.jl/blob/dfddf82e7d64ba9b12e79c40950f241e27e4b4a9/src/metaphlan.jl#L427-L442">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BiobakeryUtils.parsetaxon-Tuple{AbstractString}" href="#BiobakeryUtils.parsetaxon-Tuple{AbstractString}"><code>BiobakeryUtils.parsetaxon</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">parsetaxon(taxstring::AbstractString, taxlevel::Union{Int, Symbol})</code></pre><p>Finds given taxonomic level in a string (as formatted by MetaPhlAn (eg &quot;k<strong>Bacteria|p</strong>Proteobacteria...&quot;)) and returns the clade and taxonomic level as a Taxon. If taxon level not given, function will return the most specific (lowest) taxonomic level available.</p><p>Levels may be given either as numbers or symbols:</p><ul><li><code>1</code> = <code>:kingdom</code></li><li><code>2</code> = <code>:phylum</code></li><li><code>3</code> = <code>:class</code></li><li><code>4</code> = <code>:order</code></li><li><code>5</code> = <code>:family</code></li><li><code>6</code> = <code>:genus</code></li><li><code>7</code> = <code>:species</code></li><li><code>8</code> = <code>:subspecies</code></li></ul><p>Examples ≡≡≡≡≡≡≡≡≡≡</p><pre><code class="language-julia-repl hljs">julia&gt; parsetaxon(&quot;k__Archaea|p__Euryarchaeota|c__Methanobacteria&quot;, 2)
 Taxon(&quot;Euryarchaeota&quot;, :phylum)
 
 julia&gt; parsetaxon(&quot;k__Archaea|p__Euryarchaeota|c__Methanobacteria&quot;, :kingdom)
 Taxon(&quot;Archaea&quot;, :kingdom)
 
 julia&gt; parsetaxon(&quot;k__Archaea|p__Euryarchaeota|c__Methanobacteria&quot;)
-Taxon(&quot;Methanobacteria&quot;, :class)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/BioJulia/BiobakeryUtils.jl/blob/96d1646d40f4e74fdc3f667667591d557ebc38ee/src/metaphlan.jl#L172-L202">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BiobakeryUtils.taxfilter!" href="#BiobakeryUtils.taxfilter!"><code>BiobakeryUtils.taxfilter!</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">taxfilter!(df::DataFrame, level::Union{Int, Symbol}; keepunidentified::Bool)</code></pre><p>Filter a MetaPhlAn table (as DataFrame) to a particular taxon level. Levels may be given either as numbers or symbols:</p><ul><li><code>1</code> = <code>:kingdom</code></li><li><code>2</code> = <code>:phylum</code></li><li><code>3</code> = <code>:class</code></li><li><code>4</code> = <code>:order</code></li><li><code>5</code> = <code>:family</code></li><li><code>6</code> = <code>:genus</code></li><li><code>7</code> = <code>:species</code></li><li><code>8</code> = <code>:subspecies</code></li></ul><p>Taxon level is removed from resulting taxon string, eg. <code>g__Bifidobacterium</code> becomes <code>Bifidobacterium</code>.</p><p>Set <code>keepunidentified</code> flag to <code>false</code> to remove <code>UNIDENTIFIED</code> rows.</p><p><code>taxfilter!()</code> modifies the dataframe that you pass to it and <code>taxfilter()</code> doesn&#39;t.</p><p>This function will also rename the taxa in the first column.</p><pre><code class="language-julia-repl hljs">
+Taxon(&quot;Methanobacteria&quot;, :class)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/BioJulia/BiobakeryUtils.jl/blob/dfddf82e7d64ba9b12e79c40950f241e27e4b4a9/src/metaphlan.jl#L383-L413">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BiobakeryUtils.taxfilter!" href="#BiobakeryUtils.taxfilter!"><code>BiobakeryUtils.taxfilter!</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">taxfilter!(df::DataFrame, level::Union{Int, Symbol}; keepunidentified::Bool)</code></pre><p>Filter a MetaPhlAn table (as DataFrame) to a particular taxon level. Levels may be given either as numbers or symbols:</p><ul><li><code>1</code> = <code>:kingdom</code></li><li><code>2</code> = <code>:phylum</code></li><li><code>3</code> = <code>:class</code></li><li><code>4</code> = <code>:order</code></li><li><code>5</code> = <code>:family</code></li><li><code>6</code> = <code>:genus</code></li><li><code>7</code> = <code>:species</code></li><li><code>8</code> = <code>:subspecies</code></li></ul><p>Taxon level is removed from resulting taxon string, eg. <code>g__Bifidobacterium</code> becomes <code>Bifidobacterium</code>.</p><p>Set <code>keepunidentified</code> flag to <code>false</code> to remove <code>UNIDENTIFIED</code> rows.</p><p><code>taxfilter!()</code> modifies the dataframe that you pass to it and <code>taxfilter()</code> doesn&#39;t.</p><p>This function will also rename the taxa in the first column.</p><pre><code class="language-julia-repl hljs">
 Examples
 ≡≡≡≡≡≡≡≡≡≡
 julia&gt; df
@@ -69,4 +198,4 @@ julia&gt; taxfilter!(df,1; keepunidentified=true)
    1 │ Firmicutes        63.1582
    2 │ Bacteroidetes     25.6038
    3 │ Actinobacteria    11.0898
-   </code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/BioJulia/BiobakeryUtils.jl/blob/96d1646d40f4e74fdc3f667667591d557ebc38ee/src/metaphlan.jl#L55-L141">source</a></section></article></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../humann/">« Working with HUMAnN</a><a class="docs-footer-nextpage" href="../contributing/">Contributing »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.7 on <span class="colophon-date" title="Tuesday 28 September 2021 16:30">Tuesday 28 September 2021</span>. Using Julia version 1.6.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+   </code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/BioJulia/BiobakeryUtils.jl/blob/dfddf82e7d64ba9b12e79c40950f241e27e4b4a9/src/metaphlan.jl#L266-L352">source</a></section></article></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../humann/">« Working with HUMAnN</a><a class="docs-footer-nextpage" href="../contributing/">Contributing »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.7 on <span class="colophon-date" title="Tuesday 28 September 2021 18:59">Tuesday 28 September 2021</span>. Using Julia version 1.6.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
