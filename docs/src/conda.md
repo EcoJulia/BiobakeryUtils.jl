@@ -1,6 +1,10 @@
+```@meta
+CurrentModule = BiobakeryUtils
+```
+
 # Using `bioBakery` command line tools
 
-Some functions provided by this package (eg [`humann_regroup_table`](@ref) and [`humann_rename_table`](@ref)),
+Some functions provided by this package (eg [`humann_regroup`](@ref) and [`humann_rename`](@ref)),
 require the appropriate `bioBakery` tools to be installed and accessible from the julia `shell` environment.
 The easiest way to do this is to use `Conda.jl`,
 though other installation methods are possible as well.
@@ -8,14 +12,14 @@ though other installation methods are possible as well.
 ## Using a previous installation
 
 Environmental variables in julia are stored in a `Dict` called `ENV`.
-For example, the `\$PATH` variable in Unix tells the shell where to look
+For example, the `$PATH` variable in Unix tells the shell where to look
 for executable programs, and is available in julia using `ENV["PATH"]`
 
 ```@repl conda
 ENV["PATH"]
 ```
 
-This variable is automatically populated with the `\$PATH` variable
+This variable is automatically populated with the `$PATH` variable
 from the shell from which you launched julia,
 so if you can access `humann` or `metaphlan` from your shell,
 then launch julia, you should be all set.
@@ -33,7 +37,7 @@ ENV["PATH"] = ENV["PATH"] * ":" * "/home/kevin/.local/bin"
 
 If you don't have a previous installation, you can use `Conda.jl` to install the necessary tools.
 To do this, first install `Conda.jl` in your environment using the Pkg REPL
-(accessible by typing `]` in the julia REPL - press <backspace> to get back to the regular REPL).
+(accessible by typing `]` in the julia REPL - press `<backspace>` to get back to the regular REPL).
 
 ```plaintext
 ❯ mkdir my_project

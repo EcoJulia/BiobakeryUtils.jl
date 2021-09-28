@@ -3,6 +3,6 @@
 ## Contents
 
 ```@contents
-Pages = ["general.md", "humann2.md", "metaphlan2.md"]
+Pages = ["general.md", "conda.md", "metaphlan.md", "humann.md"]
 Depth = 6
 ```

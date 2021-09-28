@@ -6,7 +6,7 @@ replaces first column of a DataFrame with results from
 regrouping `inkind` to `outkind`.
 
 Requires installation of [`humann`](https://github.com/biobakery/humann) available in `ENV["PATH"]`.
-See ["Using Conda"](@ref) for more information.
+See "[Using Conda](@ref)" for more information.
 """
 function humann_regroup(df::AbstractDataFrame; inkind::String="uniref90", outkind::String="ec")
     in_path = tempname()
@@ -28,7 +28,7 @@ replaces first column of a DataFrame with results from
 renaming `inkind` to `outkind`.
 
 Requires installation of [`humann`](https://github.com/biobakery/humann) available in `ENV["PATH"]`.
-See ["Using Conda"](@ref) for more information.
+See "[Using Conda](@ref)" for more information.
 """
 function humann_rename(df::AbstractDataFrame; kind::String="ec")
     in_path = tempname()
