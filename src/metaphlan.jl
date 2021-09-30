@@ -39,7 +39,7 @@ end
 
 Compiles a MetaPhlAn file into a CommunityProfile.
 Can select data according to taxonomic level. If level not given, all data is compiled.
-`Place name` of the CommunityProfile can be specified by passing a `sample` argument. If name not given, the name of the file becomes the `Place name`.
+`Sample name` of the CommunityProfile can be specified by passing a `sample` argument. If name not given, the name of the file becomes the `Sample name`.
 
 Levels may be given either as numbers or symbols:
 
@@ -57,45 +57,45 @@ Levels may be given either as numbers or symbols:
 Examples
 ≡≡≡≡≡≡≡≡≡≡
 julia> metaphlan_profile("test/files/metaphlan_single2.tsv")
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 96 things in 1 places
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 96 features in 1 samples
 
-Thing names:
+Feature names:
 Bacteria, Archaea, Firmicutes...Ruminococcus_bromii, Bacteroides_vulgatus
 
-Place names:
+Sample names:
 metaphlan_single2
 
 
 
 julia> metaphlan_profile("test/files/metaphlan_single2.tsv", 4)
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 11 things in 1 places
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 11 features in 1 samples
 
-Thing names:
+Feature names:
 Clostridiales, Bacteroidales, Coriobacteriales...Firmicutes_unclassified, Pasteurellales
 
-Place names:
+Sample names:
 metaphlan_single2
 
 
 
 julia> metaphlan_profile("test/files/metaphlan_single2.tsv", :genus)
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 40 things in 1 places
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 40 features in 1 samples
 
-Thing names:
+Feature names:
 Prevotella, Roseburia, Faecalibacterium...Haemophilus, Lactococcus
 
-Place names:
+Sample names:
 metaphlan_single2
 
 
 
 julia> metaphlan_profile("test/files/metaphlan_single2.tsv", :genus, sample = "sample2")
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 40 things in 1 places
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 40 features in 1 samples
 
-Thing names:
+Feature names:
 Prevotella, Roseburia, Faecalibacterium...Haemophilus, Lactococcus
 
-Place names:
+Sample names:
 sample2
 ```
 """
@@ -136,56 +136,56 @@ Levels may be given either as numbers or symbols:
 Examples
 ≡≡≡≡≡≡≡≡≡≡
 julia> metaphlan_profiles("test/files/metaphlan_multi_test.tsv")
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 42 things in 7 places
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 42 features in 7 samples
 
-Thing names:
+Feature names:
 Archaea, Euryarchaeota, Methanobacteria...Actinomyces_viscosus, GCF_000175315
 
-Place names:
+Sample names:
 sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
 
 
 
 julia> metaphlan_profiles("test/files/metaphlan_multi_test.tsv", :genus)
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 3 things in 7 places
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 3 features in 7 samples
 
-Thing names:
+Feature names:
 Methanobrevibacter, Methanosphaera, Actinomyces
 
-Place names:
+Sample names:
 sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
 
 
 
 julia> metaphlan_profiles("test/files/metaphlan_multi_test.tsv", 3)
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 2 things in 7 places
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 2 features in 7 samples
 
-Thing names:
+Feature names:
 Methanobacteria, Actinobacteria
 
-Place names:
+Sample names:
 sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
 
 
 
 # julia> metaphlan_profiles("test/files/metaphlan_multi_test_unidentified.tsv")
-# CommunityProfile{Float64, Taxon, MicrobiomeSample} with 43 things in 7 places
+# CommunityProfile{Float64, Taxon, MicrobiomeSample} with 43 features in 7 samples
 
-# Thing names:
+# Feature names:
 # UNIDENTIFIED, Archaea, Euryarchaeota...Actinomyces_viscosus, GCF_000175315
 
-# Place names:
+# Sample names:
 # sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
 
 
 
 # julia> metaphlan_profiles("test/files/metaphlan_multi_test_unidentified.tsv", keepunidentified = true)
-# CommunityProfile{Float64, Taxon, MicrobiomeSample} with 43 things in 7 places
+# CommunityProfile{Float64, Taxon, MicrobiomeSample} with 43 features in 7 samples
 
-# Thing names:
+# Feature names:
 # UNIDENTIFIED, Archaea, Euryarchaeota...Actinomyces_viscosus, GCF_000175315
 
-# Place names:
+# Sample names:
 # sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
 ```
 """
@@ -219,34 +219,34 @@ Compiles MetaPhlAn profiles from multiple single tables into a CommunityProfile.
 Examples
 ≡≡≡≡≡≡≡≡≡≡
 julia> metaphlan_profiles(["test/files/metaphlan_single1.tsv", "test/files/metaphlan_single2.tsv"])
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 129 things in 2 places
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 129 features in 2 samples
 
-Thing names:
+Feature names:
 Bacteria, Firmicutes, Bacteroidetes...Coprococcus_eutactus, Ruminococcus_bromii
 
-Place names:
+Sample names:
 metaphlan_single1, metaphlan_single2
 
 
 
 julia> metaphlan_profiles(["test/files/metaphlan_single1.tsv", "test/files/metaphlan_single2.tsv"], :genus)
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 46 things in 2 places
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 46 features in 2 samples
 
-Thing names:
+Feature names:
 Bacteroides, Roseburia, Faecalibacterium...Ruthenibacterium, Haemophilus
 
-Place names:
+Sample names:
 metaphlan_single1, metaphlan_single2
 
 
 
 julia> metaphlan_profiles(["test/files/metaphlan_single1.tsv", "test/files/metaphlan_single2.tsv"], 5)
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 24 things in 2 places
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 24 features in 2 samples
 
-Thing names:
+Feature names:
 Lachnospiraceae, Ruminococcaceae, Bacteroidaceae...Clostridiales_unclassified, Pasteurellaceae
 
-Place names:
+Sample names:
 metaphlan_single1, metaphlan_single2
 ```
 """
