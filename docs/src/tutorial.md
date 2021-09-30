@@ -17,12 +17,12 @@ From one file with a single table:
 
 ``` julia
 julia> metaphlan_profile("test/files/metaphlan_single2.tsv")
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 96 things in 1 places
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 96 features in 1 samples
 
-Thing names:
+Feature names:
 Bacteria, Archaea, Firmicutes...Ruminococcus_bromii, Bacteroides_vulgatus
 
-Place names:
+Sample names:
 metaphlan_single2
 ```
 
@@ -30,12 +30,12 @@ From one file with a merged table:
 
 ``` julia
 julia> metaphlan_profiles("test/files/metaphlan_multi_test.tsv")
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 42 things in 7 places
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 42 features in 7 samples
 
-Thing names:
+Feature names:
 Archaea, Euryarchaeota, Methanobacteria...Actinomyces_viscosus, GCF_000175315
 
-Place names:
+Sample names:
 sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
 ```
 
@@ -43,12 +43,12 @@ From multiple files with single tables:
 
 ```julia
 julia> metaphlan_profiles(["test/files/metaphlan_single1.tsv", "test/files/metaphlan_single2.tsv"])
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 129 things in 2 places
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 129 features in 2 samples
 
-Thing names:
+Feature names:
 Bacteria, Firmicutes, Bacteroidetes...Coprococcus_eutactus, Ruminococcus_bromii
 
-Place names:
+Sample names:
 metaphlan_single1, metaphlan_single2
 ```
 
@@ -69,23 +69,23 @@ Taxonomic levels may be given either as numbers or symbols:
 
 ```julia
 julia> metaphlan_profile("test/files/metaphlan_single2.tsv", :genus)
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 40 things in 1 places
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 40 features in 1 samples
 
-Thing names:
+Feature names:
 Prevotella, Roseburia, Faecalibacterium...Haemophilus, Lactococcus
 
-Place names:
+Sample names:
 metaphlan_single2
 ```
 
 ```julia
 julia> metaphlan_profile("test/files/metaphlan_single2.tsv", 4)
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 11 things in 1 places
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 11 features in 1 samples
 
-Thing names:
+Feature names:
 Clostridiales, Bacteroidales, Coriobacteriales...Firmicutes_unclassified, Pasteurellales
 
-Place names:
+Sample names:
 metaphlan_single2
 ```
 
@@ -96,36 +96,38 @@ When creating a CommunityProfile from a merged table, data from unidentified tax
 ```
 
 ### Indexing CommunityProfiles
-CommunityProfiles can be indexed using items in "Thing names" and "Place names".
+CommunityProfiles can be indexed using items in "Feature names" and "Sample names".
 
 ```julia
-julia> profile = metaphlan_profiles("test/files/metaphlan_multi_test.tsv")CommunityProfile{Float64, Taxon, MicrobiomeSample} with 42 things in 7 places
-Thing names:
+julia> profile = metaphlan_profiles("test/files/metaphlan_multi_test.tsv")
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 42 features in 7 samples
+
+Feature names:
 Archaea, Euryarchaeota, Methanobacteria...Actinomyces_viscosus, GCF_000175315
 
-Place names:
+Sample names:
 sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
 
 
 
 julia> profile[:, "sample1_taxonomic"]
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 42 things in 1 places
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 42 features in 1 samples
 
-Thing names:
+Feature names:
 Archaea, Euryarchaeota, Methanobacteria...Actinomyces_viscosus, GCF_000175315
 
-Place names:
+Sample names:
 sample1_taxonomic
 
 
 
 julia> profile["Archaea", :]
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 1 things in 7 places
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 1 features in 7 samples
 
-Thing names:
+Feature names:
 Archaea
 
-Place names:
+Sample names:
 sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
 
 
@@ -134,23 +136,23 @@ julia> profile["Actinomycetales", "sample3_taxonomic"]
 0.08487
 
 julia> profile["Actinobacteria", ["sample1_taxonomic", "sample3_taxonomic"]]
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 1 things in 2 places
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 1 features in 2 samples
 
-Thing names:
+Feature names:
 Actinobacteria
 
-Place names:
+Sample names:
 sample1_taxonomic, sample3_taxonomic
 
 
 
 julia> profile[["Actinobacteria", "Methanobacteria"], "sample1_taxonomic"]
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 2 things in 1 places
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 2 features in 1 samples
 
-Thing names:
+Feature names:
 Actinobacteria, Methanobacteria
 
-Place names:
+Sample names:
 sample1_taxonomic
 ```
 
