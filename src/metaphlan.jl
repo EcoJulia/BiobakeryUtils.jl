@@ -53,22 +53,26 @@ function metaphlan_profiles(tables)
 end
 
 """
-    taxfilter!(df::DataFrame, level::Union{Int, Symbol}; keepunidentified::Bool)
+    taxfilter!(df::DataFrame, level::Union{Int, Symbol}; keepunidentified::Bool).
+
 Filter a MetaPhlAn table (as DataFrame) to a particular taxon level.
 Levels may be given either as numbers or symbols:
-- `1` = `:Kingdom`
-- `2` = `:Phylum`
-- `3` = `:Class`
-- `4` = `:Order`
-- `5` = `:Family`
-- `6` = `:Genus`
-- `7` = `:Species`
-- `8` = `:Subspecies`
+
+- `1` = `:kingdom`
+- `2` = `:phylum`
+- `3` = `:class`
+- `4` = `:order`
+- `5` = `:family`
+- `6` = `:genus`
+- `7` = `:species`
+- `8` = `:subspecies`
+
 Taxon level is removed from resulting taxon string, eg.
 `g__Bifidobacterium` becomes `Bifidobacterium`.
 Set `keepunidentified` flag to `false` to remove `UNIDENTIFIED` rows.
 
-`taxfilter!()` modifies the dataframe.
+`taxfilter!()` modifies the dataframe. 
+If you don't want to modify the dataframe use [`taxfilter()`](@ref)
 
 This function will also rename the taxa in the first column.
 
@@ -125,8 +129,10 @@ end
 
 """
     taxfilter(df::DataFrame, level::Union{Int, Symbol}; keepunidentified::Bool)
+
 Filter a MetaPhlAn table (as DataFrame) to a particular taxon level.
 Levels may be given either as numbers or symbols:
+
 - `1` = `:Kingdom`
 - `2` = `:Phylum`
 - `3` = `:Class`
@@ -135,11 +141,13 @@ Levels may be given either as numbers or symbols:
 - `6` = `:Genus`
 - `7` = `:Species`
 - `8` = `:Subspecies`
+
 Taxon level is removed from resulting taxon string, eg.
 `g__Bifidobacterium` becomes `Bifidobacterium`.
 Set `keepunidentified` flag to `false` to remove `UNIDENTIFIED` rows.
 
 `taxfilter()` doesn't modify the dataframe that you pass to it.
+If you want to modify the dataframe use [`taxfilter!()`](@ref)
 
 This function will also rename the taxa in the first column.
 
