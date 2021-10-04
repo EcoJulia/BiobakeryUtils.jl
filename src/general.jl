@@ -41,6 +41,33 @@ function clean_abundance_tables(files::Array{String, 1};
 end
 
 
+"""
+    rm_strat!(df::DataFrame; col::Union{Int, Symbol}=1)
+
+Given an abundance table of functional profiles ex. humann2 file, removes stratification to show total abundances.
+Examples
+≡≡≡≡≡≡≡≡≡≡
+
+```jldoctest rm_strat!
+julia> table = CSV.read("test/files/humanntestfile.tsv", DataFrame)
+5×2 DataFrame
+ Row │ #GeneFamily                        SRS014459-Stool_Abundance 
+     │ String                             Float64                   
+─────┼──────────────────────────────────────────────────────────────
+   1 │ UniRef50_unknown|g__Parabacteroi…                   24.9493
+   2 │ UniRef50_unknown|g__Bacteroides|…                   21.9066
+   3 │ UniRef50_unknown|g__Bacteroides|…                   14.1214
+   4 │ UniRef50_unknown|g__Eubacterium|…                    8.04484
+   5 │ UniRef50_unknown                                    69.0221   
+
+julia> rm_strat!(table)
+1×2 DataFrame
+ Row │ #GeneFamily                        SRS014459-Stool_Abundance 
+     │ String                             Float64                   
+─────┼──────────────────────────────────────────────────────────────
+   1 │ UniRef50_unknown                                     69.0221
+```
+"""
 function rm_strat!(df::DataFrame; col::Union{Int, Symbol}=1)
     filter!(row->!occursin(r"\|", row[1]), df)
 end
