@@ -1,4 +1,65 @@
 """
+Stratified import currently non-functional
+"""
+function humann_profile(path::AbstractString; sample=basename(first(splitext(path))), stratified=false)
+    gfs = GeneFunction[]
+    abundances = Float64[]
+    
+    for (i, (gf, abundance)) in enumerate(CSV.File(path, datarow=2, header=["function", "abundance"]))
+        if occursin('|', gf) # indicates a taxon-stratified entry
+            stratified || continue
+            # (gf, tax) = split(gf, '|')
+            # if tax == "unclassified"
+            #     tax = Taxon("unclassified")
+            # else
+            #     tm = match(r"s__(\w+)", tax)
+            #     cld = :species
+            #     if isnothing(tm)
+            #         tm = match(r"g__(\d+)", tax)
+            #         cld = :genus
+            #         isnothing(tm) && error("Incorrectly formatted taxon stratification: $tax")
+            #     end
+            #     tax = Taxon(string(tm.captures[1]), cld)
+            # end
+            # push!(gfs, GeneFunction(gf, tax))
+        else
+            push!(gfs, GeneFunction(gf))
+        end
+        push!(abundances, abundance)
+    end
+    mat = sparse(reshape(abundances, length(abundances), 1))
+    sample = sample isa Microbiome.AbstractSample ? sample : MicrobiomeSample(sample)
+
+    return CommunityProfile(mat, gfs, [sample])
+end
+
+"""
+Stratified import currently non-functional
+"""
+function humann_profiles(path::AbstractString; samples=nothing, stratified=false)
+    tbl = CSV.File(path)
+    gfs = GeneFunction[]
+    if !isnothing(samples) 
+        length(samples) == length(keys(first(tbl))) - 1 || throw(ArgumentError("Passed $(length(samples)) samples, but table has $(length(keys(first(tbl))) - 1)"))
+    else
+        samples = keys(first(tbl))[2:end]
+    end
+
+    # Need to add code to deal with stratified input
+    tbl = filter(row-> !occursin('|', row[1]), tbl)
+    mat = spzeros(length(tbl), length(samples))
+
+    for (i, (row)) in enumerate(tbl)
+        push!(gfs, GeneFunction(row[1]))
+        for j in 1:length(samples)
+            mat[i, j] = row[j+1]
+        end
+    end
+    samples = eltype(samples) == MicrobiomeSample ? samples : MicrobiomeSample.(string.(samples))
+    return CommunityProfile(mat, gfs, samples)
+end
+
+"""
     function humann_regroup(df::AbstractDataFrame; inkind="uniref90", outkind::String="ec")
 
 Wrapper for `humann_regroup` script,

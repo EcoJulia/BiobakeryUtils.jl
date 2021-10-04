@@ -56,6 +56,25 @@ using CSV
     @test parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria") == Taxon("Methanobacteria", :class)
 end
 
+@testset "HUMAnN" begin
+    p1 = humann_profile("files/humann_single_1.tsv")
+    p2 = humann_profile("files/humann_single_2.tsv")
+    @test p1 isa CommunityProfile
+    @test size(p1) == (560, 1)
+    @test samplenames(p1) == ["humann_single_1"]
+    @test samplenames(humann_profile("files/humann_single_1.tsv"; sample = "sample1")) == ["sample1"]
+    @test samplenames(humann_profile("files/humann_single_1.tsv"; sample = MicrobiomeSample("sample1"))) == ["sample1"]
+
+    @test all(f-> !hastaxon(f), features(p1)) # unstratified
+    @test all(f-> !occursin('|', name(f)), features(p1))
+
+    pj = humann_profiles("files/humann_joined.tsv")
+    @test size(pj) == (560, 2)
+    @test isempty(setdiff(features(pj), features(commjoin(p1, p2))))
+    @test samplenames(pj) == samplenames(commjoin(p1, p2))
+
+end
+
 @testset "CommunityProfile Testing" begin
     table = CSV.read("files/metaphlan_multi_test.tsv", DataFrame, delim='\t',
     header=["#SampleID", "sample1_taxonomic_profile", "sample2_taxonomic_profile", "sample3_taxonomic_profile",	"sample4_taxonomic_profile", "sample5_taxonomic_profile", "sample6_taxonomic_profile", "sample7_taxonomic_profile"], datarow = 8)

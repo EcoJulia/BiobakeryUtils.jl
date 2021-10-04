@@ -6,6 +6,8 @@ export
     clean_abundance_tables,
     metaphlan_profile,
     metaphlan_profiles,
+    humann_profile,
+    humann_profiles,
     taxfilter,
     taxfilter!,
     parsetaxa,
@@ -28,5 +30,9 @@ using SparseArrays
 include("general.jl")
 include("metaphlan.jl")
 include("humann.jl")
+
+function __init__()
+    
+end
 
 end
