@@ -1,4 +1,41 @@
 """
+    humann(inputfile, output[, flags]; kwargs...)
+
+Run `humann` command line tool on `inputfile`,
+putting outputs in `output`.
+Requires `humann` to be installed and accessible in the `PATH`
+(see [Getting Started](@ref)).
+
+`humann` flag options (those that don't have a parameter) can be passed in an array,
+and other options can be passed with keyword arguments.
+For example, if on the command line you would run:
+
+```sh
+\$ humann -i \$INPUTFILE -o \$OUTPUT --bypass-tranlated-search --input-format fastq.gz --output-format biom
+```
+
+using this function, you would write:
+
+```julia
+humann(INTPUTFILE, OUTPUT, ["bypass_translated_search"]; input_formal="fastq.gz", output_format="biom")
+```
+"""
+function humann(inputfile, output, flags=[]; kwargs...)
+    c = ["metaphlan", inputfile, output]
+    append!(c, [replace(string("--", f), "_"=>"-") for f in flags])
+    append!(c, Iterators.flatten((replace(string("--", k), "_"=>"-"), v) for (k,v) in pairs(kwargs)))
+    
+    if !haskey(kwargs, :metaphlan_options) && haskey(ENV, "METAPHLAN_BOWTIE2_DB")
+        append!(c, ["--metaphlan-options", "'--bowtie2db $(ENV["METAPHLAN_BOWTIE2_DB"])'"])
+    end
+
+    deleteat!(c, findall(==(""), c))
+    @info "Running command: $(Cmd(c))"
+    return run(Cmd(c))
+end
+
+
+"""
 Stratified import currently non-functional
 """
 function humann_profile(path::AbstractString; sample=basename(first(splitext(path))), stratified=false)

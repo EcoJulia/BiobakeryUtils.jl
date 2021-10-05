@@ -25,7 +25,15 @@ If you're still confused, please ask (see 3rd bullet point at the top)!
 
 ### Bowtie2 database
 
-The first time you run `metaphlan`, it needs to download
+The first time you run `metaphlan`, it needs to download and unpack the marker database.
+If you don't care where this goes, don't worry about it - by default it will go
+into a subdirectory of your `conda` environment.
+
+If your home folder has limited space, or you want to install it to a particular location
+(eg a faster drive),
+you can either pass the kewword argument `bowtie2db="/path/to/location"` to all `metaphlan` commands,
+or set the environment variable `METAPHLAN_BOWTIE2_DB`.
+
 
 ## Input files
 
@@ -34,12 +42,12 @@ The first time you run `metaphlan`, it needs to download
 Some example files you can use to run this tutorial are available from the MetaPhlAn repo,
 and can be downloaded using the `Downloads` standard library in julia:
 
-```@repl
-using Downloads: download
+```julia-repl
+julia> using Downloads: download
 
-base_url = "https://github.com/biobakery/biobakery/raw/master/demos/biobakery_demos/data/metaphlan3/input/";
+julia> base_url = "https://github.com/biobakery/biobakery/raw/master/demos/biobakery_demos/data/metaphlan3/input/";
 
-files = [
+julia> files = [
     "SRS014476-Supragingival_plaque.fasta.gz",
     "SRS014494-Posterior_fornix.fasta.gz",
     "SRS014459-Stool.fasta.gz",
@@ -48,43 +56,69 @@ files = [
     "SRS014472-Buccal_mucosa.fasta.gz"
 ];
 
-mkdir("inputs")
+julia> for file in files
+           download(joinpath(base_url, file), file)
+       end
 
-for file in files
-    download(joinpath(base_url, file), joinpath("inputs", file))
-end
-
-readdir("inputs")
+julia> readdir()
+8-element Vector{String}:
+ "Manifest.toml"
+ "Project.toml"
+ "SRS014459-Stool.fasta.gz"
+ "SRS014464-Anterior_nares.fasta.gz"
+ "SRS014470-Tongue_dorsum.fasta.gz"
+ "SRS014472-Buccal_mucosa.fasta.gz"
+ "SRS014476-Supragingival_plaque.fasta.gz"
+ "SRS014494-Posterior_fornix.fasta.gz"
 ```
 
 ## Run a single sample
 
-- https://github.com/biobakery/biobakery/wiki/metaphlan3#run-a-single-sample
-- for now, use `run(cmd)`
+[Official tutorial link](https://github.com/biobakery/biobakery/wiki/metaphlan3#run-a-single-sample)
+
+For convenience, this package has the [`metaphlan()`](@ref) function,
+which can be used in your julia scripts to build and call the `metaphlan` command line tool.
+
+For example, rather than call
+
+```sh
+$ metaphlan SRS014476-Supragingival_plaque.fasta.gz --input_type fasta > SRS014476-Supragingival_plaque_profile.txt
+```
+
+from the julia REPL, you can call
+
+```@repl
+metaphlan("SRS014476-Supragingival_plaque.fasta.gz", "SRS014476-Supragingival_plaque_profile.tsv"; input_type="fasta")
+```
 
 ## Output files
 
-- https://github.com/biobakery/biobakery/wiki/metaphlan3#output-files
+[Official tutorial link](https://github.com/biobakery/biobakery/wiki/metaphlan3#output-files)
+
 - load output with `metaphlan_profile`
 - investigate with various functions (try to show similar things as tutorial)
 
 ## Run on multiple cores
 
-- https://github.com/biobakery/biobakery/wiki/metaphlan3#run-on-multiple-cores
+[Official tutorial link](https://github.com/biobakery/biobakery/wiki/metaphlan3#run-on-multiple-cores)
+
 
 ## Run multiple samples
 
-- https://github.com/biobakery/biobakery/wiki/metaphlan3#run-multiple-samples
+[Official tutorial link](https://github.com/biobakery/biobakery/wiki/metaphlan3#run-multiple-samples)
+
 
 ## Merge outputs
 
-- https://github.com/biobakery/biobakery/wiki/metaphlan3#merge-outputs
+[Official tutorial link](https://github.com/biobakery/biobakery/wiki/metaphlan3#merge-outputs)
+
 - use `metaphlan_profile` in loop and then `commjoin`
 - use `metaphlan_profiles`
 
 ## Visualize results
 
-- https://github.com/biobakery/biobakery/wiki/metaphlan3#visualize-results
+[Official tutorial link](https://github.com/biobakery/biobakery/wiki/metaphlan3#visualize-results)
+
 - Kevin should probably handle this part
 
 ## Functions and Types

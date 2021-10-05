@@ -3,10 +3,10 @@ MetaPhlAn CLI
 ============#
 
 """
-    metaphlan(inputfile, output; kwargs...)
+    metaphlan(inputfile, outputfile; kwargs...)
 
 Run `metaphlan` command line tool on `inputfile`,
-putting outputs in `output`.
+creating `output`.
 Requires `metaphlan` to be installed and accessible in the `PATH`
 (see [Getting Started](@ref)).
 
@@ -14,13 +14,13 @@ Requires `metaphlan` to be installed and accessible in the `PATH`
 For example, if on the command line you would run:
 
 ```sh
-\$ metaphlan some.fastq.gz output/ --input_type fastq --nprocs 8
+\$ metaphlan some.fastq.gz output/some_profile.tsv --input_type fastq --nprocs 8
 ```
 
 using this function, you would write:
 
 ```julia
-metaphlan("some.fastq.gz", "output/"; input_type="fastq", nprocs=8)
+metaphlan("some.fastq.gz", "output/some_profile.tsv"; input_type="fastq", nprocs=8)
 ```
 
 Note: the `input_type` keyword is required.
