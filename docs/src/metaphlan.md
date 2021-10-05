@@ -1,15 +1,10 @@
 # MetaPhlAn Tutorial with BiobakeryUtils.jl
 
-- 🗒️ This tutorial is meant to be run in parallel with / mirror the [official MetaPhlAn v3 tutorial][metaphlan]
-- ❓️ If you have questions about MetaPhlAn itself, please direct them to the [bioBakery help forum][bioBakeryhelp]
-- 🤔 If you have questions about using the MetaPhlAn tools in julia, [please open an issue][issues],
-  or start a discussion over on [`Microbiome.jl`][discussions]!
-- 📔 For a function / type reference, [jump to the bottom](#functions-and-types)
-
-[metaphlan]: https://github.com/biobakery/biobakery/wiki/metaphlan3
-[bioBakeryhelp]: https://forum.biobakery.org/c/Microbial-community-profiling/MetaPhlAn
-[issues]: https://github.com/BioJulia/BiobakeryUtils.jl/issues/new/choose
-[discussions]: https://github.com/BioJulia/Microbiome.jl/discussions/new
+- 🗒️ This tutorial is meant to be run in parallel with / mirror the [official MetaPhlAn v3 tutorial]([metaphlan])
+- ❓️ If you have questions about MetaPhlAn itself, please direct them to the [bioBakery help forum]([bioBakeryhelp])
+- 🤔 If you have questions about using the MetaPhlAn tools in julia, [please open an issue]([issues]),
+  or start a discussion over on [`Microbiome.jl`]([discussions])!
+- 📔 For a function / type reference, [jump to the bottom](#Functions-and-Types)
 
 ## Getting started
 

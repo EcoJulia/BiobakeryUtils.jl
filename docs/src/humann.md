@@ -1,15 +1,10 @@
 # HUMAnN Tutorial with BiobakeryUtils.jl
 
-- 🗒️ This tutorial is meant to be run in parallel with / mirror the [official HUMAnN v3 tutorial][humann]
-- ❓️ If you have questions about MetaPhlAn itself, please direct them to the [bioBakery help forum][bioBakeryhelp]
-- 🤔 If you have questions about using the MetaPhlAn tools in julia, [please open an issue][issues],
-  or start a discussion over on [`Microbiome.jl`][discussions]!
-- 📔 For a function / type reference, [jump to the bottom](#functions-and-types)
-
-[humann]: https://github.com/biobakery/biobakery/wiki/humann3
-[bioBakeryhelp]: https://forum.biobakery.org/c/Microbial-community-profiling/HUMAnN
-[issues]: https://github.com/BioJulia/BiobakeryUtils.jl/issues/new/choose
-[discussions]: https://github.com/BioJulia/Microbiome.jl/discussions/new
+- 🗒️ This tutorial is meant to be run in parallel with / mirror the [official HUMAnN v3 tutorial](https://github.com/biobakery/biobakery/wiki/humann3)
+- ❓️ If you have questions about MetaPhlAn itself, please direct them to the [bioBakery help forum](https://forum.biobakery.org/c/Microbial-community-profiling/HUMAnN)
+- 🤔 If you have questions about using the MetaPhlAn tools in julia, [please open an issue](https://github.com/BioJulia/BiobakeryUtils.jl/issues/new/choose),
+  or start a discussion over on [`Microbiome.jl`](https://github.com/BioJulia/Microbiome.jl/discussions/new)!
+- 📔 For a function / type reference, [jump to the bottom](#Functions-and-Types)
 
 ## Getting started
 
