@@ -7,7 +7,7 @@ makedocs(
     pages = [
         "BiobakeryUtils" => "index.md",
         "General Utilities" => "general.md",
-        "Installing tools with Conda" => "conda.md",
+        "Getting Started" => "gettingstarted.md",
         "Working with HUMAnN" => "humann.md",
         "Working with MetaPhlAn" => "metaphlan.md",
         "Contributing" => "contributing.md"
