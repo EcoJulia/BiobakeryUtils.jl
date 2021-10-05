@@ -1,7 +1,6 @@
 [deps]
 BiobakeryUtils = "fa5322f5-bd84-5069-834a-abf3230fb8f8"
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
-DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 Microbiome = "3bd8f0ae-a0f2-5238-a5af-e1b399a4940c"
 RCall = "6f49c342-dc21-5d91-9882-a32aef131414"
