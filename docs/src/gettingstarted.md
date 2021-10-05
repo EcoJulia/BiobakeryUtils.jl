@@ -176,8 +176,14 @@ Collecting package metadata (current_repodata.json): done
 Solving environment: done
 # ...
 
-
+julia> Conda.add("metaphlan", :biobakery; channel="bioconda")
+[ Info: Running conda install -y -c bioconda metaphlan in biobakery environment
+Collecting package metadata (current_repodata.json): done
+Solving environment: done
+# ...
 ```
+
+[![asciicast](https://asciinema.org/a/bahBYyfDyLoETR0qf1cQl7Stb.svg)](https://asciinema.org/a/bahBYyfDyLoETR0qf1cQl7Stb)
 
 By default, `Conda.jl` puts environments into `~/.julia/conda/envs/<env name>`,
 so in this case, you'd next want to run
@@ -186,4 +192,13 @@ so in this case, you'd next want to run
 ENV["PATH"] = ENV["PATH"] * ":" * expanduser("~/.julia/conda/envs/biobakery/bin")
 ```
 
-[![asciicast](https://asciinema.org/a/bahBYyfDyLoETR0qf1cQl7Stb.svg)](https://asciinema.org/a/bahBYyfDyLoETR0qf1cQl7Stb)
+Note: if you need to manually edit `ENV["PATH"]` like this,
+you'll need to do this each time you load julia.
+To get around this, you can modify you shell's `$PATH` variable,
+or use [`direnv`](https://direnv.net) to set it on a per-directory basis.
+
+## Using MetaPhlAn and HUMAnN
+
+You should now be ready to start using MetaPhlAn and HUMAnN from julia!
+Take a look at the [MetaPhlAn tutorial](metaphlan) or [HUMAnN tutorial](humann)
+for next steps.
