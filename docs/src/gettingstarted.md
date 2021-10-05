@@ -169,8 +169,24 @@ julia> # press ']'
   [4ec0a83e] + Unicode
 
 julia> using Conda
+```
 
-julia> Conda.add("humann", :biobakery; channel="bioconda")
+First, you'll need to add "channels" to a new Conda environment.
+The order here is important.
+Assuming you want your environment to be called `biobakery`:
+
+```
+julia> Conda.add_channel("bioconda", :biobakery)
+┌ Info: Running conda config --add channels bioconda --file /home/kevin/.julia/conda/3/envs/biobakery/condarc-julia.yml --force
+└ in biobakery environment
+
+julia> Conda.add_channel("conda-forge", :biobakery)
+┌ Info: Running conda config --add channels conda-forge --file /home/kevin/.julia/conda/3/envs/biobakery/condarc-julia.yml
+└ --force in biobakery environment
+```
+
+
+julia> Conda.add("humann", :biobakery)
 [ Info: Running conda install -y -c bioconda humann in biobakery environment
 Collecting package metadata (current_repodata.json): done
 Solving environment: done
@@ -186,10 +202,10 @@ Solving environment: done
 [![asciicast](https://asciinema.org/a/bahBYyfDyLoETR0qf1cQl7Stb.svg)](https://asciinema.org/a/bahBYyfDyLoETR0qf1cQl7Stb)
 
 By default, `Conda.jl` puts environments into `~/.julia/conda/envs/<env name>`,
-so in this case, you'd next want to run
+which you can get with `Conda.bin_dir()`, so in this case, you'd next want to run
 
 ```@repl
-ENV["PATH"] = ENV["PATH"] * ":" * expanduser("~/.julia/conda/envs/biobakery/bin")
+ENV["PATH"] = ENV["PATH"] * ":" * Conda.bin_dir(:biobakery)
 ```
 
 Note: if you need to manually edit `ENV["PATH"]` like this,

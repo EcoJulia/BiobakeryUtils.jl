@@ -1,9 +1,7 @@
 module BiobakeryUtils
 
 export
-    import_abundance_tables,
-    import_abundance_table,
-    clean_abundance_tables,
+    metaphlan,
     metaphlan_profile,
     metaphlan_profiles,
     humann_profile,

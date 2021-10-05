@@ -1,3 +1,48 @@
+#============
+MetaPhlAn CLI
+============#
+
+"""
+    metaphlan(inputfile, output; kwargs...)
+
+Run `metaphlan` command line tool on `inputfile`,
+putting outputs in `output`.
+Requires `metaphlan` to be installed and accessible in the `PATH`
+(see [Getting Started](@ref)).
+
+`metaphlan` options can be passed via keyword arguments.
+For example, if on the command line you would run:
+
+```sh
+\$ metaphlan some.fastq.gz output/ --input_type fastq --nprocs 8
+```
+
+using this function, you would write:
+
+```julia
+metaphlan("some.fastq.gz", "output/"; input_type="fastq", nprocs=8)
+```
+
+Note: the `input_type` keyword is required.
+
+Set the environmental variable "METAPHLAN_BOWTIE2_DB"
+to specify the location where the markergene database is/will be installed,
+or pass `bowtie2db = "some/path"` as a keyword argument.
+"""
+function metaphlan(inputfile, output; kwargs...)
+    c = ["metaphlan", inputfile, output]
+    append!(c, Iterators.flatten((string("--", k), v) for (k,v) in pairs(kwargs)))
+    
+    if !haskey(kwargs, :bowtie2db) && haskey(ENV, "METAPHLAN_BOWTIE2_DB")
+        append!(c, ["--bowtie2db", ENV["METAPHLAN_BOWTIE2_DB"]])
+    end
+
+    deleteat!(c, findall(==(""), c))
+    @info "Running command: $(Cmd(c))"
+    return run(Cmd(c))
+end
+
+
 #==============
 MetaPhlAn Utils
 ==============#
