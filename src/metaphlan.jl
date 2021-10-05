@@ -167,15 +167,14 @@ Sample names:
 sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
 
 
+julia> metaphlan_profiles("test/files/metaphlan_multi_test_unidentified.tsv")
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 43 features in 7 samples
 
-# julia> metaphlan_profiles("test/files/metaphlan_multi_test_unidentified.tsv")
-# CommunityProfile{Float64, Taxon, MicrobiomeSample} with 43 features in 7 samples
+Feature names:
+UNIDENTIFIED, Archaea, Euryarchaeota...Actinomyces_viscosus, GCF_000175315
 
-# Feature names:
-# UNIDENTIFIED, Archaea, Euryarchaeota...Actinomyces_viscosus, GCF_000175315
-
-# Sample names:
-# sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
+Sample names:
+sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
 
 
 
@@ -189,11 +188,11 @@ sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sam
 # sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
 ```
 """
-function metaphlan_profiles(path::AbstractString, level=:all; keepunidentified=false)
-    profiles = CSV.read(path, DataFrame)
-    taxa = [last(_split_clades(c)) for c in profiles[:, "#SampleID"]]
-    mat = sparse(Matrix(profiles[:, 2:end]))
-    samples = MicrobiomeSample.(replace.(names(profiles[:, 2:end]), Ref("_profile" => "")))
+function metaphlan_profiles(path::AbstractString, level=:all; keepunidentified=false, replace_string="_profile")
+    profiles = CSV.read(path, Tables.columntable)
+    taxa = [last(_split_clades(c)) for c in profiles[Symbol("#SampleID")]]
+    mat = reduce(hcat, [sparse(profiles[k]) for k in keys(profiles)[2:end]])
+    samples = collect(map(s-> MicrobiomeSample(replace(string(s), replace_string => "")), keys(profiles)[2:end]))
     if level == :all
         keep = Colon()
     elseif keepunidentified
@@ -214,10 +213,10 @@ end
 
 Compiles MetaPhlAn profiles from multiple single tables into a CommunityProfile.
     
-```jldoctest metaphlan_profiles
-
 Examples
 ≡≡≡≡≡≡≡≡≡≡
+
+```jldoctest metaphlan_profiles
 julia> metaphlan_profiles(["test/files/metaphlan_single1.tsv", "test/files/metaphlan_single2.tsv"])
 CommunityProfile{Float64, Taxon, MicrobiomeSample} with 129 features in 2 samples
 
@@ -263,150 +262,6 @@ function metaphlan_profiles(paths::Array{<:AbstractString, 1}, level::Int)
     metaphlan_profiles(paths, level)
 end
 
-"""
-    taxfilter!(df::DataFrame, level::Union{Int, Symbol}; keepunidentified::Bool).
-
-Filter a MetaPhlAn table (as DataFrame) to a particular taxon level.
-Levels may be given either as numbers or symbols:
-
-- `1` = `:kingdom`
-- `2` = `:phylum`
-- `3` = `:class`
-- `4` = `:order`
-- `5` = `:family`
-- `6` = `:genus`
-- `7` = `:species`
-- `8` = `:subspecies`
-
-Taxon level is removed from resulting taxon string, eg.
-`g__Bifidobacterium` becomes `Bifidobacterium`.
-Set `keepunidentified` flag to `false` to remove `UNIDENTIFIED` rows.
-
-`taxfilter!()` modifies the dataframe. 
-If you don't want to modify the dataframe use [`taxfilter()`](@ref)
-
-This function will also rename the taxa in the first column.
-
-```jldoctest taxfilter
-
-Examples
-≡≡≡≡≡≡≡≡≡≡
-julia> df
-4×2 DataFrame
- Row │ taxon                          abundance 
-     │ String                         Float64   
-─────┼──────────────────────────────────────────
-   1 │ k__Bacteria                     100.0
-   2 │ k__Bacteria|p__Firmicutes        63.1582
-   3 │ k__Bacteria|p__Bacteroidetes     25.6038
-   4 │ k__Bacteria|p__Actinobacteria    11.0898
-
-julia> taxfilter!(df,2; keepunidentified=true)
-3×2 DataFrame
- Row │ taxon           abundance 
-     │ String          Float64   
-─────┼───────────────────────────
-   1 │ Firmicutes        63.1582
-   2 │ Bacteroidetes     25.6038
-   3 │ Actinobacteria    11.0898
-
-julia> df
-3×2 DataFrame
- Row │ taxon           abundance 
-     │ String          Float64   
-─────┼───────────────────────────
-   1 │ Firmicutes        63.1582
-   2 │ Bacteroidetes     25.6038
-   3 │ Actinobacteria    11.0898
-```
-"""
-function taxfilter!(taxonomic_profile::AbstractDataFrame, level::Int=7; keepunidentified=true)
-    in(level, collect(1:8)) || @error "$level not a valid taxonomic level" taxonlevels
-    
-    taxonomic_profile[!, 1] = parsetaxon.(taxonomic_profile[!, 1]; throw_error=false)
-    filter!(taxonomic_profile) do row
-        cl = clade(row[1])
-        keepunidentified ? ismissing(cl) || taxonlevels[cl] == level : level == taxonlevels[cl]
-    end
-
-    taxonomic_profile[!, 1] = map(name, taxonomic_profile[!, 1])
-    return taxonomic_profile
-end
-
-function taxfilter!(taxonomic_profile::AbstractDataFrame, level::Symbol; keepunidentified=true)
-    in(level, keys(taxonlevels)) || @error "$level not a valid taxonomic level" taxonlevels
-    taxfilter!(taxonomic_profile, taxonlevels[level]; keepunidentified=keepunidentified)
-end
-
-"""
-    taxfilter(df::DataFrame, level::Union{Int, Symbol}; keepunidentified::Bool)
-
-Filter a MetaPhlAn table (as DataFrame) to a particular taxon level.
-Levels may be given either as numbers or symbols:
-
-- `1` = `:Kingdom`
-- `2` = `:Phylum`
-- `3` = `:Class`
-- `4` = `:Order`
-- `5` = `:Family`
-- `6` = `:Genus`
-- `7` = `:Species`
-- `8` = `:Subspecies`
-
-Taxon level is removed from resulting taxon string, eg.
-`g__Bifidobacterium` becomes `Bifidobacterium`.
-Set `keepunidentified` flag to `false` to remove `UNIDENTIFIED` rows.
-
-`taxfilter()` doesn't modify the dataframe that you pass to it.
-If you want to modify the dataframe use [`taxfilter!()`](@ref)
-
-This function will also rename the taxa in the first column.
-
-```jldoctest taxfilter
-
-Examples
-≡≡≡≡≡≡≡≡≡≡
-julia> df
-4×2 DataFrame
- Row │ taxon                          abundance 
-     │ String                         Float64   
-─────┼──────────────────────────────────────────
-   1 │ k__Bacteria                     100.0
-   2 │ k__Bacteria|p__Firmicutes        63.1582
-   3 │ k__Bacteria|p__Bacteroidetes     25.6038
-   4 │ k__Bacteria|p__Actinobacteria    11.0898
-   
-julia> taxfilter(df,2; keepunidentified=true)
-3×2 DataFrame
- Row │ taxon            abundance 
-     │ String           Float64   
-─────┼────────────────────────────
-   1 │ Firmicutes         63.1582
-   2 │ Bacteroidetes      25.6038
-   3 │ Actinobacteria     11.0898
-   
-julia> df
-4×2 DataFrame
- Row │ taxon                          abundance 
-     │ String                         Float64   
-─────┼──────────────────────────────────────────
-   1 │ k__Bacteria                     100.0
-   2 │ k__Bacteria|p__Firmicutes        63.1582
-   3 │ k__Bacteria|p__Bacteroidetes     25.6038
-   4 │ k__Bacteria|p__Actinobacteria    11.0898   
-```
-"""
-function taxfilter(taxonomic_profile::AbstractDataFrame, level::Int=7; keepunidentified=true)
-    filt = deepcopy(taxonomic_profile)
-    taxfilter!(filt, level; keepunidentified=keepunidentified)
-    return filt
-end
-
-function taxfilter(taxonomic_profile::AbstractDataFrame, level::Symbol; keepunidentified=true)
-    filt = deepcopy(taxonomic_profile)
-    taxfilter!(filt, level; keepunidentified=keepunidentified)
-    return filt
-end
 
 """
     parsetaxon(taxstring::AbstractString, taxlevel::Union{Int, Symbol})

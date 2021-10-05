@@ -20,9 +20,9 @@ export
     humann2_barplots,
     qvalue!
 
-using DataFrames
 using Statistics
 using CSV
+using CSV.Tables
 using RCall
 using Microbiome
 using SparseArrays

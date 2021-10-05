@@ -1,82 +1,7 @@
-
-"""
-    import_abundance_table(file::AbstractString; delim::Char='\t')
-
-Given a file path or paths to abundance tables (eg humann2 or metaphlan2),
-create abundance table. Table is presumed to have samples in columns and
-features in rows. First column is taken as feature IDs.
-"""
-function import_abundance_table(file::AbstractString; delim::Char='\t')
-    @info "Importing abundance table" file
-    df = CSV.File(file, delim=delim) |> DataFrame
-    rename!(df, names(df)[1] => :col1)
-    return df
-end
-
-function import_abundance_tables(files::Array{<:AbstractString, 1}; delim::Char='\t')
-    @info "Importing abundance tables"
-    fulltable = DataFrame(col1=String[])
-    for t in files
-        df = import_abundance_table(t, delim=delim)
-        fulltable = join(fulltable, df, on=:col1, kind=:outer)
-    end
-
-    # replace all missing values (from joins) with 0.
-    fulltable = map(c -> eltype(c) <: Union{<:Number, Missing} ? collect(Missings.replace(c, 0)) : c, eachcol(fulltable))
-    return fulltable
-end
-
-
-function clean_abundance_tables(files::Array{String, 1};
-                        delim::Char='\t',
-                        col1::Symbol=:taxon,
-                        suffix::String="_taxonomic_profile")
-    @info "Cleaning"
-    t = import_abundance_tables(files, delim=delim)
-
-    rename!(t, :col1 => col1)
-    rename!(n-> Symbol(replace(String(n), suffix => "")), t)
-
-    return t
-end
-
-
-"""
-    rm_strat!(df::DataFrame; col::Union{Int, Symbol}=1)
-
-Given an abundance table of functional profiles ex. humann2 file, removes stratification to show total abundances.
-Examples
-≡≡≡≡≡≡≡≡≡≡
-
-```jldoctest rm_strat!
-julia> table = CSV.read("test/files/humanntestfile.tsv", DataFrame)
-5×2 DataFrame
- Row │ #GeneFamily                        SRS014459-Stool_Abundance 
-     │ String                             Float64                   
-─────┼──────────────────────────────────────────────────────────────
-   1 │ UniRef50_unknown|g__Parabacteroi…                   24.9493
-   2 │ UniRef50_unknown|g__Bacteroides|…                   21.9066
-   3 │ UniRef50_unknown|g__Bacteroides|…                   14.1214
-   4 │ UniRef50_unknown|g__Eubacterium|…                    8.04484
-   5 │ UniRef50_unknown                                    69.0221   
-
-julia> rm_strat!(table)
-1×2 DataFrame
- Row │ #GeneFamily                        SRS014459-Stool_Abundance 
-     │ String                             Float64                   
-─────┼──────────────────────────────────────────────────────────────
-   1 │ UniRef50_unknown                                     69.0221
-```
-"""
-function rm_strat!(df::DataFrame; col::Union{Int, Symbol}=1)
-    filter!(row->!occursin(r"\|", row[1]), df)
-end
-
-
 """
     permanova(dm::Array{<:Real,2}, metadata::AbstractVector, nperm::Int=999;
                 label=nothing, datafilter=x->true)
-    permanova(dm::Array{<:Real,2}, metadata::AbstractDataFrame, nperm=999;
+    permanova(dm::Array{<:Real,2}, metadata::AbstractTable, nperm=999;
                 fields=names(metadata), kwargs...)
 
 Performs PERMANOVA analysis from R's [`vegan`](https://www.rdocumentation.org/packages/vegan/versions/2.4-2) package
@@ -86,8 +11,8 @@ using the `adonis` function.
 
 - `dm`: a symetric distance matrix.
 - `metadata`: either a vector of numerical or categorical data to test against,
-  or a DataFrame with columns for each variable to test against.
-  Any missing data in the vector or rows of the DataFrame with missing data
+  or a Table with columns for each variable to test against.
+  Any missing data in the vector or rows of the Table with missing data
   will be filtered out.
 - `nperm`=999: number of permutations for PERMANOVA.
 
@@ -97,8 +22,8 @@ using the `adonis` function.
   Removal of missing values occurs before this function is applied.
 - `label=nothing`: If provided, adds a column `label` to the results
   filled with this value.
-  Useful if performing multiple runs that will be combined in a single DataFrame.
-- `fields`: if passing a DataFrame as `metadata`,
+  Useful if performing multiple runs that will be combined in a single Table.
+- `fields`: if passing a Table as `metadata`,
   an array of symbols may be passed to select only certain columns
   and/or determine their order for the resulting PERMANOVA.
 
@@ -131,36 +56,6 @@ function permanova(dm::Array{<:Real,2}, metadata::AbstractVector, nperm::Int=999
 
     @rget p
 
-    p = p[:aov_tab]
-    if !isnothing(label)
-        p[!,:label] = fill(label, size(p, 1))
-    end
-
-    return p
-end
-
-
-function permanova(dm::Array{<:Real,2}, metadata::AbstractDataFrame, nperm=999;
-            datafilter=x->true,
-            label=nothing,
-            fields=names(metadata))
-
-    let notmissing = map(row->all(!ismissing, row[fields]), eachrow(metadata))
-        metadata = metadata[notmissing, :]
-        dm = dm[notmissing, notmissing]
-    end
-
-    fields = join(String.(fields), " + ")
-
-    filt = map(datafilter, eachrow(metadata))
-    r_meta = metadata[filt, :]
-    r_dm = dm[filt,filt]
-    @rput r_meta
-    @rput r_dm
-    reval("library(vegan)")
-    reval("p <- adonis(r_dm ~ $fields, data=r_meta, permutations = $nperm)")
-
-    @rget p
     p = p[:aov_tab]
     if !isnothing(label)
         p[!,:label] = fill(label, size(p, 1))
