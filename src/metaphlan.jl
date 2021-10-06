@@ -145,7 +145,14 @@ sample2
 ```
 """
 function metaphlan_profile(path::AbstractString, level=:all; sample=basename(first(splitext(path))))
-    profile = CSV.read(path, datarow=5, header=["clade", "NCBI_taxid", "abundance", "additional_species"], Tables.columntable)
+    if startswith(first(eachline(path)), "#")
+        dr = 5
+        hd = ["clade", "NCBI_taxid", "abundance", "additional_species"]
+    else
+        dr = 2
+        hd = ["clade", "abundance"]
+    end
+    profile = CSV.read(path, datarow=dr, header=hd, Tables.columntable)
     taxa = [last(_split_clades(c)) for c in profile.clade]
     mat = sparse(reshape(profile.abundance, length(profile.abundance), 1))
     sample = sample isa Microbiome.AbstractSample ? sample : MicrobiomeSample(sample)
@@ -238,6 +245,7 @@ function metaphlan_profiles(path::AbstractString, level=:all; keepunidentified=f
     taxa = [last(_split_clades(c)) for c in profiles[Symbol("#SampleID")]]
     mat = reduce(hcat, [sparse(profiles[k]) for k in keys(profiles)[2:end]])
     samples = collect(map(s-> MicrobiomeSample(replace(string(s), replace_string => "")), keys(profiles)[2:end]))
+    
     if level == :all
         keep = Colon()
     elseif keepunidentified

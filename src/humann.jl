@@ -34,7 +34,24 @@ function humann(inputfile, output, flags=[]; kwargs...)
     return run(Cmd(c))
 end
 
-
+function _gf_parse(gf)
+    if occursin('|', gf) # indicates a taxon-stratified entry
+        (gf, tax) = split(gf, '|')
+        if tax == "unclassified"
+            tax = Taxon("unclassified")
+        else
+            tm = contains(tax, "s__") ? match(r"(s__)(\w+)", tax) :
+                 contains(tax, "g__") ? match(r"(g__)(\w+)", tax) :
+                                        match(r"^(\W*)(\w+)$", tax)
+            isnothing(tm) && error("Incorrectly formatted taxon stratification: $tax")
+            cld = isnothing(tm.captures[1]) || tm.captures[1] == "s__" ? :species : :genus
+            tax = Taxon(string(tm.captures[2]), cld)
+        end
+        return GeneFunction(gf, tax)
+    else
+        return GeneFunction(gf)
+    end
+end
 """
     humann_profile(path::AbstractString; sample=basename(first(splitext(path))), stratified=false)
 
@@ -46,22 +63,9 @@ function humann_profile(path::AbstractString; sample=basename(first(splitext(pat
     gfs = GeneFunction[]
     abundances = Float64[]
     
-    for (i, (gf, abundance)) in enumerate(CSV.File(path, datarow=2, header=["function", "abundance"]))
-        if occursin('|', gf) # indicates a taxon-stratified entry
-            stratified || continue
-            (gf, tax) = split(gf, '|')
-            if tax == "unclassified"
-                tax = Taxon("unclassified")
-            else
-                tm = match(r"([sg]__)?(\w+)", tax)
-                isnothing(tm) && error("Incorrectly formatted taxon stratification: $tax")
-                cld = isnothing(tm.captures[1]) || tm.captures[1] == "s__" ? :species : :genus
-                tax = Taxon(string(tm.captures[2]), cld)
-            end
-            push!(gfs, GeneFunction(gf, tax))
-        else
-            push!(gfs, GeneFunction(gf))
-        end
+    for (i, (gf, abundance)) in enumerate(CSV.File(path, datarow=2, header=["function", "abundance"]))   
+        (!stratified && occursin('|', gf)) && continue
+        push!(gfs, _gf_parse(gf))
         push!(abundances, abundance)
     end
     mat = sparse(reshape(abundances, length(abundances), 1))
@@ -82,12 +86,11 @@ function humann_profiles(path::AbstractString; samples=nothing, stratified=false
         samples = keys(first(tbl))[2:end]
     end
 
-    # Need to add code to deal with stratified input
-    tbl = filter(row-> !occursin('|', row[1]), tbl)
+    stratified || (tbl = filter(row-> !occursin('|', row[1]), tbl))
     mat = spzeros(length(tbl), length(samples))
 
     for (i, (row)) in enumerate(tbl)
-        push!(gfs, GeneFunction(row[1]))
+        push!(gfs, _gf_parse(row[1]))
         for j in 1:length(samples)
             mat[i, j] = row[j+1]
         end
@@ -109,13 +112,13 @@ See "[Using Conda](@ref)" for more information.
 function humann_regroup(comm::CommunityProfile; inkind::String="uniref90", outkind::String="ec")
     in_path = tempname()
     out_path = tempname()
+    ss = samples(comm)
     CSV.write(in_path, comm)
     run(```
         humann_regroup_table -i $in_path -g $(inkind)_$outkind -o $out_path
         ```)
 
-    new_comm = CSV.File(out_path) |> DataFrame
-    return new_comm[!,1]
+    return humann_profiles(out_path; samples=ss)
 end
 
 # """

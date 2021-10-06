@@ -72,6 +72,13 @@ end
     @test isempty(setdiff(features(pj), features(commjoin(p1, p2))))
     @test samplenames(pj) == samplenames(commjoin(p1, p2))
 
+    pj_strat = humann_profiles("files/humann_joined.tsv"; stratified = true)
+    @test size(pj_strat) == (1358, 2)
+    @test !isempty(setdiff(features(pj_strat), features(pj)))
+    @test isempty(setdiff(featurenames(pj_strat), featurenames(pj)))
+    @test isempty(setdiff(features(filter(!hastaxon, pj_strat)), features(pj)))
+    CSV.write("files/humann_joined_roundtrip.tsv", pj_strat; delim='\t')
+    @test features(pj_strat) == features(humann_profiles("files/humann_joined_roundtrip.tsv"; stratified=true))
 end
 
 
