@@ -85,8 +85,9 @@ and a `Manifest.toml` file that contains all of the exact info about
 dependencies installed for this environment.
 
 In the future, you can launch julia with the environment already activated
-using `julia --project` if your working directory is `my_project`,
-or `julia --project=~/my_project` if you're in a different working directory.
+using `julia --project` if your working directory is `my_project/`,
+or `julia --project=<path to project>` if you're in a different working directory
+(eg. `julia --project=~/my_project` if `my_project/` is in the home directory).
 
 ## Using `bioBakery` command line tools
 
@@ -175,16 +176,16 @@ First, you'll need to add "channels" to a new Conda environment.
 The order here is important.
 Assuming you want your environment to be called `biobakery`:
 
-```
+```julia-repl
 julia> Conda.add_channel("bioconda", :biobakery)
 ┌ Info: Running conda config --add channels bioconda --file /home/kevin/.julia/conda/3/envs/biobakery/condarc-julia.yml --force
 └ in biobakery environment
+# ...
 
 julia> Conda.add_channel("conda-forge", :biobakery)
 ┌ Info: Running conda config --add channels conda-forge --file /home/kevin/.julia/conda/3/envs/biobakery/condarc-julia.yml
 └ --force in biobakery environment
-```
-
+# ...
 
 julia> Conda.add("humann", :biobakery)
 [ Info: Running conda install -y -c bioconda humann in biobakery environment
@@ -216,5 +217,5 @@ or use [`direnv`](https://direnv.net) to set it on a per-directory basis.
 ## Using MetaPhlAn and HUMAnN
 
 You should now be ready to start using MetaPhlAn and HUMAnN from julia!
-Take a look at the [MetaPhlAn tutorial](metaphlan) or [HUMAnN tutorial](humann)
+Take a look at the [MetaPhlAn tutorial](./metaphlan) or [HUMAnN tutorial](./humann)
 for next steps.
