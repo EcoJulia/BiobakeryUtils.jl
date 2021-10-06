@@ -12,10 +12,11 @@ export
     parsetaxon,
     rm_strat!,
     permanova,
-    humann2_regroup,
-    humann2_rename,
-    humann2_barplot,
-    humann2_barplots,
+    humann,
+    humann_regroup,
+    humann_rename,
+    humann_barplot,
+    humann_barplots,
     qvalue!
 
 using Statistics

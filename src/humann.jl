@@ -21,7 +21,7 @@ humann(INTPUTFILE, OUTPUT, ["bypass_translated_search"]; input_formal="fastq.gz"
 ```
 """
 function humann(inputfile, output, flags=[]; kwargs...)
-    c = ["metaphlan", inputfile, output]
+    c = ["humann", "-i", inputfile, "-o", output]
     append!(c, [replace(string("--", f), "_"=>"-") for f in flags])
     append!(c, Iterators.flatten((replace(string("--", k), "_"=>"-"), v) for (k,v) in pairs(kwargs)))
     

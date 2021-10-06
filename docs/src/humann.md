@@ -92,8 +92,54 @@ doing this will update a configuration file, so you shouldn't have to worry abou
 
 [Official tutorial link](https://github.com/biobakery/biobakery/wiki/humann3#2-metagenome-functional-profiling)
 
+Some example files you can use to run this tutorial are available from the MetaPhlAn repo,
+and can be downloaded using the `Downloads` standard library in julia:
 
+```julia-repl
+julia> using Downloads: download
 
+julia> base_url = "https://github.com/biobakery/humann/raw/master/examples/";
+
+julia> files = [
+           "demo.fastq.gz",
+           "demo.sam",
+           "demo.m8"
+       ];
+
+julia> for file in files
+           download(joinpath(base_url, file), file)
+       end
+
+julia> readdir()
+5-element Vector{String}:
+ "Manifest.toml"
+ "Project.toml"
+ "demo.fastq.gz"
+ "demo.sam"
+ "demo.m8"
+```
+
+For convenience, this package has the [`humann()`](@ref) function,
+which can be used in your julia scripts to build and call the `humann` command line tool.
+
+For example, rather than call
+
+```sh
+$ humann --input demo.fastq.gz --output demo_fastq
+```
+
+You can do
+
+```julia-repl
+julia> humann("demo.fastq.gz", "demo_fastq")
+[ Info: Running command: humann -i demo.fastq.gz -o demo_fastq
+Creating output directory: /home/kevin/my_project/demo_fastq
+Output files will be written to: /home/kevin/my_project/demo_fastq
+Decompressing gzipped file ...
+```
+
+First, `humann` will run `metaphlan` to generate taxonomic profiles,
+then will use that taxonomic profile to run a custom gene search.
 ## Default outputs
 
 [Official tutorial link](https://github.com/biobakery/biobakery/wiki/humann3#23-humann-default-outputs)
