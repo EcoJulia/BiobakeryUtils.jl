@@ -15,6 +15,7 @@ export
     humann,
     humann_regroup,
     humann_rename,
+    humann_renorm,
     humann_barplot,
     humann_barplots,
     qvalue!

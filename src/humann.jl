@@ -145,6 +145,19 @@ function humann_rename(comm::CommunityProfile; kind::String="ec")
     return humann_profiles(out_path; samples=ss)
 end
 
+function humann_renorm(comm::CommunityProfile; units="cpm")
+    in_path = tempname()
+    out_path = tempname()
+    ss = samples(comm)
+    
+    CSV.write(in_path, comm; delim='\t')
+    run(```
+        humann_renorm_table -i $in_path --units $units -o $out_path
+        ```)
+    
+    return humann_profiles(out_path; samples=ss)
+end
+
 
 # function humann_barplots(df::AbstractDataFrame, metadata::AbstractArray{<:AbstractString,1}, outpath::String)
 #     length(metadata) == size(df, 2) - 1 || @error "Must have metadata for each column"
