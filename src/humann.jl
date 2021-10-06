@@ -102,9 +102,8 @@ end
 """
     function humann_regroup(comm::CommunityProfile; inkind="uniref90", outkind::String="ec")
 
-Wrapper for `humann_regroup` script,
-replaces first column of a DataFrame with results from
-regrouping `inkind` to `outkind`.
+Wrapper for `humann_regroup_table` script
+to convert table from one kind of functional mapping to another.
 
 Requires installation of [`humann`](https://github.com/biobakery/humann) available in `ENV["PATH"]`.
 See "[Using Conda](@ref)" for more information.
@@ -125,7 +124,7 @@ end
 """
     humann_rename(comm::AbstractDataFrame; kind::String="ec")
 
-Wrapper for `humann_rename` script,
+Wrapper for `humann_rename_table` script,
 replaces first column of a DataFrame with results from
 renaming `inkind` to `outkind`.
 
@@ -145,6 +144,16 @@ function humann_rename(comm::CommunityProfile; kind::String="ec")
     return humann_profiles(out_path; samples=ss)
 end
 
+"""
+    humann_renorm(comm::AbstractDataFrame; units::String="cpm")
+
+Wrapper for `humann_renorm_table` script,
+to renormalize from RPKM (reads per kilobase per million)
+to "cpm" (counts per million) or "relab" (relative abundance).
+
+Requires installation of [`humann`](https://github.com/biobakery/humann) available in `ENV["PATH"]`.
+See "[Using Conda](@ref)" for more information.
+"""
 function humann_renorm(comm::CommunityProfile; units="cpm")
     in_path = tempname()
     out_path = tempname()
