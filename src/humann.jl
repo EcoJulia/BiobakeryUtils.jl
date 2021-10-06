@@ -92,7 +92,7 @@ function humann_profiles(path::AbstractString; samples=nothing, stratified=false
     for (i, (row)) in enumerate(tbl)
         push!(gfs, _gf_parse(row[1]))
         for j in 1:length(samples)
-            mat[i, j] = row[j+1]
+            mat[i, j] = ismissing(row[j+1]) ? 0 : row[j+1]
         end
     end
     samples = eltype(samples) == MicrobiomeSample ? samples : MicrobiomeSample.(string.(samples))
@@ -112,8 +112,9 @@ See "[Using Conda](@ref)" for more information.
 function humann_regroup(comm::CommunityProfile; inkind::String="uniref90", outkind::String="ec")
     in_path = tempname()
     out_path = tempname()
+
     ss = samples(comm)
-    CSV.write(in_path, comm)
+    CSV.write(in_path, comm; delim='\t')
     run(```
         humann_regroup_table -i $in_path -g $(inkind)_$outkind -o $out_path
         ```)
@@ -121,26 +122,28 @@ function humann_regroup(comm::CommunityProfile; inkind::String="uniref90", outki
     return humann_profiles(out_path; samples=ss)
 end
 
-# """
-#     humann_rename(comm::AbstractDataFrame; kind::String="ec")
+"""
+    humann_rename(comm::AbstractDataFrame; kind::String="ec")
 
-# Wrapper for `humann_rename` script,
-# replaces first column of a DataFrame with results from
-# renaming `inkind` to `outkind`.
+Wrapper for `humann_rename` script,
+replaces first column of a DataFrame with results from
+renaming `inkind` to `outkind`.
 
-# Requires installation of [`humann`](https://github.com/biobakery/humann) available in `ENV["PATH"]`.
-# See "[Using Conda](@ref)" for more information.
-# """
-# function humann_rename(comm::AbstractDataFrame; kind::String="ec")
-#     in_path = tempname()
-#     out_path = tempname()
-#     CSV.write(in_path, comm[!, [1]], delim='\t')
-#     run(```
-#         humann_rename_table -i $in_path -n $kind -o $out_path
-#         ```)
-#     new_comm = CSV.File(out_path, delim='\t') |> DataFrame
-#     return new_comm[!,1]
-# end
+Requires installation of [`humann`](https://github.com/biobakery/humann) available in `ENV["PATH"]`.
+See "[Using Conda](@ref)" for more information.
+"""
+function humann_rename(comm::CommunityProfile; kind::String="ec")
+    in_path = tempname()
+    out_path = tempname()
+    ss = samples(comm)
+    
+    CSV.write(in_path, comm; delim='\t')
+    run(```
+        humann_rename_table -i $in_path -n $kind -o $out_path
+        ```)
+    
+    return humann_profiles(out_path; samples=ss)
+end
 
 
 # function humann_barplots(df::AbstractDataFrame, metadata::AbstractArray{<:AbstractString,1}, outpath::String)
