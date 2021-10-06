@@ -308,24 +308,138 @@ julia> features(gfs_strat[["UniRef90_D0TRR5", "UniRef90_A6L100"], :])
 
 [Official tutorial link](https://github.com/biobakery/biobakery/wiki/humann3#3-manipulating-humann-output-tables)
 
-- Do all of this in CommProfile
+There are several ways to manipulate `CommunityProfile`s,
+both using julia and using utilities provided by `humann`.
 
+One example of the former is using `filter`,
+which takes a boolean function as the first argument,
+and returns a new `CommunityProfile` containing only
+rows that returned `true`. 
+
+For example, given a stratified table like `gfs_strat`,
+if you want to get only rows that have a taxon associated with them,
+you can do:
+
+```julia-repl
+julia> gfs_strat_only = filter(hastaxon, gfs_strat)
+CommunityProfile{Float64, GeneFunction, MicrobiomeSample} with 827 features in 1 samples
+
+Feature names:
+UniRef90_G1UL42, UniRef90_I9QXW8, UniRef90_A0A174QBF2...UniRef90_D0TRR5, UniRef90_D0TRR5
+
+Sample names:
+demo_genefamilies
+```
+
+Uh oh! We've now lost the "UNMAPPED" row,
+which means that we won't have the reads that couldn't be mapped to a gene function represented.
+No matter,
+we can use julia's [anonymous function](https://docs.julialang.org/en/v1/manual/functions/#man-anonymous-functions)
+(also sometimes called "lambda function") syntax
+to roll our own function.
+
+In the following example, `gf ->` indicates a function that takes a single argument
+(in this case, our `GeneFunction`),
+then askes if it's [`name`](@ref) is "UNMAPPED" with `name(gf) == "UNMAPPED"`,
+OR (`||` is a short-circuiting OR operator) if it has a taxon:
+
+```
+julia> gfs_strat_only_with_unmapped = filter(gf-> name(gf) == "UNMAPPED" || hastaxon(gf), gfs_strat)
+CommunityProfile{Float64, GeneFunction, MicrobiomeSample} with 828 features in 1 samples
+
+Feature names:
+UNMAPPED, UniRef90_G1UL42, UniRef90_I9QXW8...UniRef90_D0TRR5, UniRef90_D0TRR5
+
+Sample names:
+demo_genefamilies
+```
 ### Normalize RPK to relative abundance
 
 [Official tutorial link](https://github.com/biobakery/biobakery/wiki/humann3#31-normalizing-rpks-to-relative-abundance)
 
+Some `humann` utility scripts have convenience functions in `BiobakeryUtils.jl`.
+for example, if you want to renormalize your table into relative abundance,
+you could use `humann_renorm_table` from the command line,
+or call [`humann_renorm`](@ref):
+
+```
+julia> gfs_renormed = humann_renorm(gfs_strat; units="relab")
+Loading table from: /tmp/jl_9WL33H
+  Treating /tmp/jl_9WL33H as stratified output, e.g. ['UniRef90_G1UL42', 'Bacteroides_dorei']
+CommunityProfile{Float64, GeneFunction, MicrobiomeSample} with 589 features in 1 samples
+
+Feature names:
+UNMAPPED, UniRef90_G1UL42, UniRef90_I9QXW8...UniRef90_A6LH06, UniRef90_D0TRR5
+
+Sample names:
+demo_genefamilies
+
+julia> abundances(gfs_strat[1:5, 1])
+5×1 SparseArrays.SparseMatrixCSC{Float64, Int64} with 5 stored entries:
+ 17556.0
+   333.333
+   333.333
+   333.333
+   333.333
+
+julia> abundances(gfs_renormed[1:5, 1])
+5×1 SparseArrays.SparseMatrixCSC{Float64, Int64} with 5 stored entries:
+ 0.665379
+ 0.0126335
+ 0.0126335
+ 0.00758008
+ 0.00631673
+```
 
 ### Regrouping genes to other functional categories
 
 [Official tutorial link](https://github.com/biobakery/biobakery/wiki/humann3#32-regrouping-genes-to-other-functional-categories)
 
-- use `humann_regroup`
+Similarly, if we want to regroup our uniref90s into another gene function category like ecs or KOs,
+we can use [`humann_regroup`](@ref)
+
+```julia-repl
+julia> gfs_rxn = humann_regroup(gfs_strat, inkind="uniref90", outkind="rxn")
+Loading table from: /tmp/jl_SA9rCQ
+  Treating /tmp/jl_SA9rCQ as stratified output, e.g. ['UniRef90_G1UL42', 'Bacteroides_dorei']
+Loading mapping file from: /home/kevin/.julia/conda/3/envs/biobakery/lib/python3.7/site-packages/humann/tools/../data/pathways/meta
+cyc_reactions_level4ec_only.uniref.bz2
+Original Feature Count: 589; Grouped 1+ times: 78 (13.2%); Grouped 2+ times: 20 (3.4%)
+CommunityProfile{Float64, GeneFunction, MicrobiomeSample} with 174 features in 1 samples
+
+Feature names:
+UNMAPPED, UNGROUPED, 1.7.7.2-RXN...UDPNACETYLGLUCOSAMACYLTRANS-RXN, UROGENDECARBOX-RXN
+
+Sample names:
+demo_genefamilies
+
+julia> first(features(gfs_strat), 5)
+5-element Vector{GeneFunction}:
+ GeneFunction("UNMAPPED", missing)
+ GeneFunction("UniRef90_G1UL42", missing)
+ GeneFunction("UniRef90_G1UL42", Taxon("Bacteroides_dorei", :species))
+ GeneFunction("UniRef90_I9QXW8", missing)
+ GeneFunction("UniRef90_I9QXW8", Taxon("Bacteroides_dorei", :species))
+
+julia> first(features(gfs_rxn), 5)
+5-element Vector{GeneFunction}:
+ GeneFunction("UNMAPPED", missing)
+ GeneFunction("UNGROUPED", missing)
+ GeneFunction("1.7.7.2-RXN", missing)
+ GeneFunction("1.8.1.4-RXN", missing)
+ GeneFunction("2.4.1.135-RXN", missing)
+```
+
+Note - to get other feature types, you may have to download the requisite databases
+using `humann_databases` at the command line.
+See [Using Conda.jl](@ref)
 
 ### Attaching names to features
 
 [Official tutorial link](https://github.com/biobakery/biobakery/wiki/humann3#33-attaching-names-to-features)
 
-- use `humann_rename`
+You can attach names to features using [`humann_rename`](@ref).
+
 
 ## HUMAnN for multiple samples
 
