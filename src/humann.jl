@@ -53,14 +53,10 @@ function humann_profile(path::AbstractString; sample=basename(first(splitext(pat
             if tax == "unclassified"
                 tax = Taxon("unclassified")
             else
-                tm = match(r"s__(\w+)", tax)
-                cld = :species
-                if isnothing(tm)
-                    tm = match(r"g__(\d+)", tax)
-                    cld = :genus
-                    isnothing(tm) && error("Incorrectly formatted taxon stratification: $tax")
-                end
-                tax = Taxon(string(tm.captures[1]), cld)
+                tm = match(r"([sg]__)?(\w+)", tax)
+                isnothing(tm) && error("Incorrectly formatted taxon stratification: $tax")
+                cld = isnothing(tm.captures[1]) || tm.captures[1] == "s__" ? :species : :genus
+                tax = Taxon(string(tm.captures[2]), cld)
             end
             push!(gfs, GeneFunction(gf, tax))
         else
@@ -100,30 +96,30 @@ function humann_profiles(path::AbstractString; samples=nothing, stratified=false
     return CommunityProfile(mat, gfs, samples)
 end
 
+"""
+    function humann_regroup(comm::CommunityProfile; inkind="uniref90", outkind::String="ec")
+
+Wrapper for `humann_regroup` script,
+replaces first column of a DataFrame with results from
+regrouping `inkind` to `outkind`.
+
+Requires installation of [`humann`](https://github.com/biobakery/humann) available in `ENV["PATH"]`.
+See "[Using Conda](@ref)" for more information.
+"""
+function humann_regroup(comm::CommunityProfile; inkind::String="uniref90", outkind::String="ec")
+    in_path = tempname()
+    out_path = tempname()
+    CSV.write(in_path, comm)
+    run(```
+        humann_regroup_table -i $in_path -g $(inkind)_$outkind -o $out_path
+        ```)
+
+    new_comm = CSV.File(out_path) |> DataFrame
+    return new_comm[!,1]
+end
+
 # """
-#     function humann_regroup(df::AbstractDataFrame; inkind="uniref90", outkind::String="ec")
-
-# Wrapper for `humann_regroup` script,
-# replaces first column of a DataFrame with results from
-# regrouping `inkind` to `outkind`.
-
-# Requires installation of [`humann`](https://github.com/biobakery/humann) available in `ENV["PATH"]`.
-# See "[Using Conda](@ref)" for more information.
-# """
-# function humann_regroup(df::AbstractDataFrame; inkind::String="uniref90", outkind::String="ec")
-#     in_path = tempname()
-#     out_path = tempname()
-#     CSV.write(in_path, df)
-#     run(```
-#         humann_regroup_table -i $in_path -g $(inkind)_$outkind -o $out_path
-#         ```)
-
-#     new_df = CSV.File(out_path) |> DataFrame
-#     return new_df[!,1]
-# end
-
-# """
-#     humann_rename(df::AbstractDataFrame; kind::String="ec")
+#     humann_rename(comm::AbstractDataFrame; kind::String="ec")
 
 # Wrapper for `humann_rename` script,
 # replaces first column of a DataFrame with results from
@@ -132,15 +128,15 @@ end
 # Requires installation of [`humann`](https://github.com/biobakery/humann) available in `ENV["PATH"]`.
 # See "[Using Conda](@ref)" for more information.
 # """
-# function humann_rename(df::AbstractDataFrame; kind::String="ec")
+# function humann_rename(comm::AbstractDataFrame; kind::String="ec")
 #     in_path = tempname()
 #     out_path = tempname()
-#     CSV.write(in_path, df[!, [1]], delim='\t')
+#     CSV.write(in_path, comm[!, [1]], delim='\t')
 #     run(```
 #         humann_rename_table -i $in_path -n $kind -o $out_path
 #         ```)
-#     new_df = CSV.File(out_path, delim='\t') |> DataFrame
-#     return new_df[!,1]
+#     new_comm = CSV.File(out_path, delim='\t') |> DataFrame
+#     return new_comm[!,1]
 # end
 
 
