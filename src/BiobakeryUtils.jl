@@ -20,19 +20,16 @@ export
     humann_barplots,
     qvalue!
 
+using Reexport
+@reexport using Microbiome
 using Statistics
 using CSV
 using CSV.Tables
 using RCall
-using Microbiome
 using SparseArrays
 
 include("general.jl")
 include("metaphlan.jl")
 include("humann.jl")
-
-function __init__()
-    
-end
 
 end

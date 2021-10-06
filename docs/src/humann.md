@@ -179,14 +179,6 @@ If you want to hang onto the taxon information,
 use the keyword argument `stratified = true`:
 
 ```julia-repl
-julia> first(features(gfs), 5)
-5-element Vector{GeneFunction}:
- GeneFunction("UNMAPPED", missing)
- GeneFunction("UniRef90_G1UL42", missing)
- GeneFunction("UniRef90_I9QXW8", missing)
- GeneFunction("UniRef90_A0A174QBF2", missing)
- GeneFunction("UniRef90_A0A078RDY6", missing)
-
 julia> gfs_strat = humann_profile("demo_fastq/demo_genefamilies.tsv", stratified=true)
 CommunityProfile{Float64, GeneFunction, MicrobiomeSample} with 1416 features in 1 samples
 
