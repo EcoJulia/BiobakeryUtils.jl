@@ -2,7 +2,7 @@
 CurrentModule = BiobakeryUtils
 ```
 
-# Getting Started
+# [Getting Started](@id getting-started)
 
 This is a package for the [julia programming language](http://julialang.org),
 designed for working with the [bioBakery](https://github.com/biobakery/biobakery) family of tools
