@@ -16,6 +16,8 @@ export
     humann_regroup,
     humann_rename,
     humann_renorm,
+    humann_join,
+    read_pcl,
     humann_barplot,
     humann_barplots,
     qvalue!

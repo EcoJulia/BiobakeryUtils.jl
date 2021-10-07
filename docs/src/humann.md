@@ -445,12 +445,115 @@ You can attach names to features using [`humann_rename`](@ref).
 
 [Official tutorial link](https://github.com/biobakery/biobakery/wiki/humann3#42-humann-for-multiple-samples)
 
+You can easily run multiple files in a loop in julia.
+First, download the files
+(if you already did this [in the MetaPhlAn tutorial](@ref metaphlan-multi), no need to repeat it).
+
+```julia-repl
+julia> base_url = "https://github.com/biobakery/biobakery/raw/master/demos/biobakery_demos/data/metaphlan3/input/";
+
+julia> files = [
+           "SRS014476-Supragingival_plaque.fasta.gz",
+           "SRS014494-Posterior_fornix.fasta.gz",
+           "SRS014459-Stool.fasta.gz",
+           "SRS014464-Anterior_nares.fasta.gz",
+           "SRS014470-Tongue_dorsum.fasta.gz",
+           "SRS014472-Buccal_mucosa.fasta.gz"
+       ];
+
+julia> for file in files
+           download(joinpath(base_url, file), file)
+       end
+```
+
+Then, just write a normal loop with `humann`:
+
+```julia-repl
+julia> for file in files
+           humann(file, "hmp_subset")
+       end
+[ Info: Running command: humann -i SRS014476-Supragingival_plaque.fasta.gz -o hmp_subset
+Creating output directory: /home/kevin/my_project/hmp_subset
+Output files will be written to: /home/kevin/my_project/hmp_subset
+Decompressing gzipped file ...
+# ... etc
+```
+
+On my decently powerful laptop, this took about 10 min.
+
+To merge them using `humann_join_tables`,
+use the convenient julia function, [`humann_join`](@ref):
+
+```julia-repl
+julia> humann_join("hmp_subset", "hmp_subset_genefamilies.tsv"; file_name="genefamilies")
+Gene table created: /home/kevin/my_project/hmp_subset_genefamilies.tsv
+Process(`humann_join_tables -i hmp_subset -o hmp_subset_genefamilies.tsv --file_name genefamilies`, ProcessExited(0))
+```
+
+This will write a new file that you can then load with [`humann_profiles`](@ref)
+
+```julia-repl
+julia> humann_profiles("hmp_subset_genefamilies.tsv; stratified=true)
+
+```
+
+Alternatively, you can load each profile into a `CommunityProfile`,
+then merge them using the `Microbiome.jl` function `commjoin`:
+
+```julia-repl
+# anonymous function passed to filter files that contain "genefamilies"
+julia> hmp_files = filter(f-> contains(f, "genefamilies"),
+                              readdir("hmp_subset"; join=true))
+6-element Vector{String}:
+ "hmp_subset/SRS014459-Stool_genefamilies.tsv"
+ "hmp_subset/SRS014464-Anterior_nares_genefamilies.tsv"
+ "hmp_subset/SRS014470-Tongue_dorsum_genefamilies.tsv"
+ "hmp_subset/SRS014472-Buccal_mucosa_genefamilies.tsv"
+ "hmp_subset/SRS014476-Supragingival_plaque_genefamilies.tsv"
+ "hmp_subset/SRS014494-Posterior_fornix_genefamilies.tsv"
+
+julia> commjoin(humann_profile.(hmp_files)...)
+CommunityProfile{Float64, GeneFunction, MicrobiomeSample} with 1 features in 6 samples
+
+Feature names:
+UNMAPPED
+
+Sample names:
+SRS014459-Stool_genefamilies, SRS014464-Anterior_nares_genefamilies, SRS014470-Tongue_dorsum_genefamilies...SRS014476-Supragingival
+_plaque_genefamilies, SRS014494-Posterior_fornix_genefamilies
+```
+
 
 ## Plotting
 
 [Official tutorial link](https://github.com/biobakery/biobakery/wiki/humann3#5-plotting-stratified-functions)
 
-- Kevin should do this
+`BiobakeryUtils.jl` does not come with plotting recipes (yet),
+but there are several excellent plotting packages that you can use.
+First, download the pcl file used in the HUMAnN tutorial.
+
+Then, use the `read_pcl` function, which will add all of the metadata
+encoded in the PCL to the resulting `CommunityProfile`
+
+```julia-repl
+julia> download("https://raw.githubusercontent.com/biobakery/biobakery/master/demos/biobakery_demos/data/humann2/input/hmp_pathabund.pcl", "hmp_pathabund.pcl")
+
+julia> gfs = read_pcl("hmp_pathabund.pcl", last_metadata="STSite")
+CommunityProfile{Float64, GeneFunction, MicrobiomeSample} with 5606 features in 378 samples
+
+Feature names:
+1CMET2-PWY: N10-formyl-tetrahydrofolate biosynthesis, 1CMET2-PWY: N10-formyl-tetrahydrofolate biosynthesis, 1CMET2-PWY: N10-formyl-
+tetrahydrofolate biosynthesis...VALSYN-PWY: L-valine biosynthesis, VALSYN-PWY: L-valine biosynthesis
+
+Sample names:
+SRS011084, SRS011086, SRS011090...SRS058213, SRS058808
+
+
+
+julia> first(samples(gfs))
+MicrobiomeSample("SRS011084", {:STSite = "Stool"})
+```
+
 ## Functions and types
 
 ```@autodocs

@@ -103,7 +103,7 @@ metaphlan("SRS014476-Supragingival_plaque.fasta.gz", "SRS014476-Supragingival_pl
 [Official tutorial link](https://github.com/biobakery/biobakery/wiki/metaphlan3#run-on-multiple-cores)
 
 
-## Run multiple samples
+## [Run multiple samples](@id metaphlan-multi)
 
 [Official tutorial link](https://github.com/biobakery/biobakery/wiki/metaphlan3#run-multiple-samples)
 

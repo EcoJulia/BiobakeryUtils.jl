@@ -77,8 +77,8 @@ end
 """
 
 """
-function humann_profiles(path::AbstractString; samples=nothing, stratified=false)
-    tbl = CSV.File(path)
+function humann_profiles(path::AbstractString; samples=nothing, stratified=false, datarow=2)
+    tbl = CSV.File(path; datarow)
     gfs = GeneFunction[]
     if !isnothing(samples) 
         length(samples) == length(keys(first(tbl))) - 1 || throw(ArgumentError("Passed $(length(samples)) samples, but table has $(length(keys(first(tbl))) - 1)"))
@@ -167,6 +167,51 @@ function humann_renorm(comm::CommunityProfile; units="cpm")
     return humann_profiles(out_path; samples=ss)
 end
 
+"""
+    humann_renorm(comm::AbstractDataFrame; units::String="cpm")
+
+Wrapper for `humann_renorm_table` script,
+to renormalize from RPKM (reads per kilobase per million)
+to "cpm" (counts per million) or "relab" (relative abundance).
+
+Requires installation of [`humann`](https://github.com/biobakery/humann) available in `ENV["PATH"]`.
+See "[Using Conda](@ref)" for more information.
+"""
+function humann_join(in_path, out_path; file_name=nothing, search_subdirectories=false, verbose=false)
+    cmd = ["humann_join_tables", "-i", in_path, "-o", out_path]
+    !isnothing(file_name) && append!(cmd, ["--file_name", file_name])
+    search_subdirectories && push!(cmd, "--search-subdirectories")
+    verbose && push!(cmd, " --verbose")
+
+    run(Cmd(cmd))
+end
+
+function read_pcl(infile; last_metadata=2)
+    if last_metadata isa Int
+        lr = last_metadata
+    else
+        lr = 1
+        for line in eachline(infile)
+            startswith(line, last_metadata) && break
+            lr+=1
+        end
+    end
+
+    md_rows = CSV.File(infile, limit=lr-1, threaded=false)
+    cols = keys(first(md_rows))[2:end]
+    gfs = humann_profiles(infile; stratified=true, datarow=lr+1)
+    for row in md_rows
+        md = Symbol(row[1])
+        for col in cols
+            set!(gfs, string(col), md, row[col])
+        end
+    end
+    return gfs                
+end
+
+function write_pcl(comm::CommunityProfile; metadata=:all)
+         
+end
 
 # function humann_barplots(df::AbstractDataFrame, metadata::AbstractArray{<:AbstractString,1}, outpath::String)
 #     length(metadata) == size(df, 2) - 1 || @error "Must have metadata for each column"
