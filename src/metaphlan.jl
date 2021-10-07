@@ -152,7 +152,7 @@ function metaphlan_profile(path::AbstractString, level=:all; sample=basename(fir
         dr = 2
         hd = ["clade", "abundance"]
     end
-    profile = CSV.read(path, datarow=dr, header=hd, Tables.columntable)
+    profile = CSV.read(path, skipto=dr, header=hd, Tables.columntable)
     taxa = [last(_split_clades(c)) for c in profile.clade]
     mat = sparse(reshape(profile.abundance, length(profile.abundance), 1))
     sample = sample isa Microbiome.AbstractSample ? sample : MicrobiomeSample(sample)

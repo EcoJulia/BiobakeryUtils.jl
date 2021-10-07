@@ -63,7 +63,7 @@ function humann_profile(path::AbstractString; sample=basename(first(splitext(pat
     gfs = GeneFunction[]
     abundances = Float64[]
     
-    for (i, (gf, abundance)) in enumerate(CSV.File(path, datarow=2, header=["function", "abundance"]))   
+    for (i, (gf, abundance)) in enumerate(CSV.File(path, skipto=2, header=["function", "abundance"]))   
         (!stratified && occursin('|', gf)) && continue
         push!(gfs, _gf_parse(gf))
         push!(abundances, abundance)
@@ -77,8 +77,8 @@ end
 """
 
 """
-function humann_profiles(path::AbstractString; samples=nothing, stratified=false, datarow=2)
-    tbl = CSV.File(path; datarow)
+function humann_profiles(path::AbstractString; samples=nothing, stratified=false, skipto=2)
+    tbl = CSV.File(path; skipto)
     gfs = GeneFunction[]
     if !isnothing(samples) 
         length(samples) == length(keys(first(tbl))) - 1 || throw(ArgumentError("Passed $(length(samples)) samples, but table has $(length(keys(first(tbl))) - 1)"))
@@ -206,7 +206,7 @@ function read_pcl(infile; last_metadata=2)
 
     md_rows = CSV.File(infile, limit=lr-1, threaded=false)
     cols = keys(first(md_rows))[2:end]
-    gfs = humann_profiles(infile; stratified=true, datarow=lr+1)
+    gfs = humann_profiles(infile; stratified=true, skipto=lr+1)
     for row in md_rows
         md = Symbol(row[1])
         for col in cols
