@@ -530,14 +530,61 @@ _plaque_genefamilies, SRS014494-Posterior_fornix_genefamilies
 
 `BiobakeryUtils.jl` does not come with plotting recipes (yet),
 but there are several excellent plotting packages that you can use.
-First, download the pcl file used in the HUMAnN tutorial.
+Alternatively, you can use the wrapped [`humann_barplot`](@ref) script.
 
-Then, use the `read_pcl` function, which will add all of the metadata
-encoded in the PCL to the resulting `CommunityProfile`
+First, download the pcl file used in the HUMAnN tutorial.
 
 ```julia-repl
 julia> download("https://raw.githubusercontent.com/biobakery/biobakery/master/demos/biobakery_demos/data/humann2/input/hmp_pathabund.pcl", "hmp_pathabund.pcl")
+```
 
+### Using humann_barplot
+
+It's probably a good idea to read the tutorial link above that describes the dataset.
+here are the equivalent julia commands to generate the plots described there.
+
+```julia-repl
+julia> gfs = read_pcl("hmp_pathabund.pcl"; last_metadata="STSite")
+
+
+
+julia> humann_barplot(gfs, "plot1.png"; focal_metadata="STSite", focal_feature="METSYN-PWY")
+Process(`humann_barplot --i /tmp/jl_tKWIfW -o plot1.png --last-metadata STSite --focal-metadata STSite --focal-feature METSYN-PWY`,
+
+julia> humann_barplot(gfs, "plot2.png"; focal_metadata="STSite", focal_feature="METSYN-PWY", 
+                      sort="sum")
+Process(`humann_barplot --i /tmp/jl_vF6GHe -o plot2.png --last-metadata STSite --focal-metadata STSite --focal-feature METSYN-PWY -
+
+julia> humann_barplot(gfs, "plot3.png"; focal_metadata="STSite", focal_feature="METSYN-PWY",
+                      sort=["sum", "metadata"],
+                      scaling="logstack")
+Process(`humann_barplot --i /tmp/jl_VVl3zD -o plot3.png --last-metadata STSite --focal-metadata STSite --focal-feature METSYN-PWY -
+-sort sum metadata --scaling logstack`, ProcessExited(0))
+
+julia> humann_barplot(gfs, "plot4.png"; focal_metadata="STSite", focal_feature="COA-PWY",
+                      sort="sum")
+Process(`humann_barplot --i /tmp/jl_XePIBD -o plot4.png --last-metadata STSite --focal-metadata STSite --focal-feature COA-PWY --so
+rt sum`, ProcessExited(0))
+
+julia> humann_barplot(gfs, "plot5.png"; focal_metadata="STSite", focal_feature="COA-PWY",
+                      sort="braycurtis",
+                      scaling="logstack",
+                      as_genera=true,
+                      remove_zeros=true)
+```
+
+On the last call, notice that "flag arguments" (eg `--as-genera`)
+that don't take arguments on the command line must be set to `true` in the julia version.
+
+### Using julia plotting
+
+
+Use the [`read_pcl`](@ref) function to load the pcl file into julia,
+which will add all of the metadata
+encoded in the PCL to the resulting `CommunityProfile`
+
+
+```julia-repl
 julia> gfs = read_pcl("hmp_pathabund.pcl", last_metadata="STSite")
 CommunityProfile{Float64, GeneFunction, MicrobiomeSample} with 5606 features in 378 samples
 
@@ -553,6 +600,10 @@ SRS011084, SRS011086, SRS011090...SRS058213, SRS058808
 julia> first(samples(gfs))
 MicrobiomeSample("SRS011084", {:STSite = "Stool"})
 ```
+
+For plotting, I tend to use [Makie](https://github.com/JuliaPlots/Makie.jl),
+but there are [many other options](https://juliahub.com/ui/Search?q=plotting&type=packages).
+
 
 ## Functions and types
 

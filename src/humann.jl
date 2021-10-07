@@ -125,8 +125,7 @@ end
     humann_rename(comm::AbstractDataFrame; kind::String="ec")
 
 Wrapper for `humann_rename_table` script,
-replaces first column of a DataFrame with results from
-renaming `inkind` to `outkind`.
+returning a CommunityProfile with re-named features.
 
 Requires installation of [`humann`](https://github.com/biobakery/humann) available in `ENV["PATH"]`.
 See "[Using Conda](@ref)" for more information.
@@ -186,6 +185,11 @@ function humann_join(in_path, out_path; file_name=nothing, search_subdirectories
     run(Cmd(cmd))
 end
 
+"""
+    read_pcl(infile; last_metadata=2)
+
+Reads a PCL
+"""
 function read_pcl(infile; last_metadata=2)
     if last_metadata isa Int
         lr = last_metadata
@@ -209,8 +213,18 @@ function read_pcl(infile; last_metadata=2)
     return gfs                
 end
 
-function write_pcl(comm::CommunityProfile; metadata=:all)
-         
+function write_pcl(path, comm::CommunityProfile; usemetadata=:all)
+    coltab = Tables.columntable(metadata(comm))
+    if usemetadata == :all
+        usemetadata = collect(keys(coltab))
+        popfirst!(usemetadata)
+    end
+    cols = Symbol.(coltab.sample)
+    pushfirst!(cols, :thing)
+    tbl =  (; zip(cols, [[usemetadata]..., [[coltab[md][i] for md in usemetadata] for i in 1:length(cols)-1]...])...)
+    CSV.write(path, tbl; delim='\t')
+
+    CSV.write(path, comm; append=true, delim='\t')
 end
 
 # function humann_barplots(df::AbstractDataFrame, metadata::AbstractArray{<:AbstractString,1}, outpath::String)
@@ -232,29 +246,20 @@ end
 #     end
 # end
 
-# function humann_barplot(df::AbstractDataFrame, metadata::AbstractArray{<:AbstractString,1}, outpath::AbstractString)
-#     sum(x-> !occursin(r"\|", x), df[!,1]) == 1 || @error "Multipl unstratified rows in dataframe"
-#     matches = map(x-> match(r"^([^:|]+):?([^|]+)?", x),  df[!,1])
-#     all(x-> !isa(x, Nothing), matches) || @error "something is wrong!"
-#     @debug "Getting unique"
-#     ecs = unique([String(x.captures[1]) for x in matches])
-#     length(ecs) == 1 || @error "Multiple ecs found in df"
-#     ec = ecs[1]
+function humann_barplot(comm::CommunityProfile, outpath; kwargs...)
+    tmp = tempname()
+    write_pcl(tmp, comm)
 
-#     metadf = DataFrame(metadata=["metadatum"])
-#     metadf = hcat(metadf, DataFrame([names(df)[2:end][i]=>metadata[i] for i in eachindex(metadata)]...))
-#     @debug "opening file"
-#     fl_path = tempname()
-#     outfl = open(fl_path, "w")
-#     CSV.write(outfl, metadf, delim='\t')
-#     CSV.write(outfl, df, append=true, delim='\t')
-#     close(outfl)
-#     @debug "file closed"
-
-#     out = joinpath(outpath, "$ec.png")
-#     @debug "humann_barplot --i $fl_path -o $out --focal-feature $ec --focal-metadatum metadatum --last-metadatum metadatum --sort sum metadata"
-#     run(```
-#         humann_barplot --i $fl_path -o "$out" --focal-feature "$ec" --focal-metadatum metadatum --last-metadatum metadatum --sort sum metadata
-#         ```)
-
-# end
+    cmd = ["humann_barplot", "--i", tmp, "-o", outpath,
+            "--last-metadata", string(last(keys(first(metadata(comm)))))]
+    for (key,val) in kwargs
+        if val isa Bool
+            val && push!(cmd, replace(string("--", key), "_"=>"-"))
+        elseif val isa AbstractVector
+            append!(cmd, [replace(string("--", key), "_"=>"-"), string.(val)...])
+        else
+            append!(cmd, [replace(string("--", key), "_"=>"-"), string(val)])
+        end
+    end
+    run(Cmd(cmd))
+end

@@ -18,6 +18,7 @@ export
     humann_renorm,
     humann_join,
     read_pcl,
+    write_pcl,
     humann_barplot,
     humann_barplots,
     qvalue!
