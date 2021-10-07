@@ -217,5 +217,6 @@ or use [`direnv`](https://direnv.net) to set it on a per-directory basis.
 ## Using MetaPhlAn and HUMAnN
 
 You should now be ready to start using MetaPhlAn and HUMAnN from julia!
-Take a look at the [MetaPhlAn tutorial](./metaphlan) or [HUMAnN tutorial](./humann)
+Take a look at the [MetaPhlAn tutorial](@ref metaphlan-tutorial)
+or [HUMAnN tutorial](@ref humann-tutorial)
 for next steps.

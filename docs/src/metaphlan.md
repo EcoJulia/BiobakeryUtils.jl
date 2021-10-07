@@ -1,4 +1,5 @@
-# MetaPhlAn Tutorial with BiobakeryUtils.jl
+# [MetaPhlAn Tutorial with BiobakeryUtils.jl](@id metaphlan-tutorial)
+
 
 - 🗒️ This tutorial is meant to be run in parallel with / mirror the [official MetaPhlAn v3 tutorial](https://github.com/biobakery/biobakery/wiki/metaphlan3)
 - ❓️ If you have questions about MetaPhlAn itself, please direct them to the [bioBakery help forum](https://forum.biobakery.org/c/Microbial-community-profiling/MetaPhlAn)

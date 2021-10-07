@@ -1,4 +1,4 @@
-# HUMAnN Tutorial with BiobakeryUtils.jl
+# [HUMAnN Tutorial with BiobakeryUtils.jl](@id humann-tutorial)
 
 - 🗒️ This tutorial is meant to be run in parallel with / mirror the [official HUMAnN v3 tutorial](https://github.com/biobakery/biobakery/wiki/humann3)
 - ❓️ If you have questions about HUMAnN itself, please direct them to the [bioBakery help forum](https://forum.biobakery.org/c/Microbial-community-profiling/HUMAnN)
