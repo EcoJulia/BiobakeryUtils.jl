@@ -188,7 +188,10 @@ end
 """
     read_pcl(infile; last_metadata=2)
 
-Reads a PCL
+Reads a [PCL file](https://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#PCL:_Stanford_cDNA_file_format_.28.2A.pcl.29)
+and generates a `CommunityProfile` with metadata attached to the samples.
+
+`last_metadata` may be a row number or a string representing the final metadatum.
 """
 function read_pcl(infile; last_metadata=2)
     if last_metadata isa Int
@@ -213,6 +216,15 @@ function read_pcl(infile; last_metadata=2)
     return gfs                
 end
 
+"""
+    write_pcl(infile; usemetadata=:all)
+
+Writes a [PCL file](https://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#PCL:_Stanford_cDNA_file_format_.28.2A.pcl.29)
+from a `CommunityProfile` with metadata attached to the samples.
+
+`usemetadata` may be `:all` 
+or a vector of symbols.
+"""
 function write_pcl(path, comm::CommunityProfile; usemetadata=:all)
     coltab = Tables.columntable(metadata(comm))
     if usemetadata == :all
@@ -227,25 +239,25 @@ function write_pcl(path, comm::CommunityProfile; usemetadata=:all)
     CSV.write(path, comm; append=true, delim='\t')
 end
 
-# function humann_barplots(df::AbstractDataFrame, metadata::AbstractArray{<:AbstractString,1}, outpath::String)
-#     length(metadata) == size(df, 2) - 1 || @error "Must have metadata for each column"
-#     nostrat = df[map(x-> !occursin(r"\|", x), df[!,1]), 1]
-#     for p in nostrat
-#         pwy = match(r"^[\w.]+", p).match
-#         @debug pwy
-#         filt = [occursin(Regex("^$pwy\\b"), x) for x in df[!,1]]
-#         current = df[filt, :]
-#         @debug "Size of $p dataframe" size(current)
-#         if size(current, 1) < 3
-#             @info "Only 1 classified species for $p, skipping"
-#             continue
-#         end
-#         @info "plotting $p"
+"""
+    humann_barplot(comm::CommunityProfile, outpath; kwargs...)
 
-#         BiobakeryUtils.humann_barplot(current, metadata, outpath)
-#     end
-# end
+Wrapper for `humann_barplot` script,
+to generate plots from functional data.
+pass keyword arguments for script options.
+Flag arguments should be set to `true`. eg
 
+```julia-repl
+julia> humann_barplot(comm, "plot.png"; focal_metadata="STSite", focal_feature="COA-PWY",
+                      sort="braycurtis",
+                      scaling="logstack",
+                      as_genera=true,
+                      remove_zeros=true)
+```
+
+Requires installation of [`humann`](https://github.com/biobakery/humann) available in `ENV["PATH"]`.
+See "[Using Conda](@ref)" for more information.
+"""
 function humann_barplot(comm::CommunityProfile, outpath; kwargs...)
     tmp = tempname()
     write_pcl(tmp, comm)
