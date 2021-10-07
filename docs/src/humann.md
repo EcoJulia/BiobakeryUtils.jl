@@ -149,12 +149,12 @@ use the `humann_profile` function:
 
 ```julia-repl
 julia> gfs = humann_profile("demo_fastq/demo_genefamilies.tsv")
-Microbiome.CommunityProfile{Float64, Microbiome.GeneFunction, Microbiome.MicrobiomeSample} with 589 things in 1 places
+Microbiome.CommunityProfile{Float64, Microbiome.GeneFunction, Microbiome.MicrobiomeSample} with 589 features in 1 samples
 
-Thing names:
+Feature names:
 UNMAPPED, UniRef90_G1UL42, UniRef90_I9QXW8...UniRef90_A6LH06, UniRef90_D0TRR5
 
-Place names:
+Sample names:
 demo_genefamilies
 ```
 
