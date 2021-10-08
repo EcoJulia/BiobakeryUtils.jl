@@ -40,3 +40,5 @@ function __init__()
 end
 
 ENV["PATH"] = ENV["PATH"] * ':' * Conda.bin_dir(:BiobakeryUtils)
+
+end
