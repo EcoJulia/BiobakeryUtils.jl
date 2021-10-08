@@ -36,7 +36,7 @@ jobs:
       - run: |
           julia --project=@. -e '
           using Pkg
-          Pkg.add(PackageSpec(name="Microbiome", rev="main")
+          Pkg.add(PackageSpec(name="Microbiome", rev="main"))
           Pkg.instantiate()'
       - uses: julia-actions/julia-buildpkg@latest
       - uses: julia-actions/julia-runtest@latest
