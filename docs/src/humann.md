@@ -160,7 +160,7 @@ demo_genefamilies
 
 HUMAnN generates "stratified" gene function profiles - 
 in other words, each gene function is also split into the species that contributed it.
-By default, `human_profile` skips the stratified rows (they can get big!):
+By default, `humann_profile` skips the stratified rows (they can get big!):
 
 ```julia-repl
 julia> first(features(gfs), 5)
