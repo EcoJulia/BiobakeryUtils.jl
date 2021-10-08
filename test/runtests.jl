@@ -15,10 +15,10 @@ ENV["PATH"] = ENV["PATH"] * ":" * Conda.bin_dir(:BiobakeryUtils)
 end
 
 @testset "Metaphlan" begin
-    # profile_1 = metaphlan_profile("files/metaphlan_single1.tsv")
-    # @test profile_1["Bacteria", "metaphlan_single1"] == 100.0
-    # @test profile_1["Coriobacteriia", "metaphlan_single1"] == 0.24757
-    # @test size(profile_1) == (96, 1)
+    profile_1 = metaphlan_profile("files/metaphlan_single1.tsv")
+    @test profile_1["Bacteria", "metaphlan_single1"] == 100.0
+    @test profile_1["Coriobacteriia", "metaphlan_single1"] == 0.24757
+    @test size(profile_1) == (93, 1)
     profile_2 = metaphlan_profile("files/metaphlan_single1.tsv", 3)
     @test size(profile_2) == (9, 1)
     @test profile_2["Actinobacteria", "metaphlan_single1"] == 10.84221
@@ -36,10 +36,10 @@ end
     @test size(merge_profile_3) == (15, 7)
     @test merge_profile_3["Actinomyces_viscosus", "sample2_taxonomic"] == 0.03457
 
-    # multi_profile_1 = metaphlan_profiles(["files/metaphlan_single1.tsv", "files/metaphlan_single2.tsv"])
-    # @test size(multi_profile_1) == (129, 2)
-    # @test multi_profile_1["Firmicutes", "metaphlan_single1"] == 63.1582	
-    # @test multi_profile_1["Firmicutes", "metaphlan_single2"] == 48.57123
+    multi_profile_1 = metaphlan_profiles(["files/metaphlan_single1.tsv", "files/metaphlan_single2.tsv"])
+    @test size(multi_profile_1) == (129, 2)
+    @test multi_profile_1["Firmicutes", "metaphlan_single1"] == 63.1582	
+    @test multi_profile_1["Firmicutes", "metaphlan_single2"] == 48.57123
     multi_profile_2 = metaphlan_profiles(["files/metaphlan_single1.tsv", "files/metaphlan_single2.tsv"], 3)
     @test size(multi_profile_2) == (11, 2)
     @test multi_profile_2["Bacteroidia", "metaphlan_single1"] == 25.60381	
