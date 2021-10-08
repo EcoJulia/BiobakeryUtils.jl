@@ -93,7 +93,7 @@ For example, if you'd like to install these databases to `/BigDrive/humann/`,
 you could run
 
 ```julia-repl
-shell> humann_databases --download cholophlan full /BigDrive/humann/chocophlan
+shell> humann_databases --download chocophlan full /BigDrive/humann/chocophlan
 # ... lots of output
 
 shell> humann_databases --download uniref uniref90_diamond /BigDrive/humann/uniref
