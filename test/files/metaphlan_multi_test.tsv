@@ -1,4 +1,4 @@
-#SampleID	sample1_taxonomic_profile	sample2_taxonomic_profile	sample3_taxonomic_profile	sample4_taxonomic_profile	sample5_taxonomic_profile	sample6_taxonomic_profile	sample7_taxonomic_profile
+#SampleID	sample1_profile	sample2_profile	sample3_profile	sample4_profile	sample5_profile	sample6_profile	sample7_profile
 k__Archaea	0	0	0	0	0	0	14.13558
 k__Archaea|p__Euryarchaeota	0	0	0	0	0	0	14.13558
 k__Archaea|p__Euryarchaeota|c__Methanobacteria	0	0	0	0	0	0	14.13558
