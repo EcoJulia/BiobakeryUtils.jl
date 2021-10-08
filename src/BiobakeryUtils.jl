@@ -21,7 +21,7 @@ export
     write_pcl,
     humann_barplot,
     humann_barplots
-    
+
 using Reexport
 @reexport using Microbiome
 using CSV
@@ -32,6 +32,14 @@ using Conda
 include("metaphlan.jl")
 include("humann.jl")
 
+"""
+    install_deps([env])
+
+Uses Conda.jl to install HUMAnN and MetaPhlAn.
+In order to use the commandline tools,
+you must have the conda environment bin directory in `ENV["PATH"]`.
+See "[Using Conda](@ref using-conda)" for more information.
+"""
 function install_deps(env=:BiobakeryUtils)
     Conda.add_channel("bioconda", env)
     Conda.add_channel("conda-forge", env)
