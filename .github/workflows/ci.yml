@@ -41,6 +41,7 @@ jobs:
       - run: mkdir /tmp/conda
       - run: |
           julia --project=/tmp/conda -e '
+          using Pkg
           Pkg.add(PackageSpec(name="Conda"))
           using Conda
           Conda.add_channel("bioconda", :biobakery)
