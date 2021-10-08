@@ -22,7 +22,7 @@ end
     profile_2 = metaphlan_profile("files/metaphlan_single1.tsv", 3)
     # @test size(profile_2) == (9, 1)
     # @test profile_2["Actinobacteria", "metaphlan_single1"] == 10.84221
-    # profile_3 = metaphlan_profile("files/metaphlan_single1.tsv", :phylum)
+    profile_3 = metaphlan_profile("files/metaphlan_single1.tsv", :phylum)
     # @test size(profile_3) == (4, 1)
     # @test profile_3["Bacteroidetes", "metaphlan_single1"] == 25.60381
     
