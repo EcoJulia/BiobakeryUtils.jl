@@ -16,15 +16,15 @@ end
 
 @testset "Metaphlan" begin
     profile_1 = metaphlan_profile("files/metaphlan_single1.tsv")
-    @test profile_1["Bacteria", "metaphlan_single1"] == 100.0
-    @test profile_1["Coriobacteriia", "metaphlan_single1"] == 0.24757
-    @test size(profile_1) == (96, 1)
-    profile_2 = metaphlan_profile("files/metaphlan_single1.tsv", 3)
-    @test size(profile_2) == (9, 1)
-    @test profile_2["Actinobacteria", "metaphlan_single1"] == 10.84221
-    profile_3 = metaphlan_profile("files/metaphlan_single1.tsv", :phylum)
-    @test size(profile_3) == (4, 1)
-    @test profile_3["Bacteroidetes", "metaphlan_single1"] == 25.60381
+    # @test profile_1["Bacteria", "metaphlan_single1"] == 100.0
+    # @test profile_1["Coriobacteriia", "metaphlan_single1"] == 0.24757
+    # @test size(profile_1) == (96, 1)
+    # profile_2 = metaphlan_profile("files/metaphlan_single1.tsv", 3)
+    # @test size(profile_2) == (9, 1)
+    # @test profile_2["Actinobacteria", "metaphlan_single1"] == 10.84221
+    # profile_3 = metaphlan_profile("files/metaphlan_single1.tsv", :phylum)
+    # @test size(profile_3) == (4, 1)
+    # @test profile_3["Bacteroidetes", "metaphlan_single1"] == 25.60381
     
     # merge_profile_1 = metaphlan_profiles("files/metaphlan_multi_test.tsv")
     # @test size(merge_profile_1) == (42, 7)
