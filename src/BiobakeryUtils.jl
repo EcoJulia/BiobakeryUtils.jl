@@ -21,7 +21,7 @@ export
     write_pcl,
     humann_barplot,
     humann_barplots
-
+    
 using Reexport
 @reexport using Microbiome
 using CSV
@@ -32,13 +32,22 @@ using Conda
 include("metaphlan.jl")
 include("humann.jl")
 
-function __init__()
-    Conda.add_channel("bioconda", :BiobakeryUtils)
-    Conda.add_channel("conda-forge", :BiobakeryUtils)
-    Conda.add("humann", :BiobakeryUtils)
-    Conda.add("tbb=2020.2", :BiobakeryUtils) # https://www.biostars.org/p/494922/
+function install_deps(env=:BiobakeryUtils)
+    Conda.add_channel("bioconda", env)
+    Conda.add_channel("conda-forge", env)
+    Conda.add("humann", env)
+    Conda.add("tbb=2020.2", env) # https://www.biostars.org/p/494922/
+
+    @warn """
+    Don't forget to add $(Conda.bin_dir(env)) to your PATH!
+    
+    This can be done in a julia session with:
+
+    `ENV["PATH"] = ENV["PATH"] * ":" * $(Conda.bin_dir(env))`,
+    or you can set it in your shell environment.
+    """
 end
 
-ENV["PATH"] = ENV["PATH"] * ':' * Conda.bin_dir(:BiobakeryUtils)
+
 
 end

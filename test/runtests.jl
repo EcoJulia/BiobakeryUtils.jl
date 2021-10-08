@@ -1,15 +1,17 @@
 using Random
 using Test
-using Microbiome
 using BiobakeryUtils
+using BiobakeryUtils.Conda
 using SparseArrays
 using DelimitedFiles
 using CSV
 
+isdir(Conda.bin_dir(:BiobakeryUtils)) || BiobakeryUtils.install_deps()
+ENV["PATH"] = ENV["PATH"] * ":" * Conda.bin_dir(:BiobakeryUtils)
+
 @testset "CLI" begin
     run(`metaphlan --help`)
     @test true
-
 end
 
 @testset "Metaphlan" begin
