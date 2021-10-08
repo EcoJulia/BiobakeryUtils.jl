@@ -6,7 +6,7 @@ MetaPhlAn CLI
     metaphlan(inputfile, outputfile; kwargs...)
 
 Run `metaphlan` command line tool on `inputfile`,
-creating `output`.
+creating `outputfile`.
 Requires `metaphlan` to be installed and accessible in the `PATH`
 (see [Getting Started](@ref)).
 
@@ -30,16 +30,39 @@ to specify the location where the markergene database is/will be installed,
 or pass `bowtie2db = "some/path"` as a keyword argument.
 """
 function metaphlan(inputfile, output; kwargs...)
-    c = ["metaphlan", inputfile, output]
-    append!(c, Iterators.flatten((string("--", k), v) for (k,v) in pairs(kwargs)))
+    cmd = ["metaphlan", inputfile, output]
+    add_cli_kwargs!(cmd, kwargs)
     
     if !haskey(kwargs, :bowtie2db) && haskey(ENV, "METAPHLAN_BOWTIE2_DB")
-        append!(c, ["--bowtie2db", ENV["METAPHLAN_BOWTIE2_DB"]])
+        append!(cmd, ["--bowtie2db", ENV["METAPHLAN_BOWTIE2_DB"]])
     end
 
     deleteat!(c, findall(==(""), c))
-    @info "Running command: $(Cmd(c))"
-    return run(Cmd(c))
+    @info "Running command: $(Cmd(cmd))"
+    return run(Cmd(cmd))
+end
+
+"""
+    metaphlan_merge(paths, outputfile; kwargs...)
+
+Run `merge_metaphlan_tables` command line tool on the files in `paths`,
+creating `outputfile`.
+Requires `metaphlan` to be installed and accessible in the `PATH`
+(see [Getting Started](@ref)).
+"""
+function metaphlan_merge(paths, output; kwargs...)
+    cmd = ["merge_metaphlan_tables.py", "-o", output]
+    for (key,val) in pairs(kwargs)
+        if val isa Bool
+            val && push!(cmd, replace(string("--", key), "_"=>"-"))
+        elseif val isa AbstractVector
+            append!(cmd, [replace(string("--", key), "_"=>"-"), string.(val)...])
+        else
+            append!(cmd, [replace(string("--", key), "_"=>"-"), string(val)])
+        end
+    end
+    append!(cmd, paths)
+    run(Cmd(cmd))
 end
 
 

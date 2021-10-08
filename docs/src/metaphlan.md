@@ -110,18 +110,118 @@ It may take a while... maybe go for a walk 🙂.
 
 [Official tutorial link](https://github.com/biobakery/biobakery/wiki/metaphlan3#output-files)
 
-- load output with `metaphlan_profile`
-- investigate with various functions (try to show similar things as tutorial)
+You can now load this profile using [`metaphlan_profile`](@ref):
+
+```julia-repl
+julia> mp = metaphlan_profile("SRS014476-Supragingival_plaque_profile.tsv"; sample="SRS014476")
+CommunityProfile{Float64, Taxon, MicrobiomeSample} with 11 features in 1 samples
+
+Feature names:
+Bacteria, Actinobacteria, Actinobacteria...Corynebacterium_matruchotii, Rothia_dentocariosa
+
+Sample names:
+SRS014476
+```
+
+This generates a [`CommunityProfile`](@ref Microbiome.CommunityProfile) type from Microbiome.jl,
+which is a matrix-like object with [`MicrobiomeSample`](@ref Microbiome.MicrobiomeSample)s
+as column headers,
+and [`Taxon`](@ref Microbiome.Taxon)s as row headers.
+
+The samples can be accessed with [`samples`](@ref Microbiome.samples)
+or [`samplenames`](@ref Microbiome.samplenames):
+
+```julia-repl
+julia> samples(mp)
+1-element Vector{MicrobiomeSample}:
+ MicrobiomeSample("SRS014476", {})
+
+julia> samplenames(mp)
+1-element Vector{String}:
+ "SRS014476"
+```
+
+Notice that in addition to the sample name ("SRS014476"),
+there's an additional field - that's a metadata dictionary
+that we can add values to.
+
+```julia-repl
+julia> plaque = first(samples(mp))
+MicrobiomeSample("SRS014476", {})
+
+julia> set!(plaque, :STSite, "Supragingival Plaque")
+MicrobiomeSample("SRS014476", {:STSite = "Supragingival Plaque"})
+```
+
+The taxa (Microbiome.jl uses the generic term "features") can be accessed
+with [`features`](@ref Microbiome.features)
+or [`featurenames`](@ref Microbiome.featurenames):
+
+```julia-repl
+julia> features(mp)
+11-element Vector{Taxon}:
+ Taxon("Bacteria", :kingdom)
+ Taxon("Actinobacteria", :phylum)
+ Taxon("Actinobacteria", :class)
+ Taxon("Corynebacteriales", :order)
+ Taxon("Micrococcales", :order)
+ Taxon("Corynebacteriaceae", :family)
+ Taxon("Micrococcaceae", :family)
+ Taxon("Corynebacterium", :genus)
+ Taxon("Rothia", :genus)
+ Taxon("Corynebacterium_matruchotii", :species)
+ Taxon("Rothia_dentocariosa", :species)
+
+julia> featurenames(mp)
+11-element Vector{String}:
+ "Bacteria"
+ "Actinobacteria"
+ "Actinobacteria"
+ "Corynebacteriales"
+ "Micrococcales"
+ "Corynebacteriaceae"
+ "Micrococcaceae"
+ "Corynebacterium"
+ "Rothia"
+ "Corynebacterium_matruchotii"
+ "Rothia_dentocariosa"
+```
+
+
 
 ## Run on multiple cores
 
 [Official tutorial link](https://github.com/biobakery/biobakery/wiki/metaphlan3#run-on-multiple-cores)
 
+Other keywords can be passed to `metaphlan()` as well.
+For example, to speed things up a bit,
+try `nproc=4`:
+
+```julia-repl
+julia> metaphlan("SRS014459-Stool.fasta.gz",
+                        "SRS014459-Stool_profile.tsv"; input_type="fasta", nproc=4)
+[ Info: Running command: metaphlan SRS014459-Stool.fasta.gz SRS014459-Stool_profile.tsv --input_type fasta --nproc 4
+# ... 
+```
 
 ## [Run multiple samples](@id metaphlan-multi)
 
 [Official tutorial link](https://github.com/biobakery/biobakery/wiki/metaphlan3#run-multiple-samples)
 
+You can use julia to run `metaphlan` in a loop to do the rest of the files.
+Here, we find the output path by replacing `.fasta.gz` with `_profile.tsv`,
+then check if it exists already, and `continue` if it does
+(`&&` means "AND" - if `isfile(prof)` is `true`, then it will do the thing on the right).
+
+```julia-repl
+julia> for f in files
+           prof = replace(f, ".fasta.gz"=>"_profile.tsv")
+           isfile(prof) && continue
+           metaphlan(f, prof; input_type="fasta", nproc=4)
+       end
+┌ Info: Running command: metaphlan SRS014494-Posterior_fornix.fasta.gz SRS014494-Posterior_fornix_profile.tsv --input_type fasta
+└ --nproc 4
+```
 
 ## Merge outputs
 

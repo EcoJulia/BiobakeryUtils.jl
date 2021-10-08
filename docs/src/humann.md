@@ -631,11 +631,3 @@ but there are [many other options](https://juliahub.com/ui/Search?q=plotting&typ
 Modules = [BiobakeryUtils]
 Pages = ["humann.jl"]
 ```
-
-### Reexported from [Microbiome.jl]
-
-```@docs
-Microbiome.name
-Microbiome.CommunityProfile
-Microbiome.GeneFunction
-```

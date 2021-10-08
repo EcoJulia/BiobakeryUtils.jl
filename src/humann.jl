@@ -265,14 +265,7 @@ function humann_barplot(comm::CommunityProfile, outpath; kwargs...)
 
     cmd = ["humann_barplot", "--i", tmp, "-o", outpath,
             "--last-metadata", string(last(keys(first(metadata(comm)))))]
-    for (key,val) in kwargs
-        if val isa Bool
-            val && push!(cmd, replace(string("--", key), "_"=>"-"))
-        elseif val isa AbstractVector
-            append!(cmd, [replace(string("--", key), "_"=>"-"), string.(val)...])
-        else
-            append!(cmd, [replace(string("--", key), "_"=>"-"), string(val)])
-        end
-    end
+    
+    add_cli_kwargs!(cmd, kwargs)
     run(Cmd(cmd))
 end

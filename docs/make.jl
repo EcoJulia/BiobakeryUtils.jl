@@ -7,8 +7,9 @@ makedocs(
     pages = [
         "BiobakeryUtils" => "index.md",
         "Getting Started" => "gettingstarted.md",
-        "Working with HUMAnN" => "humann.md",
         "Working with MetaPhlAn" => "metaphlan.md",
+        "Working with HUMAnN" => "humann.md",
+        "Microbiome.jl Docstrings" => "microbiome.md",
         "Contributing" => "contributing.md"
     ],
     authors = "Kevin Bonham, PhD"
