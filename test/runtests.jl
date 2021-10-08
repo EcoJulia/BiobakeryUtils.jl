@@ -27,7 +27,7 @@ end
     @test profile_3["Bacteroidetes", "metaphlan_single1"] == 25.60381
     
     merge_profile_1 = metaphlan_profiles("files/metaphlan_multi_test.tsv")
-    @test size(merge_profile_1) == (42, 7)
+    @test size(merge_profile_1) == (28, 7)
     @test merge_profile_1["Actinomycetales", "sample3_taxonomic"] == 0.08487
     merge_profile_2 = metaphlan_profiles("files/metaphlan_multi_test.tsv", :family)
     @test size(merge_profile_2) == (2, 7)
