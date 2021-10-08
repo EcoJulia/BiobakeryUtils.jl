@@ -9,7 +9,7 @@
 ## Installation and setup
 
 If you haven't already,
-check out the ["Getting Started"](@ref Getting-Started) page to install julia,
+check out the ["Getting Started"](@ref getting-started) page to install julia,
 create an environment and install BiobakeryUtils.jl,
 and hook up or install the HUMAnN v3 command line tools.
 
@@ -20,7 +20,7 @@ This tutorial assumes:
 3. The `humann` python package is installed, and accessible from your `PATH`.
 
 If any of those things aren't true, or you don't know if they're true,
-go back to ["Getting Started"](@ref Getting-Started) to see if you skipped a step.
+go back to ["Getting Started"](@ref getting-started) to see if you skipped a step.
 If you're still confused, please ask (see 3rd bullet point at the top)!
 
 ### HUMAnN Databases
