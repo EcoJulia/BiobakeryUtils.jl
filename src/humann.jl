@@ -35,11 +35,12 @@ function humann(inputfile, output, flags=[]; kwargs...)
 end
 
 function _gf_parse(gf)
-    if occursin('|', gf) # indicates a taxon-stratified entry
+    if contains(gf, '|') # indicates a taxon-stratified entry
         (gf, tax) = split(gf, '|')
         if tax == "unclassified"
             tax = Taxon("unclassified")
         else
+            tax = String(tax)
             tm = contains(tax, "s__") ? match(r"(s__)(\w+)", tax) :
                  contains(tax, "g__") ? match(r"(g__)(\w+)", tax) :
                                         match(r"^(\W*)(\w+)$", tax)

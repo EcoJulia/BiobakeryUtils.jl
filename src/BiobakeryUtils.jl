@@ -20,18 +20,14 @@ export
     read_pcl,
     write_pcl,
     humann_barplot,
-    humann_barplots,
-    qvalue!
+    humann_barplots
 
 using Reexport
 @reexport using Microbiome
-using Statistics
 using CSV
 using CSV.Tables
-using RCall
 using SparseArrays
 
-include("general.jl")
 include("metaphlan.jl")
 include("humann.jl")
 

@@ -19,10 +19,6 @@ jobs:
           - x64
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/checkout@v2
-      - uses: r-lib/actions/setup-r@v1
-      - run: echo "LD_LIBRARY_PATH=$(R RHOME)/lib" >> $GITHUB_ENV
-      - run: sudo R -e "install.packages('vegan', repos='http://cran.rstudio.com/')"
       - uses: julia-actions/setup-julia@latest
         with:
           version: ${{ matrix.version }}
@@ -53,9 +49,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: r-lib/actions/setup-r@v1
-      - run: echo "LD_LIBRARY_PATH=$(R RHOME)/lib" >> $GITHUB_ENV
-      - run: sudo R -e "install.packages('vegan', repos='http://cran.rstudio.com/')"
       - uses: julia-actions/setup-julia@latest
         with:
           version: '1'

@@ -1,7 +1,6 @@
 using Random
 using Test
 using Microbiome
-using RCall
 using BiobakeryUtils
 using SparseArrays
 using DelimitedFiles
@@ -79,13 +78,4 @@ end
     @test isempty(setdiff(features(filter(!hastaxon, pj_strat)), features(pj)))
     CSV.write("files/humann_joined_roundtrip.tsv", pj_strat; delim='\t')
     @test features(pj_strat) == features(humann_profiles("files/humann_joined_roundtrip.tsv"; stratified=true))
-end
-
-
-@testset "Permanova" begin
-    reval("install.packages('vegan')")
-    d = rand(10, 10)
-    dm = d + d'
-    p = permanova(dm, repeat(["a", "b"], 5))
-    @test size(p) == (3, 6)
 end
