@@ -33,14 +33,25 @@ include("metaphlan.jl")
 include("humann.jl")
 
 """
-    install_deps([env])
+    install_deps([env]; [force=false])
 
 Uses Conda.jl to install HUMAnN and MetaPhlAn.
 In order to use the commandline tools,
 you must have the conda environment bin directory in `ENV["PATH"]`.
 See "[Using Conda](@ref using-conda)" for more information.
 """
-function install_deps(env=:BiobakeryUtils)
+function install_deps(env=:BiobakeryUtils; force=false)
+    if isdir(Conda.bin_dir(env)) && !force
+        @warn """
+        You already seem to have an environment, '$env'.
+        If you've already installed the bioBakery packages, try
+
+        `ENV["PATH"] = ENV["PATH"] * ":" * "$(Conda.bin_dir(env))"`
+
+        Use `force=true` to install anyway"""
+        return nothing
+    end
+    
     Conda.add_channel("bioconda", env)
     Conda.add_channel("conda-forge", env)
     Conda.add("humann", env)
@@ -54,6 +65,7 @@ function install_deps(env=:BiobakeryUtils)
     `ENV["PATH"] = ENV["PATH"] * ":" * "$(Conda.bin_dir(env))"`,
     or you can set it in your shell environment.
     """
+    return nothing
 end
 
 

@@ -1,3 +1,12 @@
+```@meta
+CurrentModule = BiobakeryUtils
+DocTestSetup  = quote
+    using BiobakeryUtils
+    using BiobakeryUtils.Conda
+    BiobakeryUtils.install_deps()
+    ENV["PATH"] = ENV["PATH"] * Conda.bind_dir(:BiobakeryUtils)
+end
+```
 # [MetaPhlAn Tutorial with BiobakeryUtils.jl](@id metaphlan-tutorial)
 
 
@@ -11,7 +20,7 @@
 
 If you haven't already,
 check out the ["Getting Started"](@ref getting-started) page to install julia,
-create an environment and install BiobakeryUtils.jl,
+create an environment,xd and install BiobakeryUtils.jl,
 and hook up or install the MetaPhlAn v3 command line tools.
 
 This tutorial assumes:
@@ -48,7 +57,7 @@ julia> using Downloads: download
 
 julia> base_url = "https://github.com/biobakery/biobakery/raw/master/demos/biobakery_demos/data/metaphlan3/input/";
 
-julia> files = [
+julia>  files = [
     "SRS014476-Supragingival_plaque.fasta.gz",
     "SRS014494-Posterior_fornix.fasta.gz",
     "SRS014459-Stool.fasta.gz",
@@ -62,7 +71,7 @@ julia> for file in files
        end
 
 julia> readdir()
-8-element Vector{String}:
+9-element Vector{String}:
  "Manifest.toml"
  "Project.toml"
  "SRS014459-Stool.fasta.gz"
@@ -80,18 +89,23 @@ julia> readdir()
 For convenience, this package has the [`metaphlan()`](@ref) function,
 which can be used in your julia scripts to build and call the `metaphlan` command line tool.
 
-For example, rather than call
+For example, rather than call this from the shell:
 
 ```sh
 $ metaphlan SRS014476-Supragingival_plaque.fasta.gz --input_type fasta > SRS014476-Supragingival_plaque_profile.txt
 ```
 
-from the julia REPL, you can call
+you can instead call this from the julia REPL:
 
-```@repl
-metaphlan("SRS014476-Supragingival_plaque.fasta.gz", "SRS014476-Supragingival_plaque_profile.tsv"; input_type="fasta")
+```julia-repl
+julia> metaphlan("SRS014476-Supragingival_plaque.fasta.gz",
+                 "SRS014476-Supragingival_plaque_profile.tsv"; input_type="fasta")
 ```
 
+The first time you run this command,
+metaphlan will download its database
+and build Bowtie2 indices for aligning marker genes.
+It may take a while... maybe go for a walk 🙂.
 ## Output files
 
 [Official tutorial link](https://github.com/biobakery/biobakery/wiki/metaphlan3#output-files)

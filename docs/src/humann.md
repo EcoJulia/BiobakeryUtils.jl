@@ -1,3 +1,13 @@
+```@meta
+CurrentModule = BiobakeryUtils
+DocTestSetup  = quote
+    using BiobakeryUtils
+    using BiobakeryUtils.Conda
+    BiobakeryUtils.install_deps()
+    ENV["PATH"] = ENV["PATH"] * Conda.bind_dir(:BiobakeryUtils)
+end
+```
+
 # [HUMAnN Tutorial with BiobakeryUtils.jl](@id humann-tutorial)
 
 - 🗒️ This tutorial is meant to be run in parallel with / mirror the [official HUMAnN v3 tutorial](https://github.com/biobakery/biobakery/wiki/humann3)
@@ -9,8 +19,8 @@
 ## Installation and setup
 
 If you haven't already,
-check out the ["Getting Started"](@ref Getting-Started) page to install julia,
-create an environment and install BiobakeryUtils.jl,
+check out the ["Getting Started"](@ref getting-started) page to install julia,
+create an environment, and install BiobakeryUtils.jl,
 and hook up or install the HUMAnN v3 command line tools.
 
 This tutorial assumes:
@@ -20,8 +30,16 @@ This tutorial assumes:
 3. The `humann` python package is installed, and accessible from your `PATH`.
 
 If any of those things aren't true, or you don't know if they're true,
-go back to ["Getting Started"](@ref Getting-Started) to see if you skipped a step.
+go back to ["Getting Started"](@ref getting-started) to see if you skipped a step.
 If you're still confused, please ask (see 3rd bullet point at the top)!
+
+
+```@setup tutorial
+using BiobakeryUtils
+using BiobakeryUtils.Conda
+BiobakeryUtils.install_deps()
+ENV["PATH"] = ENV["PATH"] * ':' * Conda.bin_dir(:BiobakeryUtils) #hide
+```
 
 ### HUMAnN Databases
 
@@ -36,7 +54,7 @@ For now, the easiest way to do this for now is via the shell,
 which you can access from the julia REPL by typing `;`:
 
 ```julia-repl
-shell> humann_databases --help
+;humann_databases --help
 usage: humann_databases [-h] [--available]
                         [--download <database> <build> <install_location>]
                         [--update-config {yes,no}]
@@ -54,7 +72,7 @@ optional arguments:
   --database-location DATABASE_LOCATION
                         location (local or remote) to pull the database
 
-shell> humann_databases --available
+;humann_databases --available
 HUMANnN2 Databases ( database : build = location )
 chocophlan : full = http://huttenhower.sph.harvard.edu/humann_data/chocophlan/full_chocophlan.v296_201901b.tar.gz
 chocophlan : DEMO = http://huttenhower.sph.harvard.edu/humann_data/chocophlan/DEMO_chocophlan.v296_201901b.tar.gz
@@ -172,7 +190,7 @@ julia> first(features(gfs), 5)
  GeneFunction("UniRef90_A0A078RDY6", missing)
 ```
 
-The `missing` component of the `GeneFunction` means that these gene functions
+The `missing` component of the [`GeneFunction`](@ref Microbiome.GeneFunction) means that these gene functions
 are not associated with a particular taxon.
 
 If you want to hang onto the taxon information,
@@ -340,7 +358,7 @@ to roll our own function.
 
 In the following example, `gf ->` indicates a function that takes a single argument
 (in this case, our `GeneFunction`),
-then askes if it's [`name`](@ref) is "UNMAPPED" with `name(gf) == "UNMAPPED"`,
+then askes if it's [`name`](@ref Microbiome.name) is "UNMAPPED" with `name(gf) == "UNMAPPED"`,
 OR (`||` is a short-circuiting OR operator) if it has a taxon:
 
 ```julia-repl
@@ -434,7 +452,7 @@ julia> first(features(gfs_rxn), 5)
 
 Note - to get other feature types, you may have to download the requisite databases
 using `humann_databases` at the command line.
-See [Using Conda.jl](@ref)
+See [Using Conda.jl](@ref using-conda)
 
 ### Attaching names to features
 
@@ -612,4 +630,12 @@ but there are [many other options](https://juliahub.com/ui/Search?q=plotting&typ
 ```@autodocs
 Modules = [BiobakeryUtils]
 Pages = ["humann.jl"]
+```
+
+### Reexported from [Microbiome.jl]
+
+```@docs
+Microbiome.name
+Microbiome.CommunityProfile
+Microbiome.GeneFunction
 ```
