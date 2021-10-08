@@ -36,7 +36,7 @@ function __init__()
     Conda.add_channel("bioconda", :BiobakeryUtils)
     Conda.add_channel("conda-forge", :BiobakeryUtils)
     Conda.add("humann", :BiobakeryUtils)
-    Conda.add("tbb=2020.2", :BiobakeryUtils)'
+    Conda.add("tbb=2020.2", :BiobakeryUtils) # https://www.biostars.org/p/494922/
 end
 
 ENV["PATH"] = ENV["PATH"] * ':' * Conda.bin_dir(:BiobakeryUtils)
