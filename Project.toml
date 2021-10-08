@@ -8,6 +8,7 @@ version = "0.5.0-dev"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
+Conda = "8f4d0f93-b110-5947-807f-2305c1781a2d"
 Microbiome = "3bd8f0ae-a0f2-5238-a5af-e1b399a4940c"
 Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
 SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"

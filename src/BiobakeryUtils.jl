@@ -27,8 +27,16 @@ using Reexport
 using CSV
 using CSV.Tables
 using SparseArrays
+using Conda
 
 include("metaphlan.jl")
 include("humann.jl")
 
+function __init__()
+    Conda.add_channel("bioconda", :BiobakeryUtils)
+    Conda.add_channel("conda-forge", :BiobakeryUtils)
+    Conda.add("humann", :BiobakeryUtils)
+    Conda.add("tbb=2020.2", :BiobakeryUtils)'
 end
+
+ENV["PATH"] = ENV["PATH"] * ':' * Conda.bin_dir(:BiobakeryUtils)
