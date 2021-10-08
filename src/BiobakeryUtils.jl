@@ -1,9 +1,7 @@
 module BiobakeryUtils
 
 export
-    import_abundance_tables,
-    import_abundance_table,
-    clean_abundance_tables,
+    metaphlan,
     metaphlan_profile,
     metaphlan_profiles,
     humann_profile,
@@ -14,25 +12,23 @@ export
     parsetaxon,
     rm_strat!,
     permanova,
-    humann2_regroup,
-    humann2_rename,
-    humann2_barplot,
-    humann2_barplots,
-    qvalue!
+    humann,
+    humann_regroup,
+    humann_rename,
+    humann_renorm,
+    humann_join,
+    read_pcl,
+    write_pcl,
+    humann_barplot,
+    humann_barplots
 
-using Statistics
+using Reexport
+@reexport using Microbiome
 using CSV
 using CSV.Tables
-using RCall
-using Microbiome
 using SparseArrays
 
-include("general.jl")
 include("metaphlan.jl")
 include("humann.jl")
-
-function __init__()
-    
-end
 
 end

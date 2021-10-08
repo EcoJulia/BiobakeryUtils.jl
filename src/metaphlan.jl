@@ -1,3 +1,48 @@
+#============
+MetaPhlAn CLI
+============#
+
+"""
+    metaphlan(inputfile, outputfile; kwargs...)
+
+Run `metaphlan` command line tool on `inputfile`,
+creating `output`.
+Requires `metaphlan` to be installed and accessible in the `PATH`
+(see [Getting Started](@ref)).
+
+`metaphlan` options can be passed via keyword arguments.
+For example, if on the command line you would run:
+
+```sh
+\$ metaphlan some.fastq.gz output/some_profile.tsv --input_type fastq --nprocs 8
+```
+
+using this function, you would write:
+
+```julia
+metaphlan("some.fastq.gz", "output/some_profile.tsv"; input_type="fastq", nprocs=8)
+```
+
+Note: the `input_type` keyword is required.
+
+Set the environmental variable "METAPHLAN_BOWTIE2_DB"
+to specify the location where the markergene database is/will be installed,
+or pass `bowtie2db = "some/path"` as a keyword argument.
+"""
+function metaphlan(inputfile, output; kwargs...)
+    c = ["metaphlan", inputfile, output]
+    append!(c, Iterators.flatten((string("--", k), v) for (k,v) in pairs(kwargs)))
+    
+    if !haskey(kwargs, :bowtie2db) && haskey(ENV, "METAPHLAN_BOWTIE2_DB")
+        append!(c, ["--bowtie2db", ENV["METAPHLAN_BOWTIE2_DB"]])
+    end
+
+    deleteat!(c, findall(==(""), c))
+    @info "Running command: $(Cmd(c))"
+    return run(Cmd(c))
+end
+
+
 #==============
 MetaPhlAn Utils
 ==============#
@@ -100,7 +145,14 @@ sample2
 ```
 """
 function metaphlan_profile(path::AbstractString, level=:all; sample=basename(first(splitext(path))))
-    profile = CSV.read(path, datarow=5, header=["clade", "NCBI_taxid", "abundance", "additional_species"], Tables.columntable)
+    if startswith(first(eachline(path)), "#")
+        dr = 5
+        hd = ["clade", "NCBI_taxid", "abundance", "additional_species"]
+    else
+        dr = 2
+        hd = ["clade", "abundance"]
+    end
+    profile = CSV.read(path, skipto=dr, header=hd, Tables.columntable)
     taxa = [last(_split_clades(c)) for c in profile.clade]
     mat = sparse(reshape(profile.abundance, length(profile.abundance), 1))
     sample = sample isa Microbiome.AbstractSample ? sample : MicrobiomeSample(sample)
@@ -193,6 +245,7 @@ function metaphlan_profiles(path::AbstractString, level=:all; keepunidentified=f
     taxa = [last(_split_clades(c)) for c in profiles[Symbol("#SampleID")]]
     mat = reduce(hcat, [sparse(profiles[k]) for k in keys(profiles)[2:end]])
     samples = collect(map(s-> MicrobiomeSample(replace(string(s), replace_string => "")), keys(profiles)[2:end]))
+    
     if level == :all
         keep = Colon()
     elseif keepunidentified

@@ -6,4 +6,5 @@ scratch*
 docs/build/
 docs/site/
 build/
+test/files/humann_joined_roundtrip.tsv
 Manifest.toml
