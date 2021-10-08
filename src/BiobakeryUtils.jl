@@ -51,7 +51,7 @@ function install_deps(env=:BiobakeryUtils)
     
     This can be done in a julia session with:
 
-    `ENV["PATH"] = ENV["PATH"] * ":" * $(Conda.bin_dir(env))`,
+    `ENV["PATH"] = ENV["PATH"] * ":" * "$(Conda.bin_dir(env))"`,
     or you can set it in your shell environment.
     """
 end
