@@ -6,6 +6,12 @@ using SparseArrays
 using DelimitedFiles
 using CSV
 
+@testset "CLI" begin
+    run(`metaphlan --help`)
+    @test true
+
+end
+
 @testset "Metaphlan" begin
     profile_1 = metaphlan_profile("files/metaphlan_single1.tsv")
     @test profile_1["Bacteria", "metaphlan_single1"] == 100.0
@@ -79,3 +85,4 @@ end
     CSV.write("files/humann_joined_roundtrip.tsv", pj_strat; delim='\t')
     @test features(pj_strat) == features(humann_profiles("files/humann_joined_roundtrip.tsv"; stratified=true))
 end
+
