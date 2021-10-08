@@ -28,13 +28,13 @@ end
     
     merge_profile_1 = metaphlan_profiles("files/metaphlan_multi_test.tsv")
     @test size(merge_profile_1) == (42, 7)
-    @test merge_profile_1["Actinomycetales", "sample3_taxonomic"] == 0.08487
+    @test merge_profile_1["Actinomycetales", "sample3"] == 0.08487
     merge_profile_2 = metaphlan_profiles("files/metaphlan_multi_test.tsv", :family)
     @test size(merge_profile_2) == (2, 7)
-    @test merge_profile_2["Actinomycetaceae", "sample7_taxonomic"] == 0.03716
+    @test merge_profile_2["Actinomycetaceae", "sample7"] == 0.03716
     merge_profile_3 = metaphlan_profiles("files/metaphlan_multi_test.tsv", 7)
     @test size(merge_profile_3) == (15, 7)
-    @test merge_profile_3["Actinomyces_viscosus", "sample2_taxonomic"] == 0.03457
+    @test merge_profile_3["Actinomyces_viscosus", "sample2"] == 0.03457
 
     # multi_profile_1 = metaphlan_profiles(["files/metaphlan_single1.tsv", "files/metaphlan_single2.tsv"])
     # @test size(multi_profile_1) == (129, 2)
