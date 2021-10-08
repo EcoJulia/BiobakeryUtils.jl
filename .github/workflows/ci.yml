@@ -38,6 +38,15 @@ jobs:
           using Pkg
           Pkg.add(PackageSpec(name="Microbiome", rev="main"))
           Pkg.instantiate()'
+      - run: mkdir /tmp/conda
+      - run: |
+          julia --project=/tmp/conda -e '
+          Pkg.add(PackageSpec(name="Conda"))
+          using Conda
+          Conda.add_channel("bioconda", :biobakery)
+          Conda.add_channel("conda-forge", :biobakery)
+          Conda.add("humann", :biobakery)
+      - run: export PATH="$PATH:~/.julia/conda/envs/biobakery/bin"
       - uses: julia-actions/julia-buildpkg@latest
       - uses: julia-actions/julia-runtest@latest
       - uses: julia-actions/julia-processcoverage@v1

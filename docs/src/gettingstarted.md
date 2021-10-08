@@ -202,7 +202,7 @@ Solving environment: done
 
 [![asciicast](https://asciinema.org/a/bahBYyfDyLoETR0qf1cQl7Stb.svg)](https://asciinema.org/a/bahBYyfDyLoETR0qf1cQl7Stb)
 
-By default, `Conda.jl` puts environments into `~/.julia/conda/envs/<env name>`,
+By default, `Conda.jl` puts environments into `~/.julia/conda/envs/<env name>/bin`,
 which you can get with `Conda.bin_dir()`, so in this case, you'd next want to run
 
 ```@repl
