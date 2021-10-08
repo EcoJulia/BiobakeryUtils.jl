@@ -133,10 +133,32 @@ $ which humann
 /home/kevin/.local/bin/humann
 ```
 
-### Using Conda.jl
+### [Using Conda.jl](@id using-conda)
 
 If you don't have a previous installation, you can use `Conda.jl` to install the necessary tools.
-To do this, first install `Conda.jl` in your environment using the Pkg REPL
+
+This can be done automatically for you using [`Biobakery.install_deps()`](@ref).
+
+```julia-repl
+julia> BiobakeryUtils.install_deps()
+[ Info: Running conda create -y -p /home/kevin/.julia/conda/3/envs/BiobakeryUtils in root environment
+Collecting package metadata (current_repodata.json): done
+Solving environment: done
+
+## Package Plan ##
+
+  environment location: /home/kevin/.julia/conda/3/envs/BiobakeryUtils
+
+
+
+Preparing transaction: done
+Verifying transaction: done
+Executing transaction: **done**
+# ... etc
+```
+
+Or you can do it manually.
+First install `Conda.jl` in your environment using the Pkg REPL
 (accessible by typing `]` in the julia REPL - press `<backspace>` to get back to the regular REPL).
 
 ```plaintext
@@ -202,7 +224,7 @@ Solving environment: done
 
 [![asciicast](https://asciinema.org/a/bahBYyfDyLoETR0qf1cQl7Stb.svg)](https://asciinema.org/a/bahBYyfDyLoETR0qf1cQl7Stb)
 
-By default, `Conda.jl` puts environments into `~/.julia/conda/envs/<env name>`,
+By default, `Conda.jl` puts environments into `~/.julia/conda/envs/<env name>/bin`,
 which you can get with `Conda.bin_dir()`, so in this case, you'd next want to run
 
 ```@repl

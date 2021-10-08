@@ -107,7 +107,7 @@ Wrapper for `humann_regroup_table` script
 to convert table from one kind of functional mapping to another.
 
 Requires installation of [`humann`](https://github.com/biobakery/humann) available in `ENV["PATH"]`.
-See "[Using Conda](@ref)" for more information.
+See "[Using Conda](@ref using-conda)" for more information.
 """
 function humann_regroup(comm::CommunityProfile; inkind::String="uniref90", outkind::String="ec")
     in_path = tempname()
@@ -129,7 +129,7 @@ Wrapper for `humann_rename_table` script,
 returning a CommunityProfile with re-named features.
 
 Requires installation of [`humann`](https://github.com/biobakery/humann) available in `ENV["PATH"]`.
-See "[Using Conda](@ref)" for more information.
+See "[Using Conda](@ref using-conda)" for more information.
 """
 function humann_rename(comm::CommunityProfile; kind::String="ec")
     in_path = tempname()
@@ -152,7 +152,7 @@ to renormalize from RPKM (reads per kilobase per million)
 to "cpm" (counts per million) or "relab" (relative abundance).
 
 Requires installation of [`humann`](https://github.com/biobakery/humann) available in `ENV["PATH"]`.
-See "[Using Conda](@ref)" for more information.
+See "[Using Conda](@ref using-conda)" for more information.
 """
 function humann_renorm(comm::CommunityProfile; units="cpm")
     in_path = tempname()
@@ -175,7 +175,7 @@ to renormalize from RPKM (reads per kilobase per million)
 to "cpm" (counts per million) or "relab" (relative abundance).
 
 Requires installation of [`humann`](https://github.com/biobakery/humann) available in `ENV["PATH"]`.
-See "[Using Conda](@ref)" for more information.
+See "[Using Conda](@ref using-conda)" for more information.
 """
 function humann_join(in_path, out_path; file_name=nothing, search_subdirectories=false, verbose=false)
     cmd = ["humann_join_tables", "-i", in_path, "-o", out_path]
@@ -257,7 +257,7 @@ julia> humann_barplot(comm, "plot.png"; focal_metadata="STSite", focal_feature="
 ```
 
 Requires installation of [`humann`](https://github.com/biobakery/humann) available in `ENV["PATH"]`.
-See "[Using Conda](@ref)" for more information.
+See "[Using Conda](@ref using-conda)" for more information.
 """
 function humann_barplot(comm::CommunityProfile, outpath; kwargs...)
     tmp = tempname()
