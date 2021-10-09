@@ -120,10 +120,11 @@ Levels may be given either as numbers or symbols:
 - `7` = `:species`
 - `8` = `:subspecies`
 
-```jldoctest metaphlan_profile
 
 Examples
 ≡≡≡≡≡≡≡≡≡≡
+
+```jldoctest metaphlan_profile
 julia> metaphlan_profile("test/files/metaphlan_single2.tsv")
 CommunityProfile{Float64, Taxon, MicrobiomeSample} with 96 features in 1 samples
 
@@ -206,10 +207,10 @@ Levels may be given either as numbers or symbols:
 - `7` = `:species`
 - `8` = `:subspecies`
 
-```jldoctest metaphlan_profiles
-
 Examples
 ≡≡≡≡≡≡≡≡≡≡
+
+```jldoctest metaphlan_profiles
 julia> metaphlan_profiles("test/files/metaphlan_multi_test.tsv")
 CommunityProfile{Float64, Taxon, MicrobiomeSample} with 42 features in 7 samples
 
@@ -263,11 +264,11 @@ sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sam
 # sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
 ```
 """
-function metaphlan_profiles(path::AbstractString, level=:all; keepunidentified=false, replace_string="_profile")
-    profiles = CSV.read(path, Tables.columntable)
-    taxa = [last(_split_clades(c)) for c in profiles[Symbol("#SampleID")]]
-    mat = reduce(hcat, [sparse(profiles[k]) for k in keys(profiles)[2:end]])
-    samples = collect(map(s-> MicrobiomeSample(replace(string(s), replace_string => "")), keys(profiles)[2:end]))
+function metaphlan_profiles(path::AbstractString, level=:all; samplestart = 2, keepunidentified=false, replace_string="_profile")
+    profiles = CSV.read(path, Tables.columntable; comment="#")
+    taxa = [last(_split_clades(c)) for c in profiles[1]]
+    mat = reduce(hcat, [sparse(profiles[i]) for i in samplestart:length(profiles)])
+    samples = collect(map(s-> MicrobiomeSample(replace(string(s), replace_string => "")), keys(profiles)[samplestart:end]))
     
     if level == :all
         keep = Colon()
@@ -279,9 +280,9 @@ function metaphlan_profiles(path::AbstractString, level=:all; keepunidentified=f
     return CommunityProfile(mat[keep, :], taxa[keep], samples)
 end
 
-function metaphlan_profiles(path::AbstractString, level::Int; keepunidentified=false)
+function metaphlan_profiles(path::AbstractString, level::Int; kwargs...)
     level = keys(taxonlevels)[level]
-    metaphlan_profiles(path, level; keepunidentified)
+    metaphlan_profiles(path, level; kwargs...)
 end
 
 """
