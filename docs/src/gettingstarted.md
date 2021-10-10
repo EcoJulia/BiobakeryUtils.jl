@@ -135,7 +135,7 @@ $ which humann
 
 ### [Using Conda.jl](@id using-conda)
 
-If you don't have a previous installation, you can use `Conda.jl` to install the necessary tools.
+If you don't have a previous installation, you can use [`Conda.jl`](https://github.com/JuliaPy/Conda.jl) to install the necessary tools.
 
 This can be done automatically for you using [`BiobakeryUtils.install_deps()`](@ref).
 
