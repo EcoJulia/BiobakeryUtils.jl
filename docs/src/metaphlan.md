@@ -517,7 +517,7 @@ The [`filter`](@ref Microbiome.filter) acts on a `CommunityProfile`
 by applying the predicate to the `feature`s of the profile.
 
 ```julia-repl
-julia> phyl = filter(t-> clade(t) == :phylum, mps3)
+julia> phyl = filter(t-> taxrank(t) == :phylum, mps3)
 CommunityProfile{Float64, Taxon, MicrobiomeSample} with 4 features in 6 samples
 
 Feature names:
@@ -602,4 +602,4 @@ Modules = [BiobakeryUtils]
 Pages = ["metaphlan.jl"]
 ```
 
-[^note]: Right now, the table contains all taxonomic levels, so this doesn't make much sense. For a real analysis, you'd probably want to restrict to a single clade (eg species). You can easily do this with `filter`: `spec = filter(t-> clade(t) == :species, mps3)`. We're not doing this for the demo dataset, because there's not any taxonomic overlap at the species level.
+[^note]: Right now, the table contains all taxonomic levels, so this doesn't make much sense. For a real analysis, you'd probably want to restrict to a single rank (eg species). You can easily do this with `filter`: `spec = filter(t-> taxrank(t) == :species, mps3)`. We're not doing this for the demo dataset, because there's not any taxonomic overlap at the species level.

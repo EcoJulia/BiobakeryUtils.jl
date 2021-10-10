@@ -91,11 +91,11 @@ const shortlevels = (
     t = :subspecies,
     u = missing)
 
-function _split_clades(clade_string)
-    clades = split(clade_string, '|')
+function _split_ranks(rank_string)
+    ranks = split(rank_string, '|')
     taxa = Taxon[]
-    for clade in clades
-        spl = split(clade, "__")
+    for rank in ranks
+        spl = split(rank, "__")
         (level, name) = length(spl) == 1 ? ("u", spl[1]) : spl
         push!(taxa, Taxon(name, shortlevels[Symbol(level)]))
     end
@@ -171,16 +171,16 @@ sample2
 function metaphlan_profile(path::AbstractString, level=:all; sample=basename(first(splitext(path))))
     if startswith(first(eachline(path)), "#")
         dr = 5
-        hd = ["clade", "NCBI_taxid", "abundance", "additional_species"]
+        hd = ["taxon", "NCBI_taxid", "abundance", "additional_species"]
     else
         dr = 2
-        hd = ["clade", "abundance"]
+        hd = ["taxon", "abundance"]
     end
     profile = CSV.read(path, skipto=dr, header=hd, Tables.columntable)
-    taxa = [last(_split_clades(c)) for c in profile.clade]
+    taxa = [last(_split_ranks(c)) for c in profile.taxon]
     mat = sparse(reshape(profile.abundance, length(profile.abundance), 1))
     sample = sample isa Microbiome.AbstractSample ? sample : MicrobiomeSample(sample)
-    keep = level == :all ? Colon() : [ismissing(c) || c == level for c in clade.(taxa)]
+    keep = level == :all ? Colon() : [ismissing(c) || c == level for c in taxrank.(taxa)]
     return CommunityProfile(mat[keep, :], taxa[keep], [sample])
 end
 
@@ -266,16 +266,16 @@ sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sam
 """
 function metaphlan_profiles(path::AbstractString, level=:all; samplestart = 2, keepunidentified=false, replace_string="_profile")
     profiles = CSV.read(path, Tables.columntable; comment="#")
-    taxa = [last(_split_clades(c)) for c in profiles[1]]
+    taxa = [last(_split_ranks(c)) for c in profiles[1]]
     mat = reduce(hcat, [sparse(profiles[i]) for i in samplestart:length(profiles)])
     samples = collect(map(s-> MicrobiomeSample(replace(string(s), replace_string => "")), keys(profiles)[samplestart:end]))
     
     if level == :all
         keep = Colon()
     elseif keepunidentified
-        keep = [ismissing(c) || c == level for c in clade.(taxa)]
+        keep = [ismissing(c) || c == level for c in taxrank.(taxa)]
     else
-        keep = [!ismissing(c) && c == level for c in clade.(taxa)]
+        keep = [!ismissing(c) && c == level for c in taxrank.(taxa)]
     end
     return CommunityProfile(mat[keep, :], taxa[keep], samples)
 end
@@ -341,10 +341,11 @@ end
 
 
 """
-    parsetaxon(taxstring::AbstractString, taxlevel::Union{Int, Symbol})
+    parsetaxon(taxstring::AbstractString, rank::Union{Int, Symbol})
 
-Finds given taxonomic level in a string (as formatted by MetaPhlAn (eg "k__Bacteria|p__Proteobacteria...")) and returns the clade and taxonomic level as a Taxon.
-If taxon level not given, function will return the most specific (lowest) taxonomic level available.
+Finds given taxonomic level in a string (as formatted by MetaPhlAn (eg "k__Bacteria|p__Proteobacteria..."))
+and returns the name and taxonomic rank as a `Taxon`.
+If taxon rank not given, function will return the most specific (lowest) taxonomic level available.
 
 Levels may be given either as numbers or symbols:
 
