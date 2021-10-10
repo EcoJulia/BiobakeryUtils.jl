@@ -69,44 +69,23 @@ end
 #==============
 MetaPhlAn Utils
 ==============#
-const taxonlevels = (
-    kingdom      = 1,
-    phylum       = 2,
-    class        = 3,
-    order        = 4,
-    family       = 5,
-    genus        = 6,
-    species      = 7,
-    subspecies   = 8,
-    unidentified = 0)
-
-const shortlevels = (
-    k = :kingdom,
-    p = :phylum,
-    c = :class,
-    o = :order,
-    f = :family,
-    g = :genus,
-    s = :species,
-    t = :subspecies,
-    u = missing)
 
 function _split_ranks(rank_string)
     ranks = split(rank_string, '|')
     taxa = Taxon[]
     for rank in ranks
         spl = split(rank, "__")
-        (level, name) = length(spl) == 1 ? ("u", spl[1]) : spl
-        push!(taxa, Taxon(name, shortlevels[Symbol(level)]))
+        (rank, name) = length(spl) == 1 ? ("u", spl[1]) : spl
+        push!(taxa, Taxon(name, shortranks[Symbol(rank)]))
     end
     return taxa
 end
 
 """
-    metaphlan_profile(path::AbstractString, level::Union{Int, Symbol}=:all; sample::AbstractString=basename(first(splitext(path))))
+    metaphlan_profile(path::AbstractString, rank::Union{Int, Symbol}=:all; sample::AbstractString=basename(first(splitext(path))))
 
 Compiles a MetaPhlAn file into a CommunityProfile.
-Can select data according to taxonomic level. If level not given, all data is compiled.
+Can select data according to taxonomic rank. If rank not given, all data is compiled.
 `Sample name` of the CommunityProfile can be specified by passing a `sample` argument. If name not given, the name of the file becomes the `Sample name`.
 
 Levels may be given either as numbers or symbols:
@@ -168,7 +147,7 @@ Sample names:
 sample2
 ```
 """
-function metaphlan_profile(path::AbstractString, level=:all; sample=basename(first(splitext(path))))
+function metaphlan_profile(path::AbstractString, rank=:all; sample=basename(first(splitext(path))))
     if startswith(first(eachline(path)), "#")
         dr = 5
         hd = ["taxon", "NCBI_taxid", "abundance", "additional_species"]
@@ -180,20 +159,20 @@ function metaphlan_profile(path::AbstractString, level=:all; sample=basename(fir
     taxa = [last(_split_ranks(c)) for c in profile.taxon]
     mat = sparse(reshape(profile.abundance, length(profile.abundance), 1))
     sample = sample isa Microbiome.AbstractSample ? sample : MicrobiomeSample(sample)
-    keep = level == :all ? Colon() : [ismissing(c) || c == level for c in taxrank.(taxa)]
+    keep = rank == :all ? Colon() : [ismissing(c) || c == rank for c in taxrank.(taxa)]
     return CommunityProfile(mat[keep, :], taxa[keep], [sample])
 end
 
-function metaphlan_profile(path::AbstractString, level::Int; sample=basename(first(splitext(path))))
-    level = keys(taxonlevels)[level]
-    metaphlan_profile(path, level; sample)
+function metaphlan_profile(path::AbstractString, rank::Int; sample=basename(first(splitext(path))))
+    rank = keys(Microbiome._ranks)[rank]
+    metaphlan_profile(path, rank; sample)
 end
 
 """
-    metaphlan_profiles(path::AbstractString, level::Union{Int, Symbol}=:all; keepunidentified=false)
+    metaphlan_profiles(path::AbstractString, rank::Union{Int, Symbol}=:all; keepunidentified=false)
 
 Compiles MetaPhlAn profiles from a merged table into a CommunityProfile.
-Can select data according to taxonomic level. If level not given, all data is compiled.
+Can select data according to taxonomic rank. If rank not given, all data is compiled.
 Set `keepunidentified` flag to `true` to keep `UNIDENTIFIED` data.
 
 Levels may be given either as numbers or symbols:
@@ -264,29 +243,29 @@ sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sam
 # sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
 ```
 """
-function metaphlan_profiles(path::AbstractString, level=:all; samplestart = 2, keepunidentified=false, replace_string="_profile")
+function metaphlan_profiles(path::AbstractString, rank=:all; samplestart = 2, keepunidentified=false, replace_string="_profile")
     profiles = CSV.read(path, Tables.columntable; comment="#")
     taxa = [last(_split_ranks(c)) for c in profiles[1]]
     mat = reduce(hcat, [sparse(profiles[i]) for i in samplestart:length(profiles)])
     samples = collect(map(s-> MicrobiomeSample(replace(string(s), replace_string => "")), keys(profiles)[samplestart:end]))
     
-    if level == :all
+    if rank == :all
         keep = Colon()
     elseif keepunidentified
-        keep = [ismissing(c) || c == level for c in taxrank.(taxa)]
+        keep = [ismissing(c) || c == rank for c in taxrank.(taxa)]
     else
-        keep = [!ismissing(c) && c == level for c in taxrank.(taxa)]
+        keep = [!ismissing(c) && c == rank for c in taxrank.(taxa)]
     end
     return CommunityProfile(mat[keep, :], taxa[keep], samples)
 end
 
-function metaphlan_profiles(path::AbstractString, level::Int; kwargs...)
-    level = keys(taxonlevels)[level]
-    metaphlan_profiles(path, level; kwargs...)
+function metaphlan_profiles(path::AbstractString, rank::Int; kwargs...)
+    rank = keys(Microbiome._ranks)[rank]
+    metaphlan_profiles(path, rank; kwargs...)
 end
 
 """
-    metaphlan_profiles(paths::Array{<:AbstractString, 1}, level::Union{Int, Symbol}=:all)
+    metaphlan_profiles(paths::Array{<:AbstractString, 1}, rank::Union{Int, Symbol}=:all)
 
 Compiles MetaPhlAn profiles from multiple single tables into a CommunityProfile.
     
@@ -326,26 +305,26 @@ Sample names:
 metaphlan_single1, metaphlan_single2
 ```
 """
-function metaphlan_profiles(paths::Array{<:AbstractString, 1}, level=:all)
+function metaphlan_profiles(paths::Array{<:AbstractString, 1}, rank=:all)
     profiles = []
     for path in paths 
-        push!(profiles, metaphlan_profile(path, level;))
+        push!(profiles, metaphlan_profile(path, rank;))
     end
     commjoin(profiles...)
 end
 
-function metaphlan_profiles(paths::Array{<:AbstractString, 1}, level::Int)
-    level = keys(taxonlevels)[level]
-    metaphlan_profiles(paths, level)
+function metaphlan_profiles(paths::Array{<:AbstractString, 1}, rank::Int)
+    rank = keys(Microbiome._ranks)[rank]
+    metaphlan_profiles(paths, rank)
 end
 
 
 """
     parsetaxon(taxstring::AbstractString, rank::Union{Int, Symbol})
 
-Finds given taxonomic level in a string (as formatted by MetaPhlAn (eg "k__Bacteria|p__Proteobacteria..."))
+Finds given taxonomic rank in a string (as formatted by MetaPhlAn (eg "k__Bacteria|p__Proteobacteria..."))
 and returns the name and taxonomic rank as a `Taxon`.
-If taxon rank not given, function will return the most specific (lowest) taxonomic level available.
+If taxon rank not given, function will return the most specific (lowest) taxonomic rank available.
 
 Levels may be given either as numbers or symbols:
 
@@ -377,18 +356,19 @@ function parsetaxon(taxstring::AbstractString; throw_error=true)
     return last(taxa)
 end
 
-function parsetaxon(taxstring::AbstractString, taxlevel::Int; throw_error=true)
+function parsetaxon(taxstring::AbstractString, rank::Int; throw_error=true)
     taxa = parsetaxa(taxstring, throw_error=throw_error)
-    taxlevel <= length(taxa) || throw(ArgumentError("Taxonomy does not contain level $taxlevel"))
-    return taxa[taxlevel]
+    rank <= length(taxa) || throw(ArgumentError("Taxonomy does not contain rank $rank"))
+    return taxa[rank]
 end
 
-parsetaxon(taxstring::AbstractString, taxlevel::Symbol) = parsetaxon(taxstring, taxonlevels[taxlevel])
+parsetaxon(taxstring::AbstractString, rank::Symbol) = parsetaxon(taxstring, Microbiome._ranks[rank])
 
 """
     parsetaxa(taxstring::AbstractString; throw_error=true)
 
-Given a string representing taxonmic levels as formatted by MetaPhlAn (eg "k__Bacteria|p__Proteobacteria..."), separates taxonomic levels into elements of type Taxon in a vector.
+Given a string representing taxonmic ranks as formatted by MetaPhlAn (eg "k__Bacteria|p__Proteobacteria..."),
+separates taxonomic ranks into elements of type Taxon in a vector.
 
 Examples
 ≡≡≡≡≡≡≡≡≡≡
@@ -411,5 +391,5 @@ function _shortname(taxon::AbstractString; throw_error=true)
     if isnothing(m)
         throw_error ? throw(ArgumentError("Improperly formated taxon $taxon")) : return (string(taxon), :unidentified)
     end
-    return string(m.captures[1]), shortlevels[Symbol(first(taxon))]
+    return string(m.captures[1]), shortranks[Symbol(first(taxon))]
 end
