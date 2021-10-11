@@ -16,6 +16,10 @@ ENV["PATH"] = ENV["PATH"] * ":" * Conda.bin_dir(:BiobakeryUtils)
         profiles = filter(f-> contains(f, "_profile.tsv"), readdir("files/metaphlan", join=true))
         @test metaphlan_merge(profiles, "files/metaphlan/merged_abundance_table.tsv").exitcode == 0
     end
+
+    @testset "Humann" begin
+        @test run(`humann --help`).exitcode == 0
+    end
 end
 
 @testset "Metaphlan" begin
@@ -87,6 +91,5 @@ end
     @test isempty(setdiff(featurenames(pj_strat), featurenames(pj)))
     @test isempty(setdiff(features(filter(!hastaxon, pj_strat)), features(pj)))
     CSV.write("files/humann/joined_roundtrip.tsv", pj_strat; delim='\t')
-    @test @test isempty(setdiff(features(pj_strat), features(humann_profiles("files/humann/joined_roundtrip.tsv"; stratified=true))))
 end
 
