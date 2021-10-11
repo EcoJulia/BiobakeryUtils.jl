@@ -74,9 +74,7 @@ function _split_ranks(rank_string)
     ranks = split(rank_string, '|')
     taxa = Taxon[]
     for rank in ranks
-        spl = split(rank, "__")
-        (rank, name) = length(spl) == 1 ? ("u", spl[1]) : spl
-        push!(taxa, Taxon(name, shortranks[Symbol(rank)]))
+        push!(taxa, taxon(rank))
     end
     return taxa
 end
@@ -186,62 +184,6 @@ Levels may be given either as numbers or symbols:
 - `7` = `:species`
 - `8` = `:subspecies`
 
-Examples
-≡≡≡≡≡≡≡≡≡≡
-
-```jldoctest metaphlan_profiles
-julia> metaphlan_profiles("test/files/metaphlan_multi_test.tsv")
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 42 features in 7 samples
-
-Feature names:
-Archaea, Euryarchaeota, Methanobacteria...Actinomyces_viscosus, GCF_000175315
-
-Sample names:
-sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
-
-
-
-julia> metaphlan_profiles("test/files/metaphlan_multi_test.tsv", :genus)
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 3 features in 7 samples
-
-Feature names:
-Methanobrevibacter, Methanosphaera, Actinomyces
-
-Sample names:
-sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
-
-
-
-julia> metaphlan_profiles("test/files/metaphlan_multi_test.tsv", 3)
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 2 features in 7 samples
-
-Feature names:
-Methanobacteria, Actinobacteria
-
-Sample names:
-sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
-
-
-julia> metaphlan_profiles("test/files/metaphlan_multi_test_unidentified.tsv")
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 43 features in 7 samples
-
-Feature names:
-UNIDENTIFIED, Archaea, Euryarchaeota...Actinomyces_viscosus, GCF_000175315
-
-Sample names:
-sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
-
-
-
-# julia> metaphlan_profiles("test/files/metaphlan_multi_test_unidentified.tsv", keepunidentified = true)
-# CommunityProfile{Float64, Taxon, MicrobiomeSample} with 43 features in 7 samples
-
-# Feature names:
-# UNIDENTIFIED, Archaea, Euryarchaeota...Actinomyces_viscosus, GCF_000175315
-
-# Sample names:
-# sample1_taxonomic, sample2_taxonomic, sample3_taxonomic...sample6_taxonomic, sample7_taxonomic
-```
 """
 function metaphlan_profiles(path::AbstractString, rank=:all; samplestart = 2, keepunidentified=false, replace_string="_profile")
     profiles = CSV.read(path, Tables.columntable; comment="#")
@@ -260,7 +202,7 @@ function metaphlan_profiles(path::AbstractString, rank=:all; samplestart = 2, ke
 end
 
 function metaphlan_profiles(path::AbstractString, rank::Int; kwargs...)
-    rank = keys(Microbiome._ranks)[rank]
+    rank = keys(Microbiome._ranks)[rank + 1]
     metaphlan_profiles(path, rank; kwargs...)
 end
 
@@ -268,54 +210,24 @@ end
     metaphlan_profiles(paths::Array{<:AbstractString, 1}, rank::Union{Int, Symbol}=:all)
 
 Compiles MetaPhlAn profiles from multiple single tables into a CommunityProfile.
-    
-Examples
-≡≡≡≡≡≡≡≡≡≡
-
-```jldoctest metaphlan_profiles
-julia> metaphlan_profiles(["test/files/metaphlan_single1.tsv", "test/files/metaphlan_single2.tsv"])
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 129 features in 2 samples
-
-Feature names:
-Bacteria, Firmicutes, Bacteroidetes...Coprococcus_eutactus, Ruminococcus_bromii
-
-Sample names:
-metaphlan_single1, metaphlan_single2
-
-
-
-julia> metaphlan_profiles(["test/files/metaphlan_single1.tsv", "test/files/metaphlan_single2.tsv"], :genus)
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 46 features in 2 samples
-
-Feature names:
-Bacteroides, Roseburia, Faecalibacterium...Ruthenibacterium, Haemophilus
-
-Sample names:
-metaphlan_single1, metaphlan_single2
-
-
-
-julia> metaphlan_profiles(["test/files/metaphlan_single1.tsv", "test/files/metaphlan_single2.tsv"], 5)
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 24 features in 2 samples
-
-Feature names:
-Lachnospiraceae, Ruminococcaceae, Bacteroidaceae...Clostridiales_unclassified, Pasteurellaceae
-
-Sample names:
-metaphlan_single1, metaphlan_single2
 ```
 """
-function metaphlan_profiles(paths::Array{<:AbstractString, 1}, rank=:all)
+function metaphlan_profiles(paths::Array{<:AbstractString, 1}, rank=:all; samples=nothing)
+    if isnothing(samples)
+        samples = [first(splitext(basename(f))) for f in paths]
+    else
+        length(samples) == length(paths) || throw(ArgumentError("Number of paths ($(length(paths))) and number of samples ($(length(samples))) does not match"))
+    end
     profiles = []
-    for path in paths 
-        push!(profiles, metaphlan_profile(path, rank;))
+    for (path, sample) in zip(paths, samples)
+        push!(profiles, metaphlan_profile(path, rank; sample))
     end
     commjoin(profiles...)
 end
 
-function metaphlan_profiles(paths::Array{<:AbstractString, 1}, rank::Int)
-    rank = keys(Microbiome._ranks)[rank]
-    metaphlan_profiles(paths, rank)
+function metaphlan_profiles(paths::Array{<:AbstractString, 1}, rank::Int; samples=nothing)
+    rank = keys(Microbiome._ranks)[rank + 1]
+    metaphlan_profiles(paths, rank; samples)
 end
 
 
@@ -391,5 +303,5 @@ function _shortname(taxon::AbstractString; throw_error=true)
     if isnothing(m)
         throw_error ? throw(ArgumentError("Improperly formated taxon $taxon")) : return (string(taxon), :unidentified)
     end
-    return string(m.captures[1]), shortranks[Symbol(first(taxon))]
+    return string(m.captures[1]), Microbiome._shortranks[Symbol(first(taxon))]
 end
