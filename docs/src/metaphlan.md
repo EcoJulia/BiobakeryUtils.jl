@@ -367,7 +367,10 @@ see [the Microbiome.jl docs](https://biojulia.net/Microbiome.jl/latest/profiles/
 
 ### Performing PCoA analysis
 
-For this analysis, we'll need to use a couple of other julia packages,
+A few convenience functions are re-exported from `Microbiome.jl`
+to perform common analysis, like getting the Bray-Curtis dissimilarity matrix,
+
+For this analysis, we'll use a couple of other julia packages,
 [`Distances.jl`](https://github.com/JuliaStats/Distances.jl) and [`MulitvariateStats.jl`](https://github.com/JuliaStats/MulitvariateStats.jl).
 
 You can install these by opening the Pkg REPL (type ']') and using `add`:
