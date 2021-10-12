@@ -21,6 +21,7 @@ humann(INTPUTFILE, OUTPUT, ["bypass_translated_search"]; input_formal="fastq.gz"
 ```
 """
 function humann(inputfile, output, flags=[]; kwargs...)
+    check_for_install("humann")
     c = ["humann", "-i", inputfile, "-o", output]
     append!(c, [replace(string("--", f), "_"=>"-") for f in flags])
     append!(c, Iterators.flatten((replace(string("--", k), "_"=>"-"), v) for (k,v) in pairs(kwargs)))
@@ -110,6 +111,7 @@ Requires installation of [`humann`](https://github.com/biobakery/humann) availab
 See "[Using Conda](@ref using-conda)" for more information.
 """
 function humann_regroup(comm::CommunityProfile; inkind::String="uniref90", outkind::String="ec")
+    check_for_install("humann_regroup_table")
     in_path = tempname()
     out_path = tempname()
 
@@ -132,6 +134,7 @@ Requires installation of [`humann`](https://github.com/biobakery/humann) availab
 See "[Using Conda](@ref using-conda)" for more information.
 """
 function humann_rename(comm::CommunityProfile; kind::String="ec")
+    check_for_install("humann_rename_table")
     in_path = tempname()
     out_path = tempname()
     ss = samples(comm)
@@ -155,6 +158,7 @@ Requires installation of [`humann`](https://github.com/biobakery/humann) availab
 See "[Using Conda](@ref using-conda)" for more information.
 """
 function humann_renorm(comm::CommunityProfile; units="cpm")
+    check_for_install("humann_renorm_table")
     in_path = tempname()
     out_path = tempname()
     ss = samples(comm)
@@ -178,6 +182,7 @@ Requires installation of [`humann`](https://github.com/biobakery/humann) availab
 See "[Using Conda](@ref using-conda)" for more information.
 """
 function humann_join(in_path, out_path; file_name=nothing, search_subdirectories=false, verbose=false)
+    check_for_install("humann_join_tables")
     cmd = ["humann_join_tables", "-i", in_path, "-o", out_path]
     !isnothing(file_name) && append!(cmd, ["--file_name", file_name])
     search_subdirectories && push!(cmd, "--search-subdirectories")
@@ -260,6 +265,7 @@ Requires installation of [`humann`](https://github.com/biobakery/humann) availab
 See "[Using Conda](@ref using-conda)" for more information.
 """
 function humann_barplot(comm::CommunityProfile, outpath; kwargs...)
+    check_for_install("humann_barplot")
     tmp = tempname()
     write_pcl(tmp, comm)
 

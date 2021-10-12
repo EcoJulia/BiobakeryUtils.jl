@@ -30,6 +30,7 @@ to specify the location where the markergene database is/will be installed,
 or pass `bowtie2db = "some/path"` as a keyword argument.
 """
 function metaphlan(inputfile, output; kwargs...)
+    check_for_install("metaphlan")
     cmd = ["metaphlan", inputfile, output]
     add_cli_kwargs!(cmd, kwargs)
     
@@ -51,6 +52,7 @@ Requires `metaphlan` to be installed and accessible in the `PATH`
 (see [Getting Started](@ref)).
 """
 function metaphlan_merge(paths, output; kwargs...)
+    check_for_install("merge_metaphlan_tables.py")
     cmd = ["merge_metaphlan_tables.py", "-o", output]
     for (key,val) in pairs(kwargs)
         if val isa Bool

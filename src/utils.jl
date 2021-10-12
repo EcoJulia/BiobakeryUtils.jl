@@ -47,3 +47,20 @@ function add_cli_kwargs!(cmd, kwargs; optunderscores=false)
     !optunderscores && map(c-> startswith(c, "--") ? replace(c, "_"=>"-") : c, cmd)
     return cmd
 end
+
+function check_for_install(tool)
+    try run(`which $tool`, )
+        return nothing
+    catch e
+        @error """
+        Can not find `$tool`! If you think it should be installed,
+        try running:
+
+        ```
+        ENV["PATH"] = ENV["PATH"] * ":" * Conda.bin_dir(env))`
+        ```
+        """
+        rethrow()
+    end
+    return nothing
+end
