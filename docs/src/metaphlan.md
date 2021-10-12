@@ -383,10 +383,8 @@ julia> dm = pairwise(BrayCurtis(), abundances(spec), dims=2) # parwise distances
  0.857143  0.857143  0.857143  0.857143  0.0       0.857143
  0.758712  0.845517  0.787196  0.461648  0.857143  0.0
 
-julia> pcoa = classical_mds(dm, 2)
-2×6 Matrix{Float64}:
-  0.0368288  -0.319637  -0.0189194  0.341751  -0.384842  0.344819
- -0.3563      0.173062  -0.387362   0.189514   0.185102  0.195984
+julia> pc = fit(MDS, dm, distances=true)
+Classical MDS(indim = NaN, outdim = 5)
 ```
 
 For plotting, I use [Makie](https://github.com/JuliaPlots/Makie.jl),
@@ -416,7 +414,9 @@ julia> clrs = [:lightgreen, :cyan, :dodgerblue, :orange, :salmon, :purple]
  :salmon
  :purple
 
-julia> fig, ax, plt = scatter(pcoa[1,:], pcoa[2, :], color=clrs,
+julia> loads = sqrt.(pc.λ)' .* projection(pc) # loadings for pcoa, columns are axes
+
+julia> fig, ax, plt = scatter(loads[:,1], loads[:, 2], color=clrs,
                               axis=(
                                   xlabel="PCoA.1",
                                   ylabel="PCoA.2",
@@ -461,7 +461,7 @@ julia> fig2 = Figure()
 
 julia> ax2 = Axis(fig2[1,1], title="Phyla in samples", xticks=(1:nsamples(phyl), sites));
 
-julia> ax2.xticklabelrotation = π / 4 # rotations are in radians
+julia> ax2.xticklabelrotation = π / 4 # rotations are in radians, type 'π' by doing `\pi<tab>`
 0.7853981633974483
 
 julia> y = Float64[]
