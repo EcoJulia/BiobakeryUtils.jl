@@ -12,8 +12,7 @@
 **Development Status**
 
 [![CI](https://github.com/BioJulia/BiobakeryUtils.jl/workflows/CI/badge.svg)](https://github.com/BioJulia/BiobakeryUtils.jl/actions?query=workflow%3ACI)
-[![codecov](https://codecov.io/gh/BioJulia/BiobakeryUtils.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/BioJulia/BiobakeryUtils.jl)
-
+[![codecov](https://codecov.io/gh/BioJulia/BiobakeryUtils.jl/branch/main/graph/badge.svg?token=F6TAE5dppU)](https://codecov.io/gh/BioJulia/BiobakeryUtils.jl)
 [![](https://img.shields.io/badge/docs-latest-blue.svg)](http://biojulia.net/BiobakeryUtils.jl/dev/)
 
 ## Description
