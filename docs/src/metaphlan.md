@@ -288,8 +288,7 @@ julia> CSV.write("merged_abundance_table2.tsv", mps2)
 ```
 
 One benefit of doing it the later way is that as we're loading the tables,
-we can attach some metadata to them
-([see Microbiome.jl docs](https://biojulia.net/Microbiome.jl/latest/profiles/#working-metadata-1) for more info on metadata and `CommunityProfile`s).
+we can attach some metadata to them.
 For example:
 
 ```julia-repl
@@ -328,50 +327,29 @@ julia> metadata(mps3)
  (sample = "SRS014494", STSite = "Posterior_fornix", filename = "SRS014494-Posterior_fornix_profile.tsv")
 ```
 
-
+[See Microbiome.jl docs](https://biojulia.net/Microbiome.jl/latest/profiles/#working-metadata-1) for more info on metadata and `CommunityProfile`s)
 ## Analyze Results
 
 [Official tutorial link](https://github.com/biobakery/biobakery/wiki/metaphlan3#visualize-results)
 
 With the profile loaded, you can use many julia packages to analyze or visualize the results.
-
-### Indexing
-
-When you get slices of a `CommunityProfile`,
-the return value is another `CommunityProfile`.
-But you can get the underlying matrix using [`abundances`](@ref Microbiome.abundances).
-
-```julia-repl
-julia> abundances(mps3)
-62×6 SparseArrays.SparseMatrixCSC{Float64, Int64} with 84 stored entries:
-⡟⠟⠙
-⡇⠅⠀
-⡇⠀⠀
-⡇⠀⠀
-⢸⠼⠠
-⢸⠉⠈
-⠸⡀⠀
-⠀⣇⠀
-⠀⡧⠀
-⠀⢇⠀
-⠀⢸⠀
-⠀⢸⠀
-⠀⠀⡇
-⠀⠀⡇
-⠀⠀⢣
-⠀⠀⠘
-```
+Inside the `CommunityProfile` is a sparce matrix,
+which you can access with [`abundances`](@ref Microbiome.abundances).
+This means that all of julia's powerful statistics and ML libraries
+are easy to use with your microbiome data. 
 
 For more information about indexing and accessing components of the data,
 see [the Microbiome.jl docs](https://biojulia.net/Microbiome.jl/latest/profiles/#Indexing-and-selecting-1)
 
 ### Performing PCoA analysis
 
-A few convenience functions are re-exported from `Microbiome.jl`
-to perform common analysis, like getting the Bray-Curtis dissimilarity matrix,
-
-For this analysis, we'll use a couple of other julia packages,
+To demonstrate this, we'll use a couple of other julia packages
+to perform and plot a principal coordinates analysis (PCoA):
 [`Distances.jl`](https://github.com/JuliaStats/Distances.jl) and [`MulitvariateStats.jl`](https://github.com/JuliaStats/MulitvariateStats.jl).
+
+(Actually some convenent functions for this are re-exported from `Microbiome.jl`
+eg [`braycurtis`](@ref Microbiome.braycurtis) and [`pcoa`](@ref Microbiome.pcoa) 
+-- this is just meant to show how easy it is to use the underlying data for whatever you like)
 
 You can install these by opening the Pkg REPL (type ']') and using `add`:
 
