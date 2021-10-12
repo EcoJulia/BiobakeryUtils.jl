@@ -154,6 +154,7 @@ julia> humann("demo.fastq.gz", "demo_fastq")
 Creating output directory: /home/kevin/my_project/demo_fastq
 Output files will be written to: /home/kevin/my_project/demo_fastq
 Decompressing gzipped file ...
+# ... etc
 ```
 
 First, `humann` will run `metaphlan` to generate taxonomic profiles,
@@ -224,45 +225,7 @@ and has a bunch of useful properties.
 
 ### Indexing
 
-For example, you can index into a `CommunityProfile` just like you would a matrix.
-In julia, you can pull out specific values using `[row, col]`.
-So for example, to get the 3rd row, 2nd column, of matrix `mat`:
-
-```julia-repl
-julia> mat
-4×3 Matrix{Int64}:
-  1   2   3
-  4   5   6
-  7   8   9
- 10  11  12
-
-julia> mat[3,2]
-8
-```
-
-You can also get "slices", eg to get rows 2-4, column 1:
-
-```julia-repl
-julia> mat[2:4, 1]
-3-element Vector{Int64}:
-  4
-  7
- 10
-```
-
-To get all of one dimension, you can just use a bare `:`
-
-```julia-repl
-julia> mat[:, 1:2]
-4×2 Matrix{Int64}:
-  1   2
-  4   5
-  7   8
- 10  11
-```
-
-For `CommunityProfile`s,
-you can index with numbers as above, but also with strings
+For `CommunityProfile`s, you can select features and samples with strings (or regular expressions)
 representing names of features (rows) or samples (columns):
 
 ```julia-repl
@@ -300,12 +263,12 @@ julia> features(slice)
  GeneFunction("UniRef90_D0TRR5", Taxon("Bacteroides_dorei", :species))
 ```
 
-For gene functions, using a string to index will return
-all rows, regardless of the taxon.
+Using a string (or regular expression) to index will return
+all rows whose `name` matches, regardless of the taxon.
 If you just want a single value, you can use a `GeneFunction` directly:
 
 ```julia-repl
-julia> gfs_strat[GeneFunction("UniRef90_D0TRR5", "Bacteroides_dorei"), 1]
+julia> gfs_strat[GeneFunction("UniRef90_D0TRR5", "s__Bacteroides_dorei"), 1]
 0.8271298594
 ```
 
@@ -321,6 +284,9 @@ julia> features(gfs_strat[["UniRef90_D0TRR5", "UniRef90_A6L100"], :])
  GeneFunction("UniRef90_D0TRR5", Taxon("Bacteroides_vulgatus", :species))
  GeneFunction("UniRef90_D0TRR5", Taxon("Bacteroides_dorei", :species))
 ```
+
+For more information about indexing and accessing components of the data,
+see [the Microbiome.jl docs](https://biojulia.net/Microbiome.jl/latest/profiles/#Indexing-and-selecting-1)
 
 ## Manipulating tables
 

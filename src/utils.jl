@@ -49,7 +49,7 @@ function add_cli_kwargs!(cmd, kwargs; optunderscores=false)
 end
 
 function check_for_install(tool)
-    try run(`which $tool`, )
+    try run(pipeline(`which $tool`, stdout=devnull))
         return nothing
     catch e
         @error """
