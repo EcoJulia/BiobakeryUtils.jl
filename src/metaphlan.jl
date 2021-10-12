@@ -37,7 +37,7 @@ function metaphlan(inputfile, output; kwargs...)
         append!(cmd, ["--bowtie2db", ENV["METAPHLAN_BOWTIE2_DB"]])
     end
 
-    deleteat!(c, findall(==(""), c))
+    deleteat!(cmd, findall(==(""), cmd))
     @info "Running command: $(Cmd(cmd))"
     return run(Cmd(cmd))
 end

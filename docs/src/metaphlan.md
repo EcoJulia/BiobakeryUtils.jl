@@ -288,7 +288,8 @@ julia> CSV.write("merged_abundance_table2.tsv", mps2)
 ```
 
 One benefit of doing it the later way is that as we're loading the tables,
-we can attach some metadata to them.
+we can attach some metadata to them
+([see Microbiome.jl docs](https://biojulia.net/Microbiome.jl/latest/profiles/#working-metadata-1) for more info on metadata and `CommunityProfile`s).
 For example:
 
 ```julia-repl
@@ -359,34 +360,9 @@ julia> abundances(mps3)
 ⠀⠀⡇
 ⠀⠀⢣
 ⠀⠀⠘
-
-julia> abundances(mps3["Firmicutes", :])
-1×6 SparseArrays.SparseMatrixCSC{Float64, Int64} with 5 stored entries:
- 68.9017  2.71266  43.0437  98.6447   ⋅   100.0
-
-julia> abundances(mps3[:, "SRS014476"])
-62×1 SparseArrays.SparseMatrixCSC{Float64, Int64} with 11 stored entries:
-⠁
-⠀
-⠀
-⠀
-⠀
-⠀
-⠀
-⠀
-⠀
-⠀
-⠀
-⠀
-⡇
-⡇
-⠃
-⠀
-julia> mps3["Bacteroidetes", "SRS014459"]
-31.09833
 ```
 
-For more information about indexing a and accessing components of the data,
+For more information about indexing and accessing components of the data,
 see [the Microbiome.jl docs](https://biojulia.net/Microbiome.jl/latest/profiles/#Indexing-and-selecting-1)
 
 ### Performing PCoA analysis

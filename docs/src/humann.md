@@ -332,7 +332,7 @@ both using julia and using utilities provided by `humann`.
 One example of the former is using `filter`,
 which takes a boolean function as the first argument,
 and returns a new `CommunityProfile` containing only
-rows that returned `true`. 
+rows that returned `true`.
 
 For example, given a stratified table like `gfs_strat`,
 if you want to get only rows that have a taxon associated with them,
