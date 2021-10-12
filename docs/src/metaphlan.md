@@ -336,46 +336,8 @@ With the profile loaded, you can use many julia packages to analyze or visualize
 
 ### Indexing
 
-`CommunityProfile`s wrap a sparse matrix,
-and you can access the values as you would a normal matrix.
-In julia, you can pull out specific values using `[row, col]`.
-So for example, to get the 3rd row, 2nd column, of matrix `mat`:
-
-```julia-repl
-julia> mat
-4×3 Matrix{Int64}:
-  1   2   3
-  4   5   6
-  7   8   9
- 10  11  12
-
-julia> mat[3,2]
-8
-```
-
-You can also get "slices", eg to get rows 2-4, column 1:
-
-```julia-repl
-julia> mat[2:4, 1]
-3-element Vector{Int64}:
-  4
-  7
- 10
-```
-
-To get all of one dimension, you can just use a bare `:`
-
-```julia-repl
-julia> mat[:, 1:2]
-4×2 Matrix{Int64}:
-  1   2
-  4   5
-  7   8
- 10  11
-```
-
 When you get slices of a `CommunityProfile`,
-the return value is another `CommunityProfile.
+the return value is another `CommunityProfile`.
 But you can get the underlying matrix using [`abundances`](@ref Microbiome.abundances).
 
 ```julia-repl
@@ -423,6 +385,9 @@ julia> abundances(mps3[:, "SRS014476"])
 julia> mps3["Bacteroidetes", "SRS014459"]
 31.09833
 ```
+
+For more information about indexing a and accessing components of the data,
+see [the Microbiome.jl docs](https://biojulia.net/Microbiome.jl/latest/profiles/#Indexing-and-selecting-1)
 
 ### Performing PCoA analysis
 
