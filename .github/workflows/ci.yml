@@ -58,8 +58,8 @@ jobs:
           julia --project=docs -e '
             using Pkg
             Pkg.develop(PackageSpec(path=pwd()))
-            Pkg.add(PackageSpec(name="Microbiome", rev="main"))
             Pkg.instantiate()'
+            Pkg.add(PackageSpec(name="Microbiome", rev="main"))
       - run: julia --project=docs docs/make.jl
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
