@@ -20,17 +20,16 @@ using this function, you would write:
 humann(INTPUTFILE, OUTPUT, ["bypass_translated_search"]; input_formal="fastq.gz", output_format="biom")
 ```
 """
-function humann(inputfile, output, flags=[]; kwargs...)
+function humann(inputfile, output; kwargs...)
     check_for_install("humann")
     c = ["humann", "-i", inputfile, "-o", output]
-    append!(c, [replace(string("--", f), "_"=>"-") for f in flags])
-    append!(c, Iterators.flatten((replace(string("--", k), "_"=>"-"), v) for (k,v) in pairs(kwargs)))
     
     if !haskey(kwargs, :metaphlan_options) && haskey(ENV, "METAPHLAN_BOWTIE2_DB")
         append!(c, ["--metaphlan-options", "'--bowtie2db $(ENV["METAPHLAN_BOWTIE2_DB"])'"])
     end
 
-    deleteat!(c, findall(==(""), c))
+    add_cli_kwargs!(c, kwargs)
+    
     @info "Running command: $(Cmd(c))"
     return run(Cmd(c))
 end
