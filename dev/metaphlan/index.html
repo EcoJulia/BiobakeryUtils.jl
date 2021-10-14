@@ -140,66 +140,7 @@ julia&gt; metadata(mps3)
  (sample = &quot;SRS014470&quot;, STSite = &quot;Tongue_dorsum&quot;, filename = &quot;SRS014470-Tongue_dorsum_profile.tsv&quot;)
  (sample = &quot;SRS014472&quot;, STSite = &quot;Buccal_mucosa&quot;, filename = &quot;SRS014472-Buccal_mucosa_profile.tsv&quot;)
  (sample = &quot;SRS014476&quot;, STSite = &quot;Supragingival_plaque&quot;, filename = &quot;SRS014476-Supragingival_plaque_profile.tsv&quot;)
- (sample = &quot;SRS014494&quot;, STSite = &quot;Posterior_fornix&quot;, filename = &quot;SRS014494-Posterior_fornix_profile.tsv&quot;)</code></pre><h2 id="Analyze-Results"><a class="docs-heading-anchor" href="#Analyze-Results">Analyze Results</a><a id="Analyze-Results-1"></a><a class="docs-heading-anchor-permalink" href="#Analyze-Results" title="Permalink"></a></h2><p><a href="https://github.com/biobakery/biobakery/wiki/metaphlan3#visualize-results">Official tutorial link</a></p><p>With the profile loaded, you can use many julia packages to analyze or visualize the results.</p><h3 id="Indexing"><a class="docs-heading-anchor" href="#Indexing">Indexing</a><a id="Indexing-1"></a><a class="docs-heading-anchor-permalink" href="#Indexing" title="Permalink"></a></h3><p><code>CommunityProfile</code>s wrap a sparse matrix, and you can access the values as you would a normal matrix. In julia, you can pull out specific values using <code>[row, col]</code>. So for example, to get the 3rd row, 2nd column, of matrix <code>mat</code>:</p><pre><code class="language-julia-repl hljs">julia&gt; mat
-4×3 Matrix{Int64}:
-  1   2   3
-  4   5   6
-  7   8   9
- 10  11  12
-
-julia&gt; mat[3,2]
-8</code></pre><p>You can also get &quot;slices&quot;, eg to get rows 2-4, column 1:</p><pre><code class="language-julia-repl hljs">julia&gt; mat[2:4, 1]
-3-element Vector{Int64}:
-  4
-  7
- 10</code></pre><p>To get all of one dimension, you can just use a bare <code>:</code></p><pre><code class="language-julia-repl hljs">julia&gt; mat[:, 1:2]
-4×2 Matrix{Int64}:
-  1   2
-  4   5
-  7   8
- 10  11</code></pre><p>When you get slices of a <code>CommunityProfile</code>, the return value is another <code>CommunityProfile. But you can get the underlying matrix using [</code>abundances`](@ref Microbiome.abundances).</p><pre><code class="language-julia-repl hljs">julia&gt; abundances(mps3)
-62×6 SparseArrays.SparseMatrixCSC{Float64, Int64} with 84 stored entries:
-⡟⠟⠙
-⡇⠅⠀
-⡇⠀⠀
-⡇⠀⠀
-⢸⠼⠠
-⢸⠉⠈
-⠸⡀⠀
-⠀⣇⠀
-⠀⡧⠀
-⠀⢇⠀
-⠀⢸⠀
-⠀⢸⠀
-⠀⠀⡇
-⠀⠀⡇
-⠀⠀⢣
-⠀⠀⠘
-
-julia&gt; abundances(mps3[&quot;Firmicutes&quot;, :])
-1×6 SparseArrays.SparseMatrixCSC{Float64, Int64} with 5 stored entries:
- 68.9017  2.71266  43.0437  98.6447   ⋅   100.0
-
-julia&gt; abundances(mps3[:, &quot;SRS014476&quot;])
-62×1 SparseArrays.SparseMatrixCSC{Float64, Int64} with 11 stored entries:
-⠁
-⠀
-⠀
-⠀
-⠀
-⠀
-⠀
-⠀
-⠀
-⠀
-⠀
-⠀
-⡇
-⡇
-⠃
-⠀
-julia&gt; mps3[&quot;Bacteroidetes&quot;, &quot;SRS014459&quot;]
-31.09833</code></pre><h3 id="Performing-PCoA-analysis"><a class="docs-heading-anchor" href="#Performing-PCoA-analysis">Performing PCoA analysis</a><a id="Performing-PCoA-analysis-1"></a><a class="docs-heading-anchor-permalink" href="#Performing-PCoA-analysis" title="Permalink"></a></h3><p>For this analysis, we&#39;ll need to use a couple of other julia packages, <a href="https://github.com/JuliaStats/Distances.jl"><code>Distances.jl</code></a> and <a href="https://github.com/JuliaStats/MulitvariateStats.jl"><code>MulitvariateStats.jl</code></a>.</p><p>You can install these by opening the Pkg REPL (type &#39;]&#39;) and using <code>add</code>:</p><pre><code class="language-julia-repl hljs">(my_project) pkg&gt; add MultivariateStats Distances
+ (sample = &quot;SRS014494&quot;, STSite = &quot;Posterior_fornix&quot;, filename = &quot;SRS014494-Posterior_fornix_profile.tsv&quot;)</code></pre><p><a href="https://biojulia.net/Microbiome.jl/latest/profiles/#working-metadata-1">See Microbiome.jl docs</a> for more info on metadata and <code>CommunityProfile</code>s)</p><h2 id="Analyze-Results"><a class="docs-heading-anchor" href="#Analyze-Results">Analyze Results</a><a id="Analyze-Results-1"></a><a class="docs-heading-anchor-permalink" href="#Analyze-Results" title="Permalink"></a></h2><p><a href="https://github.com/biobakery/biobakery/wiki/metaphlan3#visualize-results">Official tutorial link</a></p><p>With the profile loaded, you can use many julia packages to analyze or visualize the results. Inside the <code>CommunityProfile</code> is a sparce matrix, which you can access with <a href="../microbiome/#Microbiome.abundances"><code>abundances</code></a>. This means that all of julia&#39;s powerful statistics and ML libraries are easy to use with your microbiome data. </p><p>For more information about indexing and accessing components of the data, see <a href="https://biojulia.net/Microbiome.jl/latest/profiles/#Indexing-and-selecting-1">the Microbiome.jl docs</a></p><h3 id="Performing-PCoA-analysis"><a class="docs-heading-anchor" href="#Performing-PCoA-analysis">Performing PCoA analysis</a><a id="Performing-PCoA-analysis-1"></a><a class="docs-heading-anchor-permalink" href="#Performing-PCoA-analysis" title="Permalink"></a></h3><p>To demonstrate this, we&#39;ll use a couple of other julia packages to perform and plot a principal coordinates analysis (PCoA): <a href="https://github.com/JuliaStats/Distances.jl"><code>Distances.jl</code></a> and <a href="https://github.com/JuliaStats/MulitvariateStats.jl"><code>MulitvariateStats.jl</code></a>.</p><p>(Actually some convenent functions for this are re-exported from <code>Microbiome.jl</code> eg <a href="../microbiome/#Microbiome.braycurtis-Tuple{Microbiome.AbstractAbundanceTable}"><code>braycurtis</code></a> and <a href="../microbiome/#Microbiome.pcoa"><code>pcoa</code></a>  – this is just meant to show how easy it is to use the underlying data for whatever you like)</p><p>You can install these by opening the Pkg REPL (type &#39;]&#39;) and using <code>add</code>:</p><pre><code class="language-julia-repl hljs">(my_project) pkg&gt; add MultivariateStats Distances
    Resolving package versions...
     Updating `~/my_project/Project.toml`
   [b4f34e82] + Distances v0.10.4
@@ -219,10 +160,8 @@ julia&gt; using Distances</code></pre><p>Since <code>abundances</code> gives us 
  0.857143  0.857143  0.857143  0.857143  0.0       0.857143
  0.758712  0.845517  0.787196  0.461648  0.857143  0.0
 
-julia&gt; pcoa = classical_mds(dm, 2)
-2×6 Matrix{Float64}:
-  0.0368288  -0.319637  -0.0189194  0.341751  -0.384842  0.344819
- -0.3563      0.173062  -0.387362   0.189514   0.185102  0.195984</code></pre><p>For plotting, I use <a href="https://github.com/JuliaPlots/Makie.jl">Makie</a>, but there are <a href="https://juliahub.com/ui/Search?q=plotting&amp;type=packages">many other options</a>.</p><pre><code class="language-julia-repl hljs">(my_project) pkg&gt; add CairoMakie
+julia&gt; pc = fit(MDS, dm, distances=true)
+Classical MDS(indim = NaN, outdim = 5)</code></pre><p>For plotting, I use <a href="https://github.com/JuliaPlots/Makie.jl">Makie</a>, but there are <a href="https://juliahub.com/ui/Search?q=plotting&amp;type=packages">many other options</a>.</p><pre><code class="language-julia-repl hljs">(my_project) pkg&gt; add CairoMakie
 # ...
 
 julia&gt; using CairoMakie
@@ -245,7 +184,9 @@ julia&gt; clrs = [:lightgreen, :cyan, :dodgerblue, :orange, :salmon, :purple]
  :salmon
  :purple
 
-julia&gt; fig, ax, plt = scatter(pcoa[1,:], pcoa[2, :], color=clrs,
+julia&gt; loads = sqrt.(pc.λ)&#39; .* projection(pc) # loadings for pcoa, columns are axes
+
+julia&gt; fig, ax, plt = scatter(loads[:,1], loads[:, 2], color=clrs,
                               axis=(
                                   xlabel=&quot;PCoA.1&quot;,
                                   ylabel=&quot;PCoA.2&quot;,
@@ -273,7 +214,7 @@ julia&gt; fig2 = Figure()
 
 julia&gt; ax2 = Axis(fig2[1,1], title=&quot;Phyla in samples&quot;, xticks=(1:nsamples(phyl), sites));
 
-julia&gt; ax2.xticklabelrotation = π / 4 # rotations are in radians
+julia&gt; ax2.xticklabelrotation = π / 4 # rotations are in radians, type &#39;π&#39; by doing `\pi&lt;tab&gt;`
 0.7853981633974483
 
 julia&gt; y = Float64[]
@@ -324,55 +265,4 @@ Combined{Makie.barplot, Tuple{Vector{Point{2, Float32}}}}
 julia&gt; leg = Legend(fig2[1,2], [MarkerElement(color = c, marker=:rect) for c in to_colormap(:Accent_5, 4)], phylumnames)
 Legend()
 
-julia&gt; fig2</code></pre><p><img src="/img/metaphlan_stack.png" alt="Metaphlan PCoA"/></p><h2 id="Functions-and-Types"><a class="docs-heading-anchor" href="#Functions-and-Types">Functions and Types</a><a id="Functions-and-Types-1"></a><a class="docs-heading-anchor-permalink" href="#Functions-and-Types" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="BiobakeryUtils.metaphlan-Tuple{Any, Any}" href="#BiobakeryUtils.metaphlan-Tuple{Any, Any}"><code>BiobakeryUtils.metaphlan</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">metaphlan(inputfile, outputfile; kwargs...)</code></pre><p>Run <code>metaphlan</code> command line tool on <code>inputfile</code>, creating <code>outputfile</code>. Requires <code>metaphlan</code> to be installed and accessible in the <code>PATH</code> (see <a href="@ref">Getting Started</a>).</p><p><code>metaphlan</code> options can be passed via keyword arguments. For example, if on the command line you would run:</p><pre><code class="language-sh hljs">$ metaphlan some.fastq.gz output/some_profile.tsv --input_type fastq --nprocs 8</code></pre><p>using this function, you would write:</p><pre><code class="language-julia hljs">metaphlan(&quot;some.fastq.gz&quot;, &quot;output/some_profile.tsv&quot;; input_type=&quot;fastq&quot;, nprocs=8)</code></pre><p>Note: the <code>input_type</code> keyword is required.</p><p>Set the environmental variable &quot;METAPHLAN<em>BOWTIE2</em>DB&quot; to specify the location where the markergene database is/will be installed, or pass <code>bowtie2db = &quot;some/path&quot;</code> as a keyword argument.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/BioJulia/BiobakeryUtils.jl/blob/bd60c83bb4ec0a44b718dd2d3e4fe854a7c4f778/src/metaphlan.jl#L5-L31">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BiobakeryUtils.metaphlan_merge-Tuple{Any, Any}" href="#BiobakeryUtils.metaphlan_merge-Tuple{Any, Any}"><code>BiobakeryUtils.metaphlan_merge</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">metaphlan_merge(paths, outputfile; kwargs...)</code></pre><p>Run <code>merge_metaphlan_tables</code> command line tool on the files in <code>paths</code>, creating <code>outputfile</code>. Requires <code>metaphlan</code> to be installed and accessible in the <code>PATH</code> (see <a href="@ref">Getting Started</a>).</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/BioJulia/BiobakeryUtils.jl/blob/bd60c83bb4ec0a44b718dd2d3e4fe854a7c4f778/src/metaphlan.jl#L45-L52">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BiobakeryUtils.metaphlan_profile" href="#BiobakeryUtils.metaphlan_profile"><code>BiobakeryUtils.metaphlan_profile</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">metaphlan_profile(path::AbstractString, rank::Union{Int, Symbol}=:all; sample::AbstractString=basename(first(splitext(path))))</code></pre><p>Compiles a MetaPhlAn file into a CommunityProfile. Can select data according to taxonomic rank. If rank not given, all data is compiled. <code>Sample name</code> of the CommunityProfile can be specified by passing a <code>sample</code> argument. If name not given, the name of the file becomes the <code>Sample name</code>.</p><p>Levels may be given either as numbers or symbols:</p><ul><li><code>1</code> = <code>:kingdom</code></li><li><code>2</code> = <code>:phylum</code></li><li><code>3</code> = <code>:class</code></li><li><code>4</code> = <code>:order</code></li><li><code>5</code> = <code>:family</code></li><li><code>6</code> = <code>:genus</code></li><li><code>7</code> = <code>:species</code></li><li><code>8</code> = <code>:subspecies</code></li></ul><p>Examples ≡≡≡≡≡≡≡≡≡≡</p><pre><code class="language-julia-repl hljs">julia&gt; metaphlan_profile(&quot;test/files/metaphlan_single2.tsv&quot;)
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 96 features in 1 samples
-
-Feature names:
-Bacteria, Archaea, Firmicutes...Ruminococcus_bromii, Bacteroides_vulgatus
-
-Sample names:
-metaphlan_single2
-
-
-
-julia&gt; metaphlan_profile(&quot;test/files/metaphlan_single2.tsv&quot;, 4)
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 11 features in 1 samples
-
-Feature names:
-Clostridiales, Bacteroidales, Coriobacteriales...Firmicutes_unclassified, Pasteurellales
-
-Sample names:
-metaphlan_single2
-
-
-
-julia&gt; metaphlan_profile(&quot;test/files/metaphlan_single2.tsv&quot;, :genus)
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 40 features in 1 samples
-
-Feature names:
-Prevotella, Roseburia, Faecalibacterium...Haemophilus, Lactococcus
-
-Sample names:
-metaphlan_single2
-
-
-
-julia&gt; metaphlan_profile(&quot;test/files/metaphlan_single2.tsv&quot;, :genus, sample = &quot;sample2&quot;)
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 40 features in 1 samples
-
-Feature names:
-Prevotella, Roseburia, Faecalibacterium...Haemophilus, Lactococcus
-
-Sample names:
-sample2</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/BioJulia/BiobakeryUtils.jl/blob/bd60c83bb4ec0a44b718dd2d3e4fe854a7c4f778/src/metaphlan.jl#L82-L147">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BiobakeryUtils.metaphlan_profiles" href="#BiobakeryUtils.metaphlan_profiles"><code>BiobakeryUtils.metaphlan_profiles</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">metaphlan_profiles(paths::Array{&lt;:AbstractString, 1}, rank::Union{Int, Symbol}=:all)</code></pre><p>Compiles MetaPhlAn profiles from multiple single tables into a CommunityProfile. ```</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/BioJulia/BiobakeryUtils.jl/blob/bd60c83bb4ec0a44b718dd2d3e4fe854a7c4f778/src/metaphlan.jl#L209-L214">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BiobakeryUtils.metaphlan_profiles" href="#BiobakeryUtils.metaphlan_profiles"><code>BiobakeryUtils.metaphlan_profiles</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">metaphlan_profiles(path::AbstractString, rank::Union{Int, Symbol}=:all; keepunidentified=false)</code></pre><p>Compiles MetaPhlAn profiles from a merged table into a CommunityProfile. Can select data according to taxonomic rank. If rank not given, all data is compiled. Set <code>keepunidentified</code> flag to <code>true</code> to keep <code>UNIDENTIFIED</code> data.</p><p>Levels may be given either as numbers or symbols:</p><ul><li><code>1</code> = <code>:kingdom</code></li><li><code>2</code> = <code>:phylum</code></li><li><code>3</code> = <code>:class</code></li><li><code>4</code> = <code>:order</code></li><li><code>5</code> = <code>:family</code></li><li><code>6</code> = <code>:genus</code></li><li><code>7</code> = <code>:species</code></li><li><code>8</code> = <code>:subspecies</code></li></ul></div><a class="docs-sourcelink" target="_blank" href="https://github.com/BioJulia/BiobakeryUtils.jl/blob/bd60c83bb4ec0a44b718dd2d3e4fe854a7c4f778/src/metaphlan.jl#L169-L187">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BiobakeryUtils.parsetaxa-Tuple{AbstractString}" href="#BiobakeryUtils.parsetaxa-Tuple{AbstractString}"><code>BiobakeryUtils.parsetaxa</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">parsetaxa(taxstring::AbstractString; throw_error=true)</code></pre><p>Given a string representing taxonmic ranks as formatted by MetaPhlAn (eg &quot;k<strong>Bacteria|p</strong>Proteobacteria...&quot;), separates taxonomic ranks into elements of type Taxon in a vector.</p><p>Examples ≡≡≡≡≡≡≡≡≡≡</p><pre><code class="language-julia-repl hljs">julia&gt; parsetaxa(&quot;k__Archaea|p__Euryarchaeota|c__Methanobacteria&quot;; throw_error = true)
-3-element Vector{Taxon}:
- Taxon(&quot;Archaea&quot;, :kingdom)
- Taxon(&quot;Euryarchaeota&quot;, :phylum)
- Taxon(&quot;Methanobacteria&quot;, :class)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/BioJulia/BiobakeryUtils.jl/blob/bd60c83bb4ec0a44b718dd2d3e4fe854a7c4f778/src/metaphlan.jl#L279-L295">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BiobakeryUtils.parsetaxon-Tuple{AbstractString}" href="#BiobakeryUtils.parsetaxon-Tuple{AbstractString}"><code>BiobakeryUtils.parsetaxon</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">parsetaxon(taxstring::AbstractString, rank::Union{Int, Symbol})</code></pre><p>Finds given taxonomic rank in a string (as formatted by MetaPhlAn (eg &quot;k<strong>Bacteria|p</strong>Proteobacteria...&quot;)) and returns the name and taxonomic rank as a <code>Taxon</code>. If taxon rank not given, function will return the most specific (lowest) taxonomic rank available.</p><p>Levels may be given either as numbers or symbols:</p><ul><li><code>1</code> = <code>:kingdom</code></li><li><code>2</code> = <code>:phylum</code></li><li><code>3</code> = <code>:class</code></li><li><code>4</code> = <code>:order</code></li><li><code>5</code> = <code>:family</code></li><li><code>6</code> = <code>:genus</code></li><li><code>7</code> = <code>:species</code></li><li><code>8</code> = <code>:subspecies</code></li></ul><p>Examples ≡≡≡≡≡≡≡≡≡≡</p><pre><code class="language-julia-repl hljs">julia&gt; parsetaxon(&quot;k__Archaea|p__Euryarchaeota|c__Methanobacteria&quot;, 2)
-Taxon(&quot;Euryarchaeota&quot;, :phylum)
-
-julia&gt; parsetaxon(&quot;k__Archaea|p__Euryarchaeota|c__Methanobacteria&quot;, :kingdom)
-Taxon(&quot;Archaea&quot;, :kingdom)
-
-julia&gt; parsetaxon(&quot;k__Archaea|p__Euryarchaeota|c__Methanobacteria&quot;)
-Taxon(&quot;Methanobacteria&quot;, :class)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/BioJulia/BiobakeryUtils.jl/blob/bd60c83bb4ec0a44b718dd2d3e4fe854a7c4f778/src/metaphlan.jl#L234-L265">source</a></section></article><section class="footnotes is-size-7"><ul><li class="footnote" id="footnote-note"><a class="tag is-link" href="#citeref-note">note</a>Right now, the table contains all taxonomic levels, so this doesn&#39;t make much sense. For a real analysis, you&#39;d probably want to restrict to a single rank (eg species). You can easily do this with <code>filter</code>: <code>spec = filter(t-&gt; taxrank(t) == :species, mps3)</code>. We&#39;re not doing this for the demo dataset, because there&#39;s not any taxonomic overlap at the species level.</li></ul></section></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../gettingstarted/">« Getting Started</a><a class="docs-footer-nextpage" href="../humann/">Working with HUMAnN »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.7 on <span class="colophon-date" title="Tuesday 12 October 2021 15:33">Tuesday 12 October 2021</span>. Using Julia version 1.6.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+julia&gt; fig2</code></pre><p><img src="/img/metaphlan_stack.png" alt="Metaphlan PCoA"/></p><h2 id="Functions-and-Types"><a class="docs-heading-anchor" href="#Functions-and-Types">Functions and Types</a><a id="Functions-and-Types-1"></a><a class="docs-heading-anchor-permalink" href="#Functions-and-Types" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="BiobakeryUtils.metaphlan-Tuple{Any, Any}" href="#BiobakeryUtils.metaphlan-Tuple{Any, Any}"><code>BiobakeryUtils.metaphlan</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">metaphlan(inputfile, outputfile; kwargs...)</code></pre><p>Run <code>metaphlan</code> command line tool on <code>inputfile</code>, creating <code>outputfile</code>. Requires <code>metaphlan</code> to be installed and accessible in the <code>PATH</code> (see <a href="@ref">Getting Started</a>).</p><p><code>metaphlan</code> options can be passed via keyword arguments. For example, if on the command line you would run:</p><pre><code class="language-sh hljs">$ metaphlan some.fastq.gz output/some_profile.tsv --input_type fastq --nprocs 8</code></pre><p>using this function, you would write:</p><pre><code class="language-julia hljs">metaphlan(&quot;some.fastq.gz&quot;, &quot;output/some_profile.tsv&quot;; input_type=&quot;fastq&quot;, nprocs=8)</code></pre><p>Note: the <code>input_type</code> keyword is required.</p><p>Set the environmental variable <code>&quot;METAPHLAN_BOWTIE2_DB&quot;</code><code>to specify the location where the markergene database is/will be installed, or pass</code>bowtie2db = &quot;some/path&quot;` as a keyword argument.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/BioJulia/BiobakeryUtils.jl/blob/c3beb277f2d8e6fcb841863c2c4d42fdcede1d91/src/metaphlan.jl#L5-L31">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BiobakeryUtils.metaphlan_merge-Tuple{Any, Any}" href="#BiobakeryUtils.metaphlan_merge-Tuple{Any, Any}"><code>BiobakeryUtils.metaphlan_merge</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">metaphlan_merge(paths, outputfile; kwargs...)</code></pre><p>Run <code>merge_metaphlan_tables</code> command line tool on the files in <code>paths</code>, creating <code>outputfile</code>. Requires <code>metaphlan</code> to be installed and accessible in the <code>PATH</code> (see <a href="@ref">Getting Started</a>).</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/BioJulia/BiobakeryUtils.jl/blob/c3beb277f2d8e6fcb841863c2c4d42fdcede1d91/src/metaphlan.jl#L46-L53">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BiobakeryUtils.metaphlan_profile" href="#BiobakeryUtils.metaphlan_profile"><code>BiobakeryUtils.metaphlan_profile</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">metaphlan_profile(path::AbstractString, rank::Union{Int, Symbol}=:all; sample::AbstractString=basename(first(splitext(path))))</code></pre><p>Compiles a MetaPhlAn file into a CommunityProfile. Can select data according to taxonomic rank. If rank not given, all data is compiled. <code>Sample name</code> of the CommunityProfile can be specified by passing a <code>sample</code> argument. If name not given, the name of the file becomes the <code>Sample name</code>.</p><p>Levels may be given either as numbers or symbols:</p><ul><li><code>1</code> = <code>:kingdom</code></li><li><code>2</code> = <code>:phylum</code></li><li><code>3</code> = <code>:class</code></li><li><code>4</code> = <code>:order</code></li><li><code>5</code> = <code>:family</code></li><li><code>6</code> = <code>:genus</code></li><li><code>7</code> = <code>:species</code></li><li><code>8</code> = <code>:subspecies</code></li></ul></div><a class="docs-sourcelink" target="_blank" href="https://github.com/BioJulia/BiobakeryUtils.jl/blob/c3beb277f2d8e6fcb841863c2c4d42fdcede1d91/src/metaphlan.jl#L84-L101">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BiobakeryUtils.metaphlan_profiles" href="#BiobakeryUtils.metaphlan_profiles"><code>BiobakeryUtils.metaphlan_profiles</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">metaphlan_profiles(paths::Array{&lt;:AbstractString, 1}, rank::Union{Int, Symbol}=:all)</code></pre><p>Compiles MetaPhlAn profiles from multiple single tables into a CommunityProfile. ```</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/BioJulia/BiobakeryUtils.jl/blob/c3beb277f2d8e6fcb841863c2c4d42fdcede1d91/src/metaphlan.jl#L163-L168">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BiobakeryUtils.metaphlan_profiles" href="#BiobakeryUtils.metaphlan_profiles"><code>BiobakeryUtils.metaphlan_profiles</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">metaphlan_profiles(path::AbstractString, rank::Union{Int, Symbol}=:all; keepunidentified=false)</code></pre><p>Compiles MetaPhlAn profiles from a merged table into a CommunityProfile. Can select data according to taxonomic rank. If rank not given, all data is compiled. Set <code>keepunidentified</code> flag to <code>true</code> to keep <code>UNIDENTIFIED</code> data.</p><p>Levels may be given either as numbers or symbols:</p><ul><li><code>1</code> = <code>:kingdom</code></li><li><code>2</code> = <code>:phylum</code></li><li><code>3</code> = <code>:class</code></li><li><code>4</code> = <code>:order</code></li><li><code>5</code> = <code>:family</code></li><li><code>6</code> = <code>:genus</code></li><li><code>7</code> = <code>:species</code></li><li><code>8</code> = <code>:subspecies</code></li></ul></div><a class="docs-sourcelink" target="_blank" href="https://github.com/BioJulia/BiobakeryUtils.jl/blob/c3beb277f2d8e6fcb841863c2c4d42fdcede1d91/src/metaphlan.jl#L123-L141">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BiobakeryUtils.parsetaxa-Tuple{AbstractString}" href="#BiobakeryUtils.parsetaxa-Tuple{AbstractString}"><code>BiobakeryUtils.parsetaxa</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">parsetaxa(taxstring::AbstractString; throw_error=true)</code></pre><p>Given a string representing taxonmic ranks as formatted by MetaPhlAn (eg &quot;k<strong>Bacteria|p</strong>Proteobacteria...&quot;), separates taxonomic ranks into elements of type Taxon in a vector.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/BioJulia/BiobakeryUtils.jl/blob/c3beb277f2d8e6fcb841863c2c4d42fdcede1d91/src/metaphlan.jl#L219-L224">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="BiobakeryUtils.parsetaxon-Tuple{AbstractString}" href="#BiobakeryUtils.parsetaxon-Tuple{AbstractString}"><code>BiobakeryUtils.parsetaxon</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">parsetaxon(taxstring::AbstractString, rank::Union{Int, Symbol})</code></pre><p>Finds given taxonomic rank in a string (as formatted by MetaPhlAn (eg &quot;k<strong>Bacteria|p</strong>Proteobacteria...&quot;)) and returns the name and taxonomic rank as a <code>Taxon</code>. If taxon rank not given, function will return the most specific (lowest) taxonomic rank available.</p><p>Levels may be given either as numbers or symbols:</p><ul><li><code>1</code> = <code>:kingdom</code></li><li><code>2</code> = <code>:phylum</code></li><li><code>3</code> = <code>:class</code></li><li><code>4</code> = <code>:order</code></li><li><code>5</code> = <code>:family</code></li><li><code>6</code> = <code>:genus</code></li><li><code>7</code> = <code>:species</code></li><li><code>8</code> = <code>:subspecies</code></li></ul></div><a class="docs-sourcelink" target="_blank" href="https://github.com/BioJulia/BiobakeryUtils.jl/blob/c3beb277f2d8e6fcb841863c2c4d42fdcede1d91/src/metaphlan.jl#L188-L205">source</a></section></article><section class="footnotes is-size-7"><ul><li class="footnote" id="footnote-note"><a class="tag is-link" href="#citeref-note">note</a>Right now, the table contains all taxonomic levels, so this doesn&#39;t make much sense. For a real analysis, you&#39;d probably want to restrict to a single rank (eg species). You can easily do this with <code>filter</code>: <code>spec = filter(t-&gt; taxrank(t) == :species, mps3)</code>. We&#39;re not doing this for the demo dataset, because there&#39;s not any taxonomic overlap at the species level.</li></ul></section></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../gettingstarted/">« Getting Started</a><a class="docs-footer-nextpage" href="../humann/">Working with HUMAnN »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.8 on <span class="colophon-date" title="Thursday 14 October 2021 15:02">Thursday 14 October 2021</span>. Using Julia version 1.6.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
