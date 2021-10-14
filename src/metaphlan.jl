@@ -98,54 +98,6 @@ Levels may be given either as numbers or symbols:
 - `6` = `:genus`
 - `7` = `:species`
 - `8` = `:subspecies`
-
-
-Examples
-≡≡≡≡≡≡≡≡≡≡
-
-```jldoctest metaphlan_profile
-julia> metaphlan_profile("test/files/metaphlan_single2.tsv")
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 96 features in 1 samples
-
-Feature names:
-Bacteria, Archaea, Firmicutes...Ruminococcus_bromii, Bacteroides_vulgatus
-
-Sample names:
-metaphlan_single2
-
-
-
-julia> metaphlan_profile("test/files/metaphlan_single2.tsv", 4)
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 11 features in 1 samples
-
-Feature names:
-Clostridiales, Bacteroidales, Coriobacteriales...Firmicutes_unclassified, Pasteurellales
-
-Sample names:
-metaphlan_single2
-
-
-
-julia> metaphlan_profile("test/files/metaphlan_single2.tsv", :genus)
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 40 features in 1 samples
-
-Feature names:
-Prevotella, Roseburia, Faecalibacterium...Haemophilus, Lactococcus
-
-Sample names:
-metaphlan_single2
-
-
-
-julia> metaphlan_profile("test/files/metaphlan_single2.tsv", :genus, sample = "sample2")
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 40 features in 1 samples
-
-Feature names:
-Prevotella, Roseburia, Faecalibacterium...Haemophilus, Lactococcus
-
-Sample names:
-sample2
-```
 """
 function metaphlan_profile(path::AbstractString, rank=:all; sample=basename(first(splitext(path))))
     if startswith(first(eachline(path)), "#")
@@ -250,20 +202,6 @@ Levels may be given either as numbers or symbols:
 - `6` = `:genus`
 - `7` = `:species`
 - `8` = `:subspecies`
-
-Examples
-≡≡≡≡≡≡≡≡≡≡
- 
-```jldoctest parsetaxon
-julia> parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria", 2)
-Taxon("Euryarchaeota", :phylum)
-
-julia> parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria", :kingdom)
-Taxon("Archaea", :kingdom)
-
-julia> parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria")
-Taxon("Methanobacteria", :class)
-```
 """
 function parsetaxon(taxstring::AbstractString; throw_error=true)
     taxa = parsetaxa(taxstring, throw_error=throw_error)
@@ -283,17 +221,6 @@ parsetaxon(taxstring::AbstractString, rank::Symbol) = parsetaxon(taxstring, Micr
 
 Given a string representing taxonmic ranks as formatted by MetaPhlAn (eg "k__Bacteria|p__Proteobacteria..."),
 separates taxonomic ranks into elements of type Taxon in a vector.
-
-Examples
-≡≡≡≡≡≡≡≡≡≡
-
-```jldoctest parsetaxa
-julia> parsetaxa("k__Archaea|p__Euryarchaeota|c__Methanobacteria"; throw_error = true)
-3-element Vector{Taxon}:
- Taxon("Archaea", :kingdom)
- Taxon("Euryarchaeota", :phylum)
- Taxon("Methanobacteria", :class)
-```
 """
 function parsetaxa(taxstring::AbstractString; throw_error=true)
     taxa = split(taxstring, '|')
