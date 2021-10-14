@@ -26,7 +26,7 @@ ENV["PATH"] = ENV["PATH"] * ":" * Conda.bin_dir(:BiobakeryUtils)
         @test BiobakeryUtils.check_for_install("humann_renorm_table") |> isnothing
         @test BiobakeryUtils.check_for_install("humann_join_tables") |> isnothing
         @test BiobakeryUtils.check_for_install("humann") |> isnothing
-        @test humann("", ""; help==true).exitcode == 0
+        @test humann("", ""; help=true).exitcode == 0
 
     end
 end
