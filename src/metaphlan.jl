@@ -25,7 +25,7 @@ metaphlan("some.fastq.gz", "output/some_profile.tsv"; input_type="fastq", nprocs
 
 Note: the `input_type` keyword is required.
 
-Set the environmental variable "METAPHLAN_BOWTIE2_DB"
+Set the environmental variable `"METAPHLAN_BOWTIE2_DB"``
 to specify the location where the markergene database is/will be installed,
 or pass `bowtie2db = "some/path"` as a keyword argument.
 """
