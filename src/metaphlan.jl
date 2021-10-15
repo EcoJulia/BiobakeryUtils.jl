@@ -210,7 +210,6 @@ end
     metaphlan_profiles(paths::Array{<:AbstractString, 1}, rank::Union{Int, Symbol}=:all)
 
 Compiles MetaPhlAn profiles from multiple single tables into a CommunityProfile.
-```
 """
 function metaphlan_profiles(paths::Array{<:AbstractString, 1}, rank=:all; samples=nothing)
     if isnothing(samples)
