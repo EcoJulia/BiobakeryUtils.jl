@@ -452,7 +452,7 @@ Here, we'll create a distance matrix use Bray-Curtis dissimilarity,
 and then do multi dimensional scaling to get our PCoA ordination[^note].
 
 ```julia-repl
-julia> dm = pairwise(BrayCurtis(), abundances(spec), dims=2) # parwise distances of columns (dimension 2)
+julia> dm = pairwise(BrayCurtis(), abundances(mps3), dims=2) # parwise distances of columns (dimension 2)
 6×6 Matrix{Float64}:
  0.0       0.853268  0.662373  0.758712  0.857143  0.758712
  0.853268  0.0       0.845517  0.841645  0.857143  0.845517
