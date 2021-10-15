@@ -48,7 +48,7 @@ end
 Run `merge_metaphlan_tables` command line tool on the files in `paths`,
 creating `outputfile`.
 Requires `metaphlan` to be installed and accessible in the `PATH`
-(see [Getting Started](@ref)).
+(see [Getting Started](@ref getting-started)).
 """
 function metaphlan_merge(paths, output; kwargs...)
     cmd = ["merge_metaphlan_tables.py", "-o", output]
