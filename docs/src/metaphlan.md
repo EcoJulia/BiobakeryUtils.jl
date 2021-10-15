@@ -427,7 +427,7 @@ julia> mps3["Bacteroidetes", "SRS014459"]
 ### Performing PCoA analysis
 
 For this analysis, we'll need to use a couple of other julia packages,
-[`Distances.jl`](https://github.com/JuliaStats/Distances.jl) and [`MulitvariateStats.jl`](https://github.com/JuliaStats/MulitvariateStats.jl).
+[`Distances.jl`](https://github.com/JuliaStats/Distances.jl) and [`MulitvariateStats.jl`](https://github.com/JuliaStats/MultivariateStats.jl).
 
 You can install these by opening the Pkg REPL (type ']') and using `add`:
 
