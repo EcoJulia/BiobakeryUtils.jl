@@ -476,7 +476,7 @@ but there are [many other options](https://juliahub.com/ui/Search?q=plotting&typ
 
 julia> using CairoMakie
 
-julia> sites = [m.STSite for m in metadata(spec)]
+julia> sites = [m.STSite for m in metadata(mps3)]
 6-element Vector{String}:
  "Stool"
  "Anterior_nares"
