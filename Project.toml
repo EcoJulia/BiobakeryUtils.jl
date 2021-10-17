@@ -3,7 +3,7 @@ uuid = "fa5322f5-bd84-5069-834a-abf3230fb8f8"
 keywords = ["microbiology", "microbiome", "biology", "metagenomics"]
 license = "MIT"
 desc = "Convenience functions for working with the bioBakery"
-authors = ["kescobo <kevbonham@gmail.com>", "annelle-abatoni <aa1@wellesley.edu>"]
+authors = ["kescobo <kevbonham@gmail.com>", "annelle-abatoni <aa1@wellesley.edu>", "anikaluo <al8@wellesley.edu>", "Vanja Klepac-Ceraj <vklepacc@wellesley.edu>"]
 version = "0.5.0-dev"
 
 [deps]
