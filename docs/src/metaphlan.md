@@ -12,8 +12,8 @@ end
 
 - 🗒️ This tutorial is meant to be run in parallel with / mirror the [official MetaPhlAn v3 tutorial](https://github.com/biobakery/biobakery/wiki/metaphlan3)
 - ❓️ If you have questions about MetaPhlAn itself, please direct them to the [bioBakery help forum](https://forum.biobakery.org/c/Microbial-community-profiling/MetaPhlAn)
-- 🤔 If you have questions about using the MetaPhlAn tools in julia, [please open an issue](https://github.com/BioJulia/BiobakeryUtils.jl/issues/new/choose)),
-  or start a discussion over on [`Microbiome.jl`](https://github.com/BioJulia/Microbiome.jl/discussions/new))!
+- 🤔 If you have questions about using the MetaPhlAn tools in julia, [please open an issue](https://github.com/BioJulia/BiobakeryUtils.jl/issues/new/choose),
+  or start a discussion over on [`Microbiome.jl`](https://github.com/BioJulia/Microbiome.jl/discussions/new)!
 - 📔 For a function / type reference, [jump to the bottom](#Functions-and-Types)
 
 ## Installation and setup
@@ -374,7 +374,7 @@ Here, we'll create a distance matrix use Bray-Curtis dissimilarity,
 and then do multi dimensional scaling to get our PCoA ordination[^note].
 
 ```julia-repl
-julia> dm = pairwise(BrayCurtis(), abundances(spec), dims=2) # parwise distances of columns (dimension 2)
+julia> dm = pairwise(BrayCurtis(), abundances(mps3), dims=2) # parwise distances of columns (dimension 2)
 6×6 Matrix{Float64}:
  0.0       0.853268  0.662373  0.758712  0.857143  0.758712
  0.853268  0.0       0.845517  0.841645  0.857143  0.845517
@@ -396,7 +396,7 @@ but there are [many other options](https://juliahub.com/ui/Search?q=plotting&typ
 
 julia> using CairoMakie
 
-julia> sites = [m.STSite for m in metadata(spec)]
+julia> sites = [m.STSite for m in metadata(mps3)]
 6-element Vector{String}:
  "Stool"
  "Anterior_nares"
