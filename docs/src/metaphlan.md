@@ -429,7 +429,7 @@ Legend()
 julia> fig
 ```
 
-![Metaphlan PCoA](/img/metaphlan_pcoa.png)
+![Metaphlan PCoA](img/metaphlan_pcoa.png)
 
 ### Stacked bar
 
@@ -515,7 +515,7 @@ Legend()
 julia> fig2
 ```
 
-![Metaphlan PCoA](/img/metaphlan_stack.png)
+![Metaphlan PCoA](img/metaphlan_stack.png)
 
 ## Functions and Types
 
