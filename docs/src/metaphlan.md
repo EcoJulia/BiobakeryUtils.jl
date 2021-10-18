@@ -327,107 +327,29 @@ julia> metadata(mps3)
  (sample = "SRS014494", STSite = "Posterior_fornix", filename = "SRS014494-Posterior_fornix_profile.tsv")
 ```
 
-
+[See Microbiome.jl docs](https://biojulia.net/Microbiome.jl/latest/profiles/#working-metadata-1) for more info on metadata and `CommunityProfile`s)
 ## Analyze Results
 
 [Official tutorial link](https://github.com/biobakery/biobakery/wiki/metaphlan3#visualize-results)
 
 With the profile loaded, you can use many julia packages to analyze or visualize the results.
+Inside the `CommunityProfile` is a sparce matrix,
+which you can access with [`abundances`](@ref Microbiome.abundances).
+This means that all of julia's powerful statistics and ML libraries
+are easy to use with your microbiome data. 
 
-### Indexing
-
-`CommunityProfile`s wrap a sparse matrix,
-and you can access the values as you would a normal matrix.
-In julia, you can pull out specific values using `[row, col]`.
-So for example, to get the 3rd row, 2nd column, of matrix `mat`:
-
-```julia-repl
-julia> mat
-4×3 Matrix{Int64}:
-  1   2   3
-  4   5   6
-  7   8   9
- 10  11  12
-
-julia> mat[3,2]
-8
-```
-
-You can also get "slices", eg to get rows 2-4, column 1:
-
-```julia-repl
-julia> mat[2:4, 1]
-3-element Vector{Int64}:
-  4
-  7
- 10
-```
-
-To get all of one dimension, you can just use a bare `:`
-
-```julia-repl
-julia> mat[:, 1:2]
-4×2 Matrix{Int64}:
-  1   2
-  4   5
-  7   8
- 10  11
-```
-
-When you get slices of a `CommunityProfile`,
-the return value is another `CommunityProfile.
-But you can get the underlying matrix using [`abundances`](@ref Microbiome.abundances).
-
-```julia-repl
-julia> abundances(mps3)
-62×6 SparseArrays.SparseMatrixCSC{Float64, Int64} with 84 stored entries:
-⡟⠟⠙
-⡇⠅⠀
-⡇⠀⠀
-⡇⠀⠀
-⢸⠼⠠
-⢸⠉⠈
-⠸⡀⠀
-⠀⣇⠀
-⠀⡧⠀
-⠀⢇⠀
-⠀⢸⠀
-⠀⢸⠀
-⠀⠀⡇
-⠀⠀⡇
-⠀⠀⢣
-⠀⠀⠘
-
-julia> abundances(mps3["Firmicutes", :])
-1×6 SparseArrays.SparseMatrixCSC{Float64, Int64} with 5 stored entries:
- 68.9017  2.71266  43.0437  98.6447   ⋅   100.0
-
-julia> abundances(mps3[:, "SRS014476"])
-62×1 SparseArrays.SparseMatrixCSC{Float64, Int64} with 11 stored entries:
-⠁
-⠀
-⠀
-⠀
-⠀
-⠀
-⠀
-⠀
-⠀
-⠀
-⠀
-⠀
-⡇
-⡇
-⠃
-⠀
-julia> mps3["Bacteroidetes", "SRS014459"]
-31.09833
-```
+For more information about indexing and accessing components of the data,
+see [the Microbiome.jl docs](https://biojulia.net/Microbiome.jl/latest/profiles/#Indexing-and-selecting-1)
 
 ### Performing PCoA analysis
 
-For this analysis, we'll need to use a couple of other julia packages,
-[`Distances.jl`](https://github.com/JuliaStats/Distances.jl) and [`MulitvariateStats.jl`](https://github.com/JuliaStats/MultivariateStats.jl).
+To demonstrate this, we'll use a couple of other julia packages
+to perform and plot a principal coordinates analysis (PCoA):
+[`Distances.jl`](https://github.com/JuliaStats/Distances.jl) and [`MulitvariateStats.jl`](https://github.com/JuliaStats/MulitvariateStats.jl).
+
+(Actually some convenent functions for this are re-exported from `Microbiome.jl`
+eg [`braycurtis`](@ref Microbiome.braycurtis) and [`pcoa`](@ref Microbiome.pcoa) 
+-- this is just meant to show how easy it is to use the underlying data for whatever you like)
 
 You can install these by opening the Pkg REPL (type ']') and using `add`:
 
@@ -461,10 +383,8 @@ julia> dm = pairwise(BrayCurtis(), abundances(mps3), dims=2) # parwise distances
  0.857143  0.857143  0.857143  0.857143  0.0       0.857143
  0.758712  0.845517  0.787196  0.461648  0.857143  0.0
 
-julia> pcoa = classical_mds(dm, 2)
-2×6 Matrix{Float64}:
-  0.0368288  -0.319637  -0.0189194  0.341751  -0.384842  0.344819
- -0.3563      0.173062  -0.387362   0.189514   0.185102  0.195984
+julia> pc = fit(MDS, dm, distances=true)
+Classical MDS(indim = NaN, outdim = 5)
 ```
 
 For plotting, I use [Makie](https://github.com/JuliaPlots/Makie.jl),
@@ -494,7 +414,9 @@ julia> clrs = [:lightgreen, :cyan, :dodgerblue, :orange, :salmon, :purple]
  :salmon
  :purple
 
-julia> fig, ax, plt = scatter(pcoa[1,:], pcoa[2, :], color=clrs,
+julia> loads = sqrt.(pc.λ)' .* projection(pc) # loadings for pcoa, columns are axes
+
+julia> fig, ax, plt = scatter(loads[:,1], loads[:, 2], color=clrs,
                               axis=(
                                   xlabel="PCoA.1",
                                   ylabel="PCoA.2",
@@ -539,7 +461,7 @@ julia> fig2 = Figure()
 
 julia> ax2 = Axis(fig2[1,1], title="Phyla in samples", xticks=(1:nsamples(phyl), sites));
 
-julia> ax2.xticklabelrotation = π / 4 # rotations are in radians
+julia> ax2.xticklabelrotation = π / 4 # rotations are in radians, type 'π' by doing `\pi<tab>`
 0.7853981633974483
 
 julia> y = Float64[]

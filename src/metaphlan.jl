@@ -25,11 +25,12 @@ metaphlan("some.fastq.gz", "output/some_profile.tsv"; input_type="fastq", nprocs
 
 Note: the `input_type` keyword is required.
 
-Set the environmental variable "METAPHLAN_BOWTIE2_DB"
+Set the environmental variable `"METAPHLAN_BOWTIE2_DB"``
 to specify the location where the markergene database is/will be installed,
 or pass `bowtie2db = "some/path"` as a keyword argument.
 """
 function metaphlan(inputfile, output; kwargs...)
+    check_for_install("metaphlan")
     cmd = ["metaphlan", inputfile, output]
     add_cli_kwargs!(cmd, kwargs)
     
@@ -37,7 +38,7 @@ function metaphlan(inputfile, output; kwargs...)
         append!(cmd, ["--bowtie2db", ENV["METAPHLAN_BOWTIE2_DB"]])
     end
 
-    deleteat!(c, findall(==(""), c))
+    deleteat!(cmd, findall(==(""), cmd))
     @info "Running command: $(Cmd(cmd))"
     return run(Cmd(cmd))
 end
@@ -51,6 +52,7 @@ Requires `metaphlan` to be installed and accessible in the `PATH`
 (see [Getting Started](@ref getting-started)).
 """
 function metaphlan_merge(paths, output; kwargs...)
+    check_for_install("merge_metaphlan_tables.py")
     cmd = ["merge_metaphlan_tables.py", "-o", output]
     for (key,val) in pairs(kwargs)
         if val isa Bool
@@ -96,54 +98,6 @@ Levels may be given either as numbers or symbols:
 - `6` = `:genus`
 - `7` = `:species`
 - `8` = `:subspecies`
-
-
-Examples
-≡≡≡≡≡≡≡≡≡≡
-
-```jldoctest metaphlan_profile
-julia> metaphlan_profile("test/files/metaphlan_single2.tsv")
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 96 features in 1 samples
-
-Feature names:
-Bacteria, Archaea, Firmicutes...Ruminococcus_bromii, Bacteroides_vulgatus
-
-Sample names:
-metaphlan_single2
-
-
-
-julia> metaphlan_profile("test/files/metaphlan_single2.tsv", 4)
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 11 features in 1 samples
-
-Feature names:
-Clostridiales, Bacteroidales, Coriobacteriales...Firmicutes_unclassified, Pasteurellales
-
-Sample names:
-metaphlan_single2
-
-
-
-julia> metaphlan_profile("test/files/metaphlan_single2.tsv", :genus)
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 40 features in 1 samples
-
-Feature names:
-Prevotella, Roseburia, Faecalibacterium...Haemophilus, Lactococcus
-
-Sample names:
-metaphlan_single2
-
-
-
-julia> metaphlan_profile("test/files/metaphlan_single2.tsv", :genus, sample = "sample2")
-CommunityProfile{Float64, Taxon, MicrobiomeSample} with 40 features in 1 samples
-
-Feature names:
-Prevotella, Roseburia, Faecalibacterium...Haemophilus, Lactococcus
-
-Sample names:
-sample2
-```
 """
 function metaphlan_profile(path::AbstractString, rank=:all; sample=basename(first(splitext(path))))
     if startswith(first(eachline(path)), "#")
@@ -247,20 +201,6 @@ Levels may be given either as numbers or symbols:
 - `6` = `:genus`
 - `7` = `:species`
 - `8` = `:subspecies`
-
-Examples
-≡≡≡≡≡≡≡≡≡≡
- 
-```jldoctest parsetaxon
-julia> parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria", 2)
-Taxon("Euryarchaeota", :phylum)
-
-julia> parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria", :kingdom)
-Taxon("Archaea", :kingdom)
-
-julia> parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria")
-Taxon("Methanobacteria", :class)
-```
 """
 function parsetaxon(taxstring::AbstractString; throw_error=true)
     taxa = parsetaxa(taxstring, throw_error=throw_error)
@@ -280,17 +220,6 @@ parsetaxon(taxstring::AbstractString, rank::Symbol) = parsetaxon(taxstring, Micr
 
 Given a string representing taxonmic ranks as formatted by MetaPhlAn (eg "k__Bacteria|p__Proteobacteria..."),
 separates taxonomic ranks into elements of type Taxon in a vector.
-
-Examples
-≡≡≡≡≡≡≡≡≡≡
-
-```jldoctest parsetaxa
-julia> parsetaxa("k__Archaea|p__Euryarchaeota|c__Methanobacteria"; throw_error = true)
-3-element Vector{Taxon}:
- Taxon("Archaea", :kingdom)
- Taxon("Euryarchaeota", :phylum)
- Taxon("Methanobacteria", :class)
-```
 """
 function parsetaxa(taxstring::AbstractString; throw_error=true)
     taxa = split(taxstring, '|')

@@ -34,15 +34,35 @@ function install_deps(env=:BiobakeryUtils; force=false)
     return nothing
 end
 
-function add_cli_kwargs!(cmd, kwargs)
+function add_cli_kwargs!(cmd, kwargs; optunderscores=false)
     for (key,val) in pairs(kwargs)
         if val isa Bool
-            val && push!(cmd, replace(string("--", key), "_"=>"-"))
+            val && push!(cmd, string("--", key))
         elseif val isa AbstractVector
-            append!(cmd, [replace(string("--", key), "_"=>"-"), string.(val)...])
+            append!(cmd, [string("--", key), string.(val)...])
         else
-            append!(cmd, [replace(string("--", key), "_"=>"-"), string(val)])
+            append!(cmd, [string("--", key), string(val)])
         end
     end
+    !optunderscores && map(c-> startswith(c, "--") ? replace(c, "_"=>"-") : c, cmd)
     return cmd
+end
+
+function check_for_install(tool)
+    try run(pipeline(`which $tool`, stdout=devnull))
+        return nothing
+    catch e
+        @error """
+        Can not find `$tool`! If you think it should be installed,
+        try running:
+
+        ```
+        ENV["PATH"] = ENV["PATH"] * ":" * Conda.bin_dir(env)`
+        ```
+
+        Where `env` is something like `:BiobakeryUtils`.
+        """
+        rethrow()
+    end
+    return nothing
 end
