@@ -49,7 +49,7 @@ end
 Run `merge_metaphlan_tables` command line tool on the files in `paths`,
 creating `outputfile`.
 Requires `metaphlan` to be installed and accessible in the `PATH`
-(see [Getting Started](@ref)).
+(see [Getting Started](@ref getting-started)).
 """
 function metaphlan_merge(paths, output; kwargs...)
     check_for_install("merge_metaphlan_tables.py")
@@ -164,7 +164,6 @@ end
     metaphlan_profiles(paths::Array{<:AbstractString, 1}, rank::Union{Int, Symbol}=:all)
 
 Compiles MetaPhlAn profiles from multiple single tables into a CommunityProfile.
-```
 """
 function metaphlan_profiles(paths::Array{<:AbstractString, 1}, rank=:all; samples=nothing)
     if isnothing(samples)
