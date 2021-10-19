@@ -14,13 +14,13 @@ Requires `metaphlan` to be installed and accessible in the `PATH`
 For example, if on the command line you would run:
 
 ```sh
-\$ metaphlan some.fastq.gz output/some_profile.tsv --input_type fastq --nprocs 8
+\$ metaphlan some.fastq.gz output/some_profile.tsv --input_type fastq --nproc 8
 ```
 
 using this function, you would write:
 
 ```julia
-metaphlan("some.fastq.gz", "output/some_profile.tsv"; input_type="fastq", nprocs=8)
+metaphlan("some.fastq.gz", "output/some_profile.tsv"; input_type="fastq", nproc=8)
 ```
 
 Note: the `input_type` keyword is required.
