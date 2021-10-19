@@ -252,7 +252,7 @@ for next steps.
 So, you followed all the steps above, and you're still having problems?
 There are a couple of common things that can go wrong.
 
-### Cannot find {program}
+### Cannot find `{program}`
 
 If you get an error that looks like this:
 
@@ -295,7 +295,7 @@ and have a different conda installation you're using,
 replace `Conda.bin_dir(env)` with the path,
 eg `ENV["PATH"] = ENV["PATH"] * ":" * "/Users/yourname/miniconda3/envs/biobakery/bin"`.
 
-#### [2. Check if a different installation is not interfering](@id environment-conflict)
+#### [2. Check if a different installation is interfering](@id environment-conflict)
 
 To find a program to run, the shell looks through your `PATH` variable
 at each directory for a matching program.
