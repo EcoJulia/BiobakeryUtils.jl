@@ -57,7 +57,7 @@ function check_for_install(tool)
         try running:
 
         ```
-        ENV["PATH"] = ENV["PATH"] * ":" * Conda.bin_dir(env)`
+        ENV["PATH"] = ENV["PATH"] * ":" * Conda.bin_dir(env)
         ```
 
         Where `env` is something like `:BiobakeryUtils`.
