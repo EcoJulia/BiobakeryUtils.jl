@@ -12,8 +12,8 @@ end
 
 - 🗒️ This tutorial is meant to be run in parallel with / mirror the [official MetaPhlAn v3 tutorial](https://github.com/biobakery/biobakery/wiki/metaphlan3)
 - ❓️ If you have questions about MetaPhlAn itself, please direct them to the [bioBakery help forum](https://forum.biobakery.org/c/Microbial-community-profiling/MetaPhlAn)
-- 🤔 If you have questions about using the MetaPhlAn tools in julia, [please open an issue](https://github.com/EcoJulia/BiobakeryUtils.jl/issues/new/choose),
-  or start a discussion over on [`Microbiome.jl`](https://github.com/EcoJulia/Microbiome.jl/discussions/new)!
+- 🤔 If you have questions about using the MetaPhlAn tools in julia, [please open an issue](https://github.com/BioJulia/BiobakeryUtils.jl/issues/new/choose),
+  or start a discussion over on [`Microbiome.jl`](https://github.com/BioJulia/Microbiome.jl/discussions/new)!
 - 📔 For a function / type reference, [jump to the bottom](#Functions-and-Types)
 
 ## Installation and setup
@@ -327,7 +327,7 @@ julia> metadata(mps3)
  (sample = "SRS014494", STSite = "Posterior_fornix", filename = "SRS014494-Posterior_fornix_profile.tsv")
 ```
 
-[See Microbiome.jl docs](https://docs.ecojulia.org/Microbiome.jl/latest/profiles/#working-metadata-1) for more info on metadata and `CommunityProfile`s)
+[See Microbiome.jl docs](https://biojulia.net/Microbiome.jl/latest/profiles/#working-metadata-1) for more info on metadata and `CommunityProfile`s)
 ## Analyze Results
 
 [Official tutorial link](https://github.com/biobakery/biobakery/wiki/metaphlan3#visualize-results)
@@ -339,7 +339,7 @@ This means that all of julia's powerful statistics and ML libraries
 are easy to use with your microbiome data. 
 
 For more information about indexing and accessing components of the data,
-see [the Microbiome.jl docs](https://docs.ecojulia.org/Microbiome.jl/latest/profiles/#Indexing-and-selecting-1)
+see [the Microbiome.jl docs](https://biojulia.net/Microbiome.jl/latest/profiles/#Indexing-and-selecting-1)
 
 ### Performing PCoA analysis
 

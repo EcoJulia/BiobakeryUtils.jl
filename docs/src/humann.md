@@ -12,8 +12,8 @@ end
 
 - 🗒️ This tutorial is meant to be run in parallel with / mirror the [official HUMAnN v3 tutorial](https://github.com/biobakery/biobakery/wiki/humann3)
 - ❓️ If you have questions about HUMAnN itself, please direct them to the [bioBakery help forum](https://forum.biobakery.org/c/Microbial-community-profiling/HUMAnN)
-- 🤔 If you have questions about using the MetaPhlAn tools in julia, [please open an issue](https://github.com/EcoJulia/BiobakeryUtils.jl/issues/new/choose),
-  or start a discussion over on [`Microbiome.jl`](https://github.com/EcoJulia/Microbiome.jl/discussions/new)!
+- 🤔 If you have questions about using the MetaPhlAn tools in julia, [please open an issue](https://github.com/BioJulia/BiobakeryUtils.jl/issues/new/choose),
+  or start a discussion over on [`Microbiome.jl`](https://github.com/BioJulia/Microbiome.jl/discussions/new)!
 - 📔 For a function / type reference, [jump to the bottom](#Functions-and-Types)
 
 ## Installation and setup
@@ -220,7 +220,7 @@ julia> first(features(gfs_strat), 5)
 
 Here, we can see that the uniref90 "G1UL42" was contributed by _Bacteroides dorei_.
 
-The object returned by `humann_profile` is a `CommunityProfile` type from [`Microbiome.jl`](https://github.com/EcoJulia/Microbiome.jl),
+The object returned by `humann_profile` is a `CommunityProfile` type from [`Microbiome.jl`](https://github.com/BioJulia/Microbiome.jl),
 and has a bunch of useful properties.
 
 ### Indexing
@@ -286,7 +286,7 @@ julia> features(gfs_strat[["UniRef90_D0TRR5", "UniRef90_A6L100"], :])
 ```
 
 For more information about indexing and accessing components of the data,
-see [the Microbiome.jl docs](https://docs.ecojulia.org/Microbiome.jl/latest/profiles/#Indexing-and-selecting-1)
+see [the Microbiome.jl docs](https://biojulia.net/Microbiome.jl/latest/profiles/#Indexing-and-selecting-1)
 
 ## Manipulating tables
 
