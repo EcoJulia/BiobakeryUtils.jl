@@ -26,7 +26,7 @@ export
 using Reexport
 @reexport using Microbiome
 using CSV
-using CSV.Tables
+using Tables
 using SparseArrays
 using Conda
 

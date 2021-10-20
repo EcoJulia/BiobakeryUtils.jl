@@ -4,7 +4,7 @@ keywords = ["microbiology", "microbiome", "biology", "metagenomics"]
 license = "MIT"
 desc = "Convenience functions for working with the bioBakery"
 authors = ["kescobo <kevbonham@gmail.com>", "annelle-abatoni <aa1@wellesley.edu>", "anikaluo <al8@wellesley.edu>", "Vanja Klepac-Ceraj <vklepacc@wellesley.edu>"]
-version = "0.5.0-dev"
+version = "0.5.0"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
@@ -15,9 +15,9 @@ SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 Tables = "bd369af6-aec1-5ad0-b16a-f7cc5008161c"
 
 [compat]
-julia = "1.1"
-# CSV = "0.8, 0.9"
-# Conda = "1.5"
-# Microbiome = "0.8"
-# Reexport = "1.2"
-# Tables = "1.2.1"
+julia = "1.6"
+CSV = "0.8, 0.9"
+Conda = "1.5"
+Microbiome = "0.8"
+Reexport = "0.2 - 1"
+Tables = "1.2.1"
