@@ -34,7 +34,7 @@ function install_deps(env=:BiobakeryUtils; force=false)
     return nothing
 end
 
-function add_cli_kwargs!(cmd, kwargs; optunderscores=false)
+function add_cli_kwargs!(cmd, kwargs; optunderscores=true)
     for (key,val) in pairs(kwargs)
         if val isa Bool
             val && push!(cmd, string("--", key))
@@ -44,7 +44,7 @@ function add_cli_kwargs!(cmd, kwargs; optunderscores=false)
             append!(cmd, [string("--", key), string(val)])
         end
     end
-    !optunderscores && map(c-> startswith(c, "--") ? replace(c, "_"=>"-") : c, cmd)
+    !optunderscores && map!(c-> startswith(c, "--") ? replace(c, "_"=>"-") : c, cmd, cmd)
     return cmd
 end
 
