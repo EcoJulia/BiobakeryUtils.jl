@@ -271,6 +271,6 @@ function humann_barplot(comm::CommunityProfile, outpath; kwargs...)
     cmd = ["humann_barplot", "--i", tmp, "-o", outpath,
             "--last-metadata", string(last(keys(first(metadata(comm)))))]
     
-    add_cli_kwargs!(cmd, kwargs)
+    add_cli_kwargs!(cmd, kwargs; optunderscores=false)
     run(Cmd(cmd))
 end
