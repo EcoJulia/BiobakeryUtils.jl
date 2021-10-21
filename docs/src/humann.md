@@ -426,7 +426,6 @@ See [Using Conda.jl](@ref using-conda)
 
 You can attach names to features using [`humann_rename`](@ref).
 
-
 ## HUMAnN for multiple samples
 
 [Official tutorial link](https://github.com/biobakery/biobakery/wiki/humann3#42-humann-for-multiple-samples)
