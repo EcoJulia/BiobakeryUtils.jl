@@ -10,6 +10,16 @@ isdir(Conda.bin_dir(:BiobakeryUtils)) || BiobakeryUtils.install_deps()
 ENV["PATH"] = ENV["PATH"] * ":" * Conda.bin_dir(:BiobakeryUtils)
 
 @testset "CLI" begin
+    @testset "Utilities" begin
+        cmd = ["thing", "foo_bar"]         
+        cmd2 = copy(cmd)
+
+        BiobakeryUtils.add_cli_kwargs!(cmd, Dict(:some_thing=> "foo", :bool=> true))
+        @test all(cmd .== ["thing", "foo_bar", "--some_thing", "foo", "--bool"])
+        BiobakeryUtils.add_cli_kwargs!(cmd2, Dict(:some_thing=> "foo", :bool=> true); optunderscores=false)
+        @test all(cmd2 .== ["thing", "foo_bar", "--some-thing", "foo", "--bool"])
+    end
+    
     @testset "Metaphlan" begin
         @test BiobakeryUtils.check_for_install("metaphlan") |> isnothing
         @test BiobakeryUtils.check_for_install("merge_metaphlan_tables.py") |> isnothing
