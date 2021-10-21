@@ -44,7 +44,7 @@ function add_cli_kwargs!(cmd, kwargs; optunderscores=true)
             append!(cmd, [string("--", key), string(val)])
         end
     end
-    !optunderscores && map(c-> startswith(c, "--") ? replace(c, "_"=>"-") : c, cmd)
+    !optunderscores && map!(c-> startswith(c, "--") ? replace(c, "_"=>"-") : c, cmd, cmd)
     return cmd
 end
 
