@@ -28,7 +28,7 @@ function humann(inputfile, output; kwargs...)
         append!(c, ["--metaphlan-options", "'--bowtie2db $(ENV["METAPHLAN_BOWTIE2_DB"])'"])
     end
 
-    add_cli_kwargs!(c, kwargs)
+    add_cli_kwargs!(c, kwargs; optunderscores=false)
     
     @info "Running command: $(Cmd(c))"
     return run(Cmd(c))

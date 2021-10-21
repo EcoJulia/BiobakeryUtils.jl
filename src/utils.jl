@@ -34,7 +34,7 @@ function install_deps(env=:BiobakeryUtils; force=false)
     return nothing
 end
 
-function add_cli_kwargs!(cmd, kwargs; optunderscores=false)
+function add_cli_kwargs!(cmd, kwargs; optunderscores=true)
     for (key,val) in pairs(kwargs)
         if val isa Bool
             val && push!(cmd, string("--", key))
