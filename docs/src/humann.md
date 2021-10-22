@@ -245,11 +245,12 @@ julia> featurenames(gfs_strat)
  "UniRef90_D0TRR5"
  "UniRef90_D0TRR5"
 
-julia> slice = gfs_strat["UniRef90_D0TRR5", :]
-CommunityProfile{Float64, GeneFunction, MicrobiomeSample} with 3 features in 1 samples
+julia> slice = gfs_strat["UniRef90_A0A174NIB7", :]
+CommunityProfile{Float64, GeneFunction, MicrobiomeSample} with 3
+features in 1 samples
 
 Feature names:
-UniRef90_D0TRR5, UniRef90_D0TRR5, UniRef90_D0TRR5
+UniRef90_A0A174NIB7, UniRef90_A0A174NIB7, UniRef90_A0A174NIB7
 
 Sample names:
 demo_genefamilies
@@ -258,9 +259,9 @@ demo_genefamilies
 
 julia> features(slice)
 3-element Vector{GeneFunction}:
- GeneFunction("UniRef90_D0TRR5", missing)
- GeneFunction("UniRef90_D0TRR5", Taxon("Bacteroides_vulgatus", :species))
- GeneFunction("UniRef90_D0TRR5", Taxon("Bacteroides_dorei", :species))
+ GeneFunction("UniRef90_A0A174NIB7", missing)
+ GeneFunction("UniRef90_A0A174NIB7", Taxon("Bacteroides_dorei", :species))
+ GeneFunction("UniRef90_A0A174NIB7", Taxon("Bacteroides_vulgatus", :species))
 ```
 
 Using a string (or regular expression) to index will return
@@ -268,7 +269,7 @@ all rows whose `name` matches, regardless of the taxon.
 If you just want a single value, you can use a `GeneFunction` directly:
 
 ```julia-repl
-julia> gfs_strat[GeneFunction("UniRef90_D0TRR5", "s__Bacteroides_dorei"), 1]
+julia> gfs_strat[GeneFunction("UniRef90_A0A174NIB7", "s__Bacteroides_dorei"), 1]
 0.8271298594
 ```
 
@@ -276,7 +277,7 @@ You can even pass an array of strings as the row index
 to get a slice with multiple gene functions:
 
 ```julia-repl
-julia> features(gfs_strat[["UniRef90_D0TRR5", "UniRef90_A6L100"], :])
+julia> features(gfs_strat[["UniRef90_A0A174NIB7", "UniRef90_A6L100"], :])
 5-element Vector{GeneFunction}:
  GeneFunction("UniRef90_A6L100", missing)
  GeneFunction("UniRef90_A6L100", Taxon("Bacteroides_vulgatus", :species))
