@@ -4,7 +4,7 @@
 
 **Latest Release:**
 
-[![Latest Release](https://img.shields.io/github/release/EcoJulia/BiobakeryUtils.jl.svg)](https://github.com/EcoJulia/BiobakeryUtils.jl/latest)
+[![Latest Release](https://img.shields.io/github/release/EcoJulia/BiobakeryUtils.jl.svg)](https://github.com/EcoJulia/BiobakeryUtils.jl/releases/latest)
 [![](https://img.shields.io/badge/docs-stable-blue.svg)](http://docs.ecojulia.org/BiobakeryUtils.jl/stable/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/EcoJulia/BiobakeryUtils.jl/blob/master/LICENSE)
 ![EcoJulia maintainer: kescobo](https://img.shields.io/badge/EcoJulia%20Maintainer-kescobo-blue.svg)
