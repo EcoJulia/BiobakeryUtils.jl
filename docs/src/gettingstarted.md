@@ -232,13 +232,15 @@ By default, `Conda.jl` puts environments into `~/.julia/conda/envs/<env name>/bi
 which you can get with `Conda.bin_dir()`, so in this case, you'd next want to run
 
 ```@repl
-ENV["PATH"] = ENV["PATH"] * ":" * Conda.bin_dir(:biobakery)
+ENV["PATH"] = ENV["PATH"] * ":" * Conda.bin_dir(:BiobakeryUtils)
 ```
 
-Note: if you need to manually edit `ENV["PATH"]` like this,
+Note 1: if you need to manually edit `ENV["PATH"]` like this,
 you'll need to do this each time you load julia.
 To get around this, you can modify you shell's `$PATH` variable,
 or use [`direnv`](https://direnv.net) to set it on a per-directory basis.
+
+Note 2: If following this docs you get ERROR: UndefVarError: Conda not defined` try installing and loading `Conda.jl 
 
 ## Using MetaPhlAn and HUMAnN
 
