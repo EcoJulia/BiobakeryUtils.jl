@@ -2,12 +2,16 @@
 
 # BiobakeryUtils.jl
 
+![EcoJulia maintainer: kescobo](https://img.shields.io/badge/EcoJulia%20Maintainer-kescobo-blue.svg)
+
 **Latest Release:**
 
 [![Latest Release](https://img.shields.io/github/release/EcoJulia/BiobakeryUtils.jl.svg)](https://github.com/EcoJulia/BiobakeryUtils.jl/releases/latest)
+
 [![](https://img.shields.io/badge/docs-stable-blue.svg)](http://docs.ecojulia.org/BiobakeryUtils.jl/stable/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/EcoJulia/BiobakeryUtils.jl/blob/master/LICENSE)
-![EcoJulia maintainer: kescobo](https://img.shields.io/badge/EcoJulia%20Maintainer-kescobo-blue.svg)
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+
 
 **Development Status**
 
@@ -17,10 +21,13 @@
 
 ## Description
 
-BiobakeryUtils.jl is a companion package for [Microbiome.jl](https://github.com/EcoJulia/Microbiome.jl)
+`BiobakeryUtils.jl` is a companion package for [`Microbiome.jl`](https://github.com/EcoJulia/Microbiome.jl)
 for interacting with the [bioBakery](https://github.com/biobakery/biobakery/wiki)
 family of computational tools
 authored by the [Huttenhower Lab](http://huttenhower.sph.harvard.edu/) at Harvard.
+
+BiobakeryUtils.jl reexports all functionality from `Microbiome.jl`,
+so you never need to do both `using BiobakeryUtils` _and_ `using Microbiome.jl`.
 
 ## Installation
 
