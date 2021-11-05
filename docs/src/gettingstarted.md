@@ -11,8 +11,8 @@ Currently, we support [`MetaPhlAn`](https://github.com/biobakery/MetaPhlAn) and 
 
 Read on to learn how to install the package and use it
 to begin using it to uncover insights about your microbial community data!
-If you run into problems, you can [open an issue](https://github.com/BioJulia/BiobakeryUtils.jl/issues/new/choose) on this repository,
-or start a discussion over on [`Microbiome.jl`](https://github.com/BioJulia/Microbiome.jl/discussions/new).
+If you run into problems, you can [open an issue](https://github.com/EcoJulia/BiobakeryUtils.jl/issues/new/choose) on this repository,
+or start a discussion over on [`Microbiome.jl`](https://github.com/EcoJulia/Microbiome.jl/discussions/new).
 
 ## Installing julia
 
@@ -355,5 +355,5 @@ julia> Conda.add("tbb=2020.2", env; channel="conda-forge")
 ### Still having issues?
 
 If your issue isn't addressed here, or you're still having problems,
-please [open an issue](https://github.com/BioJulia/BiobakeryUtils.jl/issues/new/choose)
-or start a discussion over on [`Microbiome.jl`](https://github.com/BioJulia/Microbiome.jl/discussions/new).
+please [open an issue](https://github.com/EcoJulia/BiobakeryUtils.jl/issues/new/choose)
+or start a discussion over on [`Microbiome.jl`](https://github.com/EcoJulia/Microbiome.jl/discussions/new).
