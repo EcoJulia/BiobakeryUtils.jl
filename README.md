@@ -2,7 +2,7 @@
 
 # BiobakeryUtils.jl
 
-![EcoJulia maintainer: kescobo](https://img.shields.io/badge/EcoJulia%20Maintainer-kescobo-blue.svg)
+[![status](https://joss.theoj.org/papers/450fa18f47932c5fd3b837edeac91440/status.svg)](https://joss.theoj.org/papers/450fa18f47932c5fd3b837edeac91440) ![EcoJulia maintainer: kescobo](https://img.shields.io/badge/EcoJulia%20Maintainer-kescobo-blue.svg)
 
 **Latest Release:**
 
