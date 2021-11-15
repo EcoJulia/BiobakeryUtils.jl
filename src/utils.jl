@@ -20,8 +20,11 @@ function install_deps(env=:BiobakeryUtils; force=false)
     
     Conda.add_channel("bioconda", env)
     Conda.add_channel("conda-forge", env)
+    Conda.add_channel("biobakery", env)
+    
     Conda.add("humann", env)
     Conda.add("tbb=2020.2", env) # https://www.biostars.org/p/494922/
+    Conda.add("kneaddata", env)
 
     @warn """
     Don't forget to add $(Conda.bin_dir(env)) to your PATH!
@@ -34,8 +37,9 @@ function install_deps(env=:BiobakeryUtils; force=false)
     return nothing
 end
 
-function add_cli_kwargs!(cmd, kwargs; optunderscores=true)
+function add_cli_kwargs!(cmd, kwargs; optunderscores=true, skip = [])
     for (key,val) in pairs(kwargs)
+        in(key, skip) && continue
         if val isa Bool
             val && push!(cmd, string("--", key))
         elseif val isa AbstractVector
