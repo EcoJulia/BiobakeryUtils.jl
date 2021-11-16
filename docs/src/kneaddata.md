@@ -114,7 +114,15 @@ Total reads after trimming ( /tmp/jl_JXPuAs/kneaddataOutputPairedEnd/seq1_kneadd
 Total reads after trimming ( /tmp/jl_JXPuAs/kneaddataOutputPairedEnd/seq1_kneaddata.trimmed.single.2.fastq ): 847.0
 ```
 
+## Changing Defaults
 
+[Official tutorial link](https://github.com/biobakery/biobakery/wiki/kneaddata#changing-defaults)
+
+To use the default-altering options,
+pass them as key words to the `kneaddata()` function.
+
+Eg, to set maximum memory utilization to 200 Mb,
+add `max_memory="200m"` to the function call.
 
 
 ## API Reference
