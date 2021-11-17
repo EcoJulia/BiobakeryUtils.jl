@@ -22,7 +22,9 @@ export
     write_pcl,
     humann_barplot,
     humann_barplots,
-    kneaddata
+    kneaddata,
+    kneaddata_database,
+    kneaddata_read_count_table
 
 using Reexport
 @reexport using Microbiome

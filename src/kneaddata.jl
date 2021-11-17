@@ -72,7 +72,7 @@ end
 
 See `kneaddata_database --help`
 
-```
+```julia
 kneaddata_database("human_genome", "bowtie2", "/some/database/dir/")
 ```
 """
@@ -83,3 +83,21 @@ function kneaddata_database(db, kind, path)
     @info "Running command: $(Cmd(c))"
     return run(Cmd(c))
 end
+
+"""
+    kneaddata_read_count_table(input, output)
+
+See `kneaddata_read_count_table --help`
+
+```julia
+kneaddata_read_count_table("human_genome", "bowtie2", "/some/database/dir/")
+```
+"""
+function kneaddata_read_count_table(input, output)
+    check_for_install("kneaddata_read_count_table")
+    c = ["kneaddata_read_count_table", "--input", input, "--output", output]
+    
+    @info "Running command: $(Cmd(c))"
+    return run(Cmd(c))
+end
+
