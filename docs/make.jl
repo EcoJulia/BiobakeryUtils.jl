@@ -5,6 +5,7 @@ makedocs(
     pages = [
         "BiobakeryUtils" => "index.md",
         "Getting Started" => "gettingstarted.md",
+        "Working with KneadData" => "kneaddata.md",
         "Working with MetaPhlAn" => "metaphlan.md",
         "Working with HUMAnN" => "humann.md",
         "Microbiome.jl Docstrings" => "microbiome.md",

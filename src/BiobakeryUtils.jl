@@ -21,7 +21,10 @@ export
     read_pcl,
     write_pcl,
     humann_barplot,
-    humann_barplots
+    humann_barplots,
+    kneaddata,
+    kneaddata_database,
+    kneaddata_read_count_table
 
 using Reexport
 @reexport using Microbiome
@@ -33,6 +36,7 @@ using Conda
 include("utils.jl")
 include("metaphlan.jl")
 include("humann.jl")
+include("kneaddata.jl")
 
 
 end
