@@ -1,5 +1,7 @@
+module BiobakeryUtilsTests
+
 using Random
-using Test
+using ReTest
 using BiobakeryUtils
 using BiobakeryUtils.Conda
 using SparseArrays
@@ -112,3 +114,4 @@ end
     CSV.write("files/humann/joined_roundtrip.tsv", pj_strat; delim='\t')
 end
 
+end # module

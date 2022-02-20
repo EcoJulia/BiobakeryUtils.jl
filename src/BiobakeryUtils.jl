@@ -32,6 +32,7 @@ using CSV
 using Tables
 using SparseArrays
 using Conda
+using ReTest
 
 include("utils.jl")
 include("metaphlan.jl")
