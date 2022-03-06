@@ -64,7 +64,7 @@ function kneaddata(inputs, output; kwargs...)
     add_cli_kwargs!(c, kwargs; optunderscores=false, skip=[:reference_db])
     
     @info "Running command: $(Cmd(c))"
-    return run(Cmd(c))
+    return CondaPkg.withenv() do run(Cmd(c)) end
 end
 
 """
@@ -81,7 +81,7 @@ function kneaddata_database(db, kind, path)
     c = ["kneaddata_database", "--download", db, kind, path]
     
     @info "Running command: $(Cmd(c))"
-    return run(Cmd(c))
+    return CondaPkg.withenv() do run(Cmd(c)) end
 end
 
 """
@@ -98,6 +98,6 @@ function kneaddata_read_count_table(input, output)
     c = ["kneaddata_read_count_table", "--input", input, "--output", output]
     
     @info "Running command: $(Cmd(c))"
-    return run(Cmd(c))
+    return CondaPkg.withenv() do run(Cmd(c)) end
 end
 

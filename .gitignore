@@ -9,3 +9,4 @@ build/
 test/files/metaphlan/merged*
 test/files/humann/joined_roundtrip.tsv
 Manifest.toml
+.CondaPkg

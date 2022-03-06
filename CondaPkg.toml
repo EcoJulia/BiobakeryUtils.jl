@@ -1,0 +1,7 @@
+channels = ["biobakery", "conda-forge", "bioconda"]
+
+[deps]
+metaphlan = ""
+humann = ""
+tbb = "=2020.2"
+kneaddata = ""
