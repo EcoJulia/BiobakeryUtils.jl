@@ -1,41 +1,41 @@
-"""
-    install_deps([env]; [force=false])
+# """
+#     install_deps([env]; [force=false])
 
-Uses Conda.jl to install HUMAnN and MetaPhlAn.
-In order to use the commandline tools,
-you must have the conda environment bin directory in `ENV["PATH"]`.
-See "[Using Conda](@ref using-conda)" for more information.
-"""
-function install_deps(env=:BiobakeryUtils; force=false)
-    if isdir(Conda.bin_dir(env)) && !force
-        @warn """
-        You already seem to have an environment, '$env'.
-        If you've already installed the bioBakery packages, try
+# Uses Conda.jl to install HUMAnN and MetaPhlAn.
+# In order to use the commandline tools,
+# you must have the conda environment bin directory in `ENV["PATH"]`.
+# See "[Using Conda](@ref using-conda)" for more information.
+# """
+# function install_deps(env=:BiobakeryUtils; force=false)
+#     if isdir(Conda.bin_dir(env)) && !force
+#         @warn """
+#         You already seem to have an environment, '$env'.
+#         If you've already installed the bioBakery packages, try
 
-        `ENV["PATH"] = ENV["PATH"] * ":" * "$(Conda.bin_dir(env))"`
+#         `ENV["PATH"] = ENV["PATH"] * ":" * "$(Conda.bin_dir(env))"`
 
-        Use `force=true` to install anyway"""
-        return nothing
-    end
+#         Use `force=true` to install anyway"""
+#         return nothing
+#     end
     
-    Conda.add_channel("bioconda", env)
-    Conda.add_channel("conda-forge", env)
-    Conda.add_channel("biobakery", env)
+#     Conda.add_channel("bioconda", env)
+#     Conda.add_channel("conda-forge", env)
+#     Conda.add_channel("biobakery", env)
     
-    Conda.add("humann", env)
-    Conda.add("tbb=2020.2", env) # https://www.biostars.org/p/494922/
-    Conda.add("kneaddata", env)
+#     Conda.add("humann", env)
+#     Conda.add("tbb=2020.2", env) # https://www.biostars.org/p/494922/
+#     Conda.add("kneaddata", env)
 
-    @warn """
-    Don't forget to add $(Conda.bin_dir(env)) to your PATH!
+#     @warn """
+#     Don't forget to add $(Conda.bin_dir(env)) to your PATH!
     
-    This can be done in a julia session with:
+#     This can be done in a julia session with:
 
-    `ENV["PATH"] = ENV["PATH"] * ":" * "$(Conda.bin_dir(env))"`,
-    or you can set it in your shell environment.
-    """
-    return nothing
-end
+#     `ENV["PATH"] = ENV["PATH"] * ":" * "$(Conda.bin_dir(env))"`,
+#     or you can set it in your shell environment.
+#     """
+#     return nothing
+# end
 
 function add_cli_kwargs!(cmd, kwargs; optunderscores=true, skip = [])
     for (key,val) in pairs(kwargs)
@@ -53,7 +53,10 @@ function add_cli_kwargs!(cmd, kwargs; optunderscores=true, skip = [])
 end
 
 function check_for_install(tool)
-    try run(pipeline(`which $tool`, stdout=devnull))
+    try 
+        CondaPkg.withenv() do
+            run(pipeline(`which $tool`, stdout=devnull))
+        end
         return nothing
     catch e
         @error """

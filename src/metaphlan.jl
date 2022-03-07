@@ -40,7 +40,7 @@ function metaphlan(inputfile, output; kwargs...)
 
     deleteat!(cmd, findall(==(""), cmd))
     @info "Running command: $(Cmd(cmd))"
-    return CondaPkg.withenv() do run(Cmd(cmd)) end
+    return CondaPkg.withenv() do; run(Cmd(cmd)) end
 end
 
 """
@@ -64,7 +64,7 @@ function metaphlan_merge(paths, output; kwargs...)
         end
     end
     append!(cmd, paths)
-    CondaPkg.withenv() do run(Cmd(cmd)) end
+    CondaPkg.withenv() do; run(Cmd(cmd)) end
 end
 
 

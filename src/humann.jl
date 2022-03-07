@@ -31,7 +31,7 @@ function humann(inputfile, output; kwargs...)
     add_cli_kwargs!(c, kwargs; optunderscores=false)
     
     @info "Running command: $(Cmd(c))"
-    return CondaPkg.withenv() do run(Cmd(c)) end
+    return CondaPkg.withenv() do; run(Cmd(c)) end
 end
 
 function _gf_parse(gf)
@@ -193,7 +193,7 @@ function humann_join(in_path, out_path; file_name=nothing, search_subdirectories
     search_subdirectories && push!(cmd, "--search-subdirectories")
     verbose && push!(cmd, " --verbose")
 
-    CondaPkg.withenv() do run(Cmd(cmd)) end
+    CondaPkg.withenv() do; run(Cmd(cmd)) end
 end
 
 """
@@ -278,5 +278,5 @@ function humann_barplot(comm::CommunityProfile, outpath; kwargs...)
             "--last-metadata", string(last(keys(first(metadata(comm)))))]
     
     add_cli_kwargs!(cmd, kwargs; optunderscores=false)
-    return CondaPkg.withenv() do run(Cmd(cmd)) end
+    return CondaPkg.withenv() do; run(Cmd(cmd)) end
 end
