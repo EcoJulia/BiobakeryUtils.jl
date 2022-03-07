@@ -60,8 +60,9 @@ function check_for_install(tool)
         return nothing
     catch e
         @error """
-        Can not find `$tool`! If you think it should be installed,
-        try running:
+        Can not find `$tool`! This should have been installed automatically,
+        if you 
+        
 
         ```
         ENV["PATH"] = ENV["PATH"] * ":" * Conda.bin_dir(env)

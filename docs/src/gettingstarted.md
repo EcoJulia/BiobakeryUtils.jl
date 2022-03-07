@@ -7,7 +7,11 @@ CurrentModule = BiobakeryUtils
 This is a package for the [julia programming language](http://julialang.org),
 designed for working with the [bioBakery](https://github.com/biobakery/biobakery) family of tools
 for metagenomic analysis of microbial communities.
-Currently, we support [`MetaPhlAn`](https://github.com/biobakery/MetaPhlAn) and [`HUMAnN`](https://github.com/biobakery/HUMAnN).
+Currently, we support:
+
+- [`KneadData`](https://github.com/biobakery/kneaddata)
+- [`MetaPhlAn`](https://github.com/biobakery/MetaPhlAn)
+- [`HUMAnN`](https://github.com/biobakery/HUMAnN).
 
 Read on to learn how to install the package and use it
 to begin using it to uncover insights about your microbial community data!
@@ -93,49 +97,27 @@ or `julia --project=<path to project>` if you're in a different working director
 
 Some functions provided by this package (eg [`humann_regroup`](@ref) and [`humann_rename`](@ref)),
 require the appropriate `bioBakery` tools to be installed and accessible from the julia `shell` environment.
-The easiest way to do this is to use `Conda.jl`,
+The easiest way to do this is to use `CondaPkg.jl`,
 though other installation methods are possible as well.
+If you have not previously installed these tools,
+they will be installed automatically the first time you attempt to call them.
+If you have, read on to find out how to use your own `conda` environment.
 
 ### Using a previous installation
 
-If you have a previous installation of `metaphlan` and/or `humann`,
-you can tell julia to use them by modifying the `$PATH` environment variable.
+If you have a previous `conda` installation of `kneaddata`, `metaphlan`, `humann`,
+you can tell julia to use them by activating your `conda` environment
+prior to starting julia.
 
-Environment variables in julia are stored in a `Dict` called `ENV`.
-For example, the `$PATH` variable in Unix tells the shell where to look
-for executable programs, and is available in julia using `ENV["PATH"]`
+Using non-conda installation is not currently supported,
+though you can probably hack it together.
+If you need this functionality, [open an issue](https://github.com/EcoJulia/BiobakeryUtils.jl/issues/new/choose).
 
-```@repl conda
-ENV["PATH"]
-```
+### [Using CondaPkg.jl](@id using-conda)
 
-If you launch julia from the shell,
-this variable is automatically populated with the same `$PATH`,
-so if you can access `humann` or `metaphlan` from your shell,
-then launch julia, you should be all set
-(eg, if you've installed them with miniconda, and you do `conda activate envname`,
-then launch julia from the same shell, they should already be available).
-
-If not, you need to identify where `humann` or `metaphlan` executables are located,
-then add that location to `ENV["PATH"]` (delimeted by `:`).
-For example, if the `humann` executable is found at `/home/kevin/.local/bin`,
-you would run:
-
-```@repl conda
-ENV["PATH"] = ENV["PATH"] * ":" * "/home/kevin/.local/bin"
-```
-
-If you don't know where your installation is located,
-from the terminal, you can use the `which` command:
-
-```sh
-$ which humann
-/home/kevin/.local/bin/humann
-```
-
-### [Using Conda.jl](@id using-conda)
-
-If you don't have a previous installation, you can use [`Conda.jl`](https://github.com/JuliaPy/Conda.jl) to install the necessary tools.
+If you don't have a previous installation, 
+and you want to manage the dependencies directly,
+you can use [`CondaPkg.jl`](https://github.com/JuliaPy/Conda.jl) to install the necessary tools.
 
 This can be done automatically for you using [`BiobakeryUtils.install_deps()`](@ref).
 
@@ -254,7 +236,7 @@ for next steps.
 So, you followed all the steps above, and you're still having problems?
 There are a couple of common things that can go wrong.
 
-### Cannot find `{program}`
+### Can not find `{program}`
 
 If you get an error that looks like this:
 
