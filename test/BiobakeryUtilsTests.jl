@@ -66,7 +66,7 @@ end
     @test merge_profile_3["s__Haemophilus_haemolyticus", 3] == 1.35528
     CSV.write(joinpath(@__DIR__, "files/metaphlan/merged_abundance_table2.csv"), merge_profile_1)
     
-    profiles = filter(f-> contains(f, "_profile.tsv"), readdir(joinpath(@__DIR__, "files/metaphlan"), join=true))
+    profiles = filter(f-> contains(f, "_profile.tsv"), readdir(joinpath(@__DIR__, "files/met aphlan"), join=true))
     @test_throws ArgumentError metaphlan_profiles(profiles; samples = ["sample1"])
     multi_profile_1 = metaphlan_profiles(profiles; samples=["sample$i" for i in 1:length(profiles)])
     @test abundances(multi_profile_1) == abundances(metaphlan_profiles(profiles))
