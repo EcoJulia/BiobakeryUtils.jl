@@ -8,16 +8,23 @@ using InteractiveUtils
 import Pkg; Pkg.activate
 
 # ╔═╡ 599711e7-ee51-4ca0-94ac-8c1a67f6ac8d
-using CSV, Microbiome, BiobakeryUtils, BiobakeryUtils.Conda;
+using CSV, Microbiome, Microbiome.SparseArrays, BiobakeryUtils, BiobakeryUtils.Conda, Random;
 
 # ╔═╡ 84470294-5a17-469e-890a-5e2b9f777dbb
 using Downloads: download
 
 # ╔═╡ 161527c0-d2c9-4ef8-a223-4946b5f0e083
-#Installing packages
+# Installing packages
+
+# ╔═╡ e41a1c8a-e51b-475d-8839-83830059c139
+
+
+# BIOBAKERYUTILS DEMO
+
+
 
 # ╔═╡ 22ef03e5-0e90-466d-9718-a104002b280f
-#Starting BiobakeryUtils' metaphlan tutorial
+# Starting BiobakeryUtils' metaphlan tutorial
 
 # ╔═╡ 0219658e-222a-403b-af54-0fbeacec8606
 m = metaphlan_profile(joinpath(@__DIR__, "../test/files/metaphlan/SRS014464-Anterior_nares_profile.tsv");  sample="SRS014464")
@@ -52,32 +59,8 @@ m2["p__Proteobacteria", 1]
 # ╔═╡ b13f7ac4-c847-4e96-84fa-56f03e3e45f5
 # merged1 = metaphlan_profiles(joinpath(@__DIR__, "../test/files/metaphlan/merged_abundance_table.tsv"); samplestart=3)
 
-# ╔═╡ 70418cb3-b995-4e38-a742-f8b71f2f952e
-taxstring = "k__Archaea|p__Euryarchaeota|c__Methanobacteria|o__Methanobacteriales|f__Methanobacteriaceae|g__Methanobrevibacter|s__Methanobrevibacter_smithii"
-
-# ╔═╡ 2fe9ec58-15ab-48ae-810b-61555248dcbc
-taxa = parsetaxa(taxstring)
-
-# ╔═╡ 645af56e-34e4-4c13-991b-479acd04855e
-length(taxa)
-
-# ╔═╡ 687f29ce-365c-4279-8470-d13ba153afa6
-parsetaxon(taxstring, 1) 
-
-# ╔═╡ 4c851abe-a69b-40d8-8170-9e84396da77b
- parsetaxon(taxstring, :family)
-
-# ╔═╡ 7107ff75-ec88-4462-84b9-58621917e22e
-parsetaxon(taxstring)
-
-# ╔═╡ 3fd1289f-6a71-4dd0-b9fc-e1968f1ebfe7
-parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria", 2)
-
-# ╔═╡ 99dce82f-07bc-4da0-b02d-6b4e35c7993a
-parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria") 
-
 # ╔═╡ a1cb3d36-e6fd-4bfe-9441-b3d5e1adc05a
-#Starting BiobakeryUtils' humann tutorial
+# Starting BiobakeryUtils' humann tutorial
 
 # ╔═╡ 5ff1527e-6746-4137-b4c2-db84589c0fe2
 h1 = humann_profile(joinpath(@__DIR__, "../test/files/humann/single_1.tsv"))
@@ -129,6 +112,175 @@ setdiff(features(filter(!hastaxon, joined_strat)), features(joined))
 CSV.write(joinpath(@__DIR__, "../test/files/humann/joined_roundtrip.tsv"), joined_strat; delim='\t')
 
 
+# ╔═╡ e67a24b1-e77a-41e5-a34b-d1d5c9ac5381
+
+
+# MICROBIOME DEMO
+
+
+
+# ╔═╡ beb7c7b7-1c5c-47ce-af7f-df1fd13ef2be
+# Taxon
+
+# ╔═╡ f28e22c0-71e6-4a77-babd-8698d3ea0773
+taxstring = "k__Archaea|p__Euryarchaeota|c__Methanobacteria|o__Methanobacteriales|f__Methanobacteriaceae|g__Methanobrevibacter|s__Methanobrevibacter_smithii"
+
+# ╔═╡ 6f932997-aba3-4088-9f7d-ce282d4ee1eb
+taxa = parsetaxa(taxstring)
+
+# ╔═╡ 35e8199c-0710-405f-a12c-6b1f6211058e
+length(taxa)
+
+# ╔═╡ a2e15229-fb7f-4b53-b6dc-777a59d580e5
+k = parsetaxon(taxstring, 1) 
+
+# ╔═╡ 29a79779-5c87-428b-95de-3f48e2d65609
+k
+
+# ╔═╡ 3cd557f1-93ae-4b8e-b796-7803d453e6a8
+f = parsetaxon(taxstring, :family)
+
+# ╔═╡ f609ebf4-a905-4478-b305-b839e2a88eec
+s = parsetaxon(taxstring)
+
+# ╔═╡ bb127510-90b2-4fca-ae86-b940defe0ce9
+p = parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria", 2)
+
+# ╔═╡ 39f36910-2a15-4550-b385-9c1141329c90
+c = parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria") 
+
+# ╔═╡ d4838616-25ea-4c6b-ba4b-8dd92118118f
+uncl = Taxon("Unknown_bug")
+
+# ╔═╡ ade25f64-4198-4b69-a789-d816fd9feb1d
+# taxrank & hasrank
+
+# ╔═╡ 23c1069c-da38-45ac-b2fc-2e153cf0fbe5
+hasrank(k)
+
+# ╔═╡ 1e99bf7e-e2f9-40cf-a551-65afea3ab961
+taxrank(k)
+
+# ╔═╡ 57ec4ab6-9bb1-43b8-9051-d8ce1d21a808
+hasrank(uncl)
+
+# ╔═╡ 5468129b-8923-4a34-a3c8-7ee41b3b6e68
+taxrank(f)
+
+# ╔═╡ cc29462f-be85-4d07-9eca-6e22325b01e2
+taxrank(p)
+
+# ╔═╡ 5688ca22-358e-49fa-812b-83663c20e8a1
+taxrank(c)
+
+# ╔═╡ e263a76d-0ace-41f4-91ab-b6ef9f2e8ea3
+taxrank(s)
+
+# ╔═╡ 65e57025-1543-4410-8adf-a1e4006a05ec
+taxrank(uncl)
+
+# ╔═╡ 0effc59c-c9f0-4c87-8ff9-4c724edbcd9a
+# String 
+
+# ╔═╡ ccf8fd00-befa-4ed5-a132-a01811b81d12
+String(k)
+
+# ╔═╡ 1411c8c3-0b91-43a1-99c9-fd364f53fd62
+String(p)
+
+# ╔═╡ c164595c-6f69-4846-ac2d-d5764a8c796d
+# GeneFunction
+
+# ╔═╡ 9276b202-7b91-4544-a2d6-e6a213eae0eb
+gf1 = GeneFunction("UniRef90_A0A015QIN1", Taxon("Bacteroides_vulgatus",:species))
+
+# ╔═╡ cd8b4b73-73af-493c-88c6-d10e8bdeb206
+gf2 = GeneFunction("UniRef90_A0A015QIN1")
+
+# ╔═╡ 5f3504e3-a448-4ebe-a54b-3fca211772e5
+hastaxon(gf1)
+
+# ╔═╡ f08fac3b-bce3-40cd-bc7f-43c71246b2f6
+hastaxon(gf2)
+
+# ╔═╡ 1cb667e7-756f-4140-b164-fc26eb4e1360
+name(gf1)
+
+# ╔═╡ f9c339bf-8875-4927-bbbe-062c10985270
+taxon(gf1)
+
+# ╔═╡ 0c52cc2e-516c-4874-bf57-480452a511fd
+taxrank(gf1)
+
+# ╔═╡ a32cd602-8f34-4fbb-bd5a-4df27313f877
+genefunction(String(gf1))
+
+# ╔═╡ ca6b2dde-f7f1-4e4b-8a42-0e73c0123d20
+# MicrobiomeSample & CommunityProfile
+
+# ╔═╡ e33d19c9-be54-4216-b96c-058c2239f950
+samples = MicrobiomeSample.(["s1", "s2", "s3"])
+
+# ╔═╡ 682cd1bf-440e-4132-85e9-6caa744d3262
+t = [[Taxon("s$i", :species) for i in 1:5]; [Taxon("g$i", :genus) for i in 1:5]]
+
+# ╔═╡ 3ebcd1a2-5ac2-4c1f-be9f-c7cf3d5672a3
+mat = spzeros(10, 3);
+
+# ╔═╡ 563dfe78-003b-4837-b4a0-a0ff7d2e52b3
+for i in 1:10, j in 1:3 
+           # fill some spots with random values
+           rand() < 0.3 && (mat[i,j] = rand())
+       end
+
+# ╔═╡ a3582468-36b7-4438-a81a-ecd69d7a088e
+mat
+
+# ╔═╡ 462c6272-626f-4f30-88d3-4abd28cd763a
+comm = CommunityProfile(mat, t, samples)
+
+# ╔═╡ a78ed619-2446-4949-bcfb-9707fd8af859
+abundances(comm)
+
+# ╔═╡ b0d763e8-ba47-4101-86c2-2df38a4e7cb7
+features(comm)
+
+# ╔═╡ 51737ce8-717e-4416-b1ae-b9d800351d0a
+samples(comm)
+
+# ╔═╡ 941744aa-f411-45ee-9c7e-9202620bdb1d
+featurenames(comm)
+
+# ╔═╡ d48af0f3-ea69-48e2-b103-c51616640e8a
+metadata(comm)
+
+# ╔═╡ 59867f94-b3ad-41b6-9f6d-cd29f8565156
+mat
+
+# ╔═╡ bfb99c10-f740-48ca-9d81-d92bbbe351ae
+mat[3,2]
+
+# ╔═╡ a7fe09e6-74b9-4bf4-90ea-2c6fab04d9f5
+mat[2:4, 1]
+
+# ╔═╡ 361780c8-df1d-4ef7-83fa-dd0d43411983
+mat[:, 1:2]
+
+# ╔═╡ 99efca32-09fc-400b-8356-d6d505fa6228
+comm[3,1]
+
+# ╔═╡ 9d26f898-d254-445d-8895-1aebfee8b504
+comm[1:4,3]
+
+# ╔═╡ e8bb8f24-8196-4113-a97d-1857ae8a946d
+comm[1:4,3] |> abundances
+
+# ╔═╡ 7ae555ed-4e03-4de3-a663-65d115a5b711
+comm["g1", "s1"]
+
+# ╔═╡ 5ab53ea6-e965-41ce-a3dc-e2815d040888
+
+
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
@@ -137,6 +289,7 @@ CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 Downloads = "f43a241f-c20a-4ad4-852c-f6b1247861c6"
 Microbiome = "3bd8f0ae-a0f2-5238-a5af-e1b399a4940c"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 
 [compat]
 BiobakeryUtils = "~0.6.0"
@@ -574,6 +727,7 @@ uuid = "3f19e933-33d8-53b3-aaab-bd5110c3b7a0"
 # ╠═19b71044-a0c8-468a-8e13-91b17d336497
 # ╠═599711e7-ee51-4ca0-94ac-8c1a67f6ac8d
 # ╠═84470294-5a17-469e-890a-5e2b9f777dbb
+# ╠═e41a1c8a-e51b-475d-8839-83830059c139
 # ╠═22ef03e5-0e90-466d-9718-a104002b280f
 # ╠═0219658e-222a-403b-af54-0fbeacec8606
 # ╠═5a17b7af-a266-4733-bba9-c9e4c29ecfd6
@@ -586,14 +740,6 @@ uuid = "3f19e933-33d8-53b3-aaab-bd5110c3b7a0"
 # ╠═4d77126c-1d93-44a7-981c-608166932d26
 # ╠═c3c896f5-1404-4bef-b054-d9167940d467
 # ╠═b13f7ac4-c847-4e96-84fa-56f03e3e45f5
-# ╠═70418cb3-b995-4e38-a742-f8b71f2f952e
-# ╠═2fe9ec58-15ab-48ae-810b-61555248dcbc
-# ╠═645af56e-34e4-4c13-991b-479acd04855e
-# ╠═687f29ce-365c-4279-8470-d13ba153afa6
-# ╠═4c851abe-a69b-40d8-8170-9e84396da77b
-# ╠═7107ff75-ec88-4462-84b9-58621917e22e
-# ╠═3fd1289f-6a71-4dd0-b9fc-e1968f1ebfe7
-# ╠═99dce82f-07bc-4da0-b02d-6b4e35c7993a
 # ╠═a1cb3d36-e6fd-4bfe-9441-b3d5e1adc05a
 # ╠═5ff1527e-6746-4137-b4c2-db84589c0fe2
 # ╠═8e4d08db-0c4d-40b4-ae2c-88982e121563
@@ -611,5 +757,59 @@ uuid = "3f19e933-33d8-53b3-aaab-bd5110c3b7a0"
 # ╠═a035d562-1fc7-43bf-b6d7-c8fbb73d562d
 # ╠═c20aa4aa-087f-409e-9d6c-175001d3d222
 # ╠═dd958147-bb44-48fd-aa55-fbc7f27881e9
+# ╠═e67a24b1-e77a-41e5-a34b-d1d5c9ac5381
+# ╠═beb7c7b7-1c5c-47ce-af7f-df1fd13ef2be
+# ╠═f28e22c0-71e6-4a77-babd-8698d3ea0773
+# ╠═6f932997-aba3-4088-9f7d-ce282d4ee1eb
+# ╠═35e8199c-0710-405f-a12c-6b1f6211058e
+# ╠═a2e15229-fb7f-4b53-b6dc-777a59d580e5
+# ╠═29a79779-5c87-428b-95de-3f48e2d65609
+# ╠═3cd557f1-93ae-4b8e-b796-7803d453e6a8
+# ╠═f609ebf4-a905-4478-b305-b839e2a88eec
+# ╠═bb127510-90b2-4fca-ae86-b940defe0ce9
+# ╠═39f36910-2a15-4550-b385-9c1141329c90
+# ╠═d4838616-25ea-4c6b-ba4b-8dd92118118f
+# ╠═ade25f64-4198-4b69-a789-d816fd9feb1d
+# ╠═23c1069c-da38-45ac-b2fc-2e153cf0fbe5
+# ╠═1e99bf7e-e2f9-40cf-a551-65afea3ab961
+# ╠═57ec4ab6-9bb1-43b8-9051-d8ce1d21a808
+# ╠═5468129b-8923-4a34-a3c8-7ee41b3b6e68
+# ╠═cc29462f-be85-4d07-9eca-6e22325b01e2
+# ╠═5688ca22-358e-49fa-812b-83663c20e8a1
+# ╠═e263a76d-0ace-41f4-91ab-b6ef9f2e8ea3
+# ╠═65e57025-1543-4410-8adf-a1e4006a05ec
+# ╠═0effc59c-c9f0-4c87-8ff9-4c724edbcd9a
+# ╠═ccf8fd00-befa-4ed5-a132-a01811b81d12
+# ╠═1411c8c3-0b91-43a1-99c9-fd364f53fd62
+# ╠═c164595c-6f69-4846-ac2d-d5764a8c796d
+# ╠═9276b202-7b91-4544-a2d6-e6a213eae0eb
+# ╠═cd8b4b73-73af-493c-88c6-d10e8bdeb206
+# ╠═5f3504e3-a448-4ebe-a54b-3fca211772e5
+# ╠═f08fac3b-bce3-40cd-bc7f-43c71246b2f6
+# ╠═1cb667e7-756f-4140-b164-fc26eb4e1360
+# ╠═f9c339bf-8875-4927-bbbe-062c10985270
+# ╠═0c52cc2e-516c-4874-bf57-480452a511fd
+# ╠═a32cd602-8f34-4fbb-bd5a-4df27313f877
+# ╠═ca6b2dde-f7f1-4e4b-8a42-0e73c0123d20
+# ╠═e33d19c9-be54-4216-b96c-058c2239f950
+# ╠═682cd1bf-440e-4132-85e9-6caa744d3262
+# ╠═3ebcd1a2-5ac2-4c1f-be9f-c7cf3d5672a3
+# ╠═563dfe78-003b-4837-b4a0-a0ff7d2e52b3
+# ╠═a3582468-36b7-4438-a81a-ecd69d7a088e
+# ╠═462c6272-626f-4f30-88d3-4abd28cd763a
+# ╠═a78ed619-2446-4949-bcfb-9707fd8af859
+# ╠═b0d763e8-ba47-4101-86c2-2df38a4e7cb7
+# ╠═51737ce8-717e-4416-b1ae-b9d800351d0a
+# ╠═941744aa-f411-45ee-9c7e-9202620bdb1d
+# ╠═d48af0f3-ea69-48e2-b103-c51616640e8a
+# ╠═59867f94-b3ad-41b6-9f6d-cd29f8565156
+# ╠═bfb99c10-f740-48ca-9d81-d92bbbe351ae
+# ╠═a7fe09e6-74b9-4bf4-90ea-2c6fab04d9f5
+# ╠═361780c8-df1d-4ef7-83fa-dd0d43411983
+# ╠═99efca32-09fc-400b-8356-d6d505fa6228
+# ╠═9d26f898-d254-445d-8895-1aebfee8b504
+# ╠═e8bb8f24-8196-4113-a97d-1857ae8a946d
+# ╠═7ae555ed-4e03-4de3-a663-65d115a5b711
+# ╠═5ab53ea6-e965-41ce-a3dc-e2815d040888
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
