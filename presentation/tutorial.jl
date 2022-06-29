@@ -7,60 +7,179 @@ using InteractiveUtils
 # ╔═╡ 19b71044-a0c8-468a-8e13-91b17d336497
 import Pkg; Pkg.activate
 
+# ╔═╡ 84470294-5a17-469e-890a-5e2b9f777dbb
+using Downloads: download;
+
 # ╔═╡ 599711e7-ee51-4ca0-94ac-8c1a67f6ac8d
 using CSV, Microbiome, Microbiome.SparseArrays, BiobakeryUtils, BiobakeryUtils.Conda, Random;
 
-# ╔═╡ 84470294-5a17-469e-890a-5e2b9f777dbb
-using Downloads: download
-
 # ╔═╡ 161527c0-d2c9-4ef8-a223-4946b5f0e083
-# Installing packages
+md"""
+### Installation
+"""
 
 # ╔═╡ e41a1c8a-e51b-475d-8839-83830059c139
+md"""
+### Welcome to the BiobakeryUtils.jl tutorial 😀
 
+In this tutorial,
+we'll learn how to interact with microbial community data
+using [`BiobakeryUtils.jl`](https://github.com/EcoJulia/BiobakeryUtils.jl).
+bioBakery workflows is a collection of workflows and tasks for executing common 
+microbial community analyses using standardized, validated tools and parameters. These tools include:
+- MetaPhlAn 
+- HUManN
+- Phylophan, etc.
+BiobakeryUtils.jl works mainly with the outputs of MetaPhlAn & HUManN.
 
-# BIOBAKERYUTILS DEMO
+If you have any questions or comments,
+please start a discussion
+or open an issue
+on github!
+Let's go! 👇️
 
+"""
 
 
 # ╔═╡ 22ef03e5-0e90-466d-9718-a104002b280f
-# Starting BiobakeryUtils' metaphlan tutorial
+md""" 
+
+#### Metaphlan tutorial
+MetaPhlAn (Metagenomic Phylogenetic Analysis) 
+is a computational tool from bioBakery  for profiling the 
+composition of microbial communities from 
+metagenomic shotgun sequencing data.
+
+##### Input files
+Some example files are in this 
+[BiobakeryUtils.jl repo](../test/files/metaphlan), 
+and can be downloaded using the Downloads standard 
+library in julia.
+ 
+"""
+
+# ╔═╡ 014de4bd-c010-47df-a905-744a5f7a680f
+base_url = "../test/files/metaphlan/";
+
+
+# ╔═╡ a3bf38ea-55aa-4c38-9878-50c98d7bcab3
+files = [
+"SRS014459-Stool_profile.tsv",
+"SRS014464-Anterior_nares_profile.tsv",
+"SRS014470-Tongue_dorsum_profile.tsv",
+"SRS014472-Buccal_mucosa_profile.tsv",
+"SRS014476-Supragingival_plaque_profile.tsv",
+"SRS014494-Posterior_fornix_profile.tsv"
+];
+
+# ╔═╡ 38396df8-14f1-4566-8317-b4490b07197f
+md""" 
+
+##### Output files
+Use [`metaphlan_profile()`] (@ref metaphlan_profile) to turn the MetaPhlAn data into a [`CommunityProfile`](@ref Microbiome.CommunityProfile) type, a matrix-like object with [`MicrobiomeSample`](@ref Microbiome.MicrobiomeSample) as column headers, and [`Taxon`](@ref Microbiome.Taxon) as row headers.
+
+"""
 
 # ╔═╡ 0219658e-222a-403b-af54-0fbeacec8606
 m = metaphlan_profile(joinpath(@__DIR__, "../test/files/metaphlan/SRS014464-Anterior_nares_profile.tsv");  sample="SRS014464")
 
-# ╔═╡ 5a17b7af-a266-4733-bba9-c9e4c29ecfd6
-m["k__Bacteria", "SRS014464"]
+# ╔═╡ 1d0762ec-4455-4ceb-86ad-d63cc3e355f0
+typeof(m)
 
-# ╔═╡ 6ad723a1-5b19-4ffc-aa7c-1d99449a3e20
-m["o__Pseudomonadales", "SRS014464"] 
+# ╔═╡ 04382f4a-0f19-42f2-a0bb-bd13295351c9
+md"""
+
+###### Sample size can be accessed with [`size()`](@ref Microbiome.size).
+
+"""
 
 # ╔═╡ 83e35adc-1edf-4df6-80af-7b065274c176
 size(m)
 
+# ╔═╡ 0d18f0c1-3ac5-47d4-8288-f8f59db43d8e
+md"""
+
+###### The sample names can be accessed with [`samples()`](@ref Microbiome.samples) & [`samplenames()`](@ref Microbiome.samplenames):
+
+"""
+
+# ╔═╡ be6ce920-8594-4de7-b243-762d43246329
+Microbiome.samples(m)
+
+# ╔═╡ e96bb871-5656-4453-b145-0b75b3486ee8
+Microbiome.samplenames(m)
+
+# ╔═╡ 5d52a05f-b7d6-4653-9152-743585cbbe46
+md""" 
+
+###### The taxa can be accessed with [`features`](@ref Microbiome.features) & [`featurenames`](@ref Microbiome.featurenames):
+
+"""
+
+# ╔═╡ a12d01c9-99bc-47d6-ab33-9219760042f5
+Microbiome.features(m)
+
+# ╔═╡ db27d4cf-5f53-46e5-8e9b-de300e69a449
+Microbiome.featurenames(m)
+
+# ╔═╡ d559f413-4d11-4fc8-a1cc-8fc0ce3c5c11
+md""" 
+
+###### You can access the microbial relative abundance of each feature in the file by indexing the clade name and filename.
+
+"""
+
+# ╔═╡ 5a17b7af-a266-4733-bba9-c9e4c29ecfd6
+m["k__Bacteria", "SRS014464"]
+
+# ╔═╡ 5a1e76d1-da62-434b-8b6e-f3350b5e43d7
+md""" 
+
+###### You can call specific clades from the CommunityProfile by adding the taxnomic level or a number that corresponds to a specific clade as a parameter of metaphlanprofile().
+
+Levels may be given either as numbers or symbols:
+- `1` = `:kingdom`
+- `2` = `:phylum`
+- `3` = `:class`
+- `4` = `:order`
+- `5` = `:family`
+- `6` = `:genus`
+- `7` = `:species`
+- `8` = `:subspecies`
+
+"""
+
 # ╔═╡ 9b1332fd-aceb-4d23-a191-8b0a8123140b
-m1 = metaphlan_profile(joinpath(@__DIR__, "../test/files/metaphlan/SRS014459-Stool_profile.tsv"), 3)
-
-# ╔═╡ 394f8156-e554-44fc-902e-915ee77e91dd
-size(m1)
-
-# ╔═╡ f6d8f919-8a6f-4f0c-8514-cfd7f48d51ee
-m1["p__Firmicutes", "SRS014459-Stool_profile"] 
+m1 = metaphlan_profile(joinpath(@__DIR__, "../test/files/metaphlan/SRS014464-Anterior_nares_profile.tsv"), 4)
 
 # ╔═╡ d0d0eb4d-b30f-4216-841a-82f596d0c0e5
-m2 = metaphlan_profile(joinpath(@__DIR__, "../test/files/metaphlan/SRS014464-Anterior_nares_profile.tsv"), :phylum)
-
-# ╔═╡ 4d77126c-1d93-44a7-981c-608166932d26
-size(m2)
-
-# ╔═╡ c3c896f5-1404-4bef-b054-d9167940d467
-m2["p__Proteobacteria", 1] 
+m2 = metaphlan_profile(joinpath(@__DIR__, "../test/files/metaphlan/SRS014464-Anterior_nares_profile.tsv"), :class)
 
 # ╔═╡ b13f7ac4-c847-4e96-84fa-56f03e3e45f5
-# merged1 = metaphlan_profiles(joinpath(@__DIR__, "../test/files/metaphlan/merged_abundance_table.tsv"); samplestart=3)
+files
+
+# ╔═╡ 81c8e2fb-b7bf-4485-aba5-2ab95ca8d5fa
+typeof(files)
+
+# ╔═╡ 8e2250d8-440b-4e86-87ca-936484e9547e
+#merging metaphlan files & CommunityProfiles
+
+# ╔═╡ 8e93e880-46ef-44f3-a0b7-c939ece686d9
+
 
 # ╔═╡ a1cb3d36-e6fd-4bfe-9441-b3d5e1adc05a
-# Starting BiobakeryUtils' humann tutorial
+md""" 
+
+#### HUMAnN tutorial
+HUMAnN IS s a method for efficiently and accurately profiling the abundance of microbial metabolic pathways and other molecular functions from metagenomic or metatranscriptomic sequencing data.
+
+##### Input files
+Some example files are in this 
+[BiobakeryUtils.jl repo](../test/files/humann), 
+and can be downloaded using the Downloads standard 
+library in julia.
+ 
+"""
 
 # ╔═╡ 5ff1527e-6746-4137-b4c2-db84589c0fe2
 h1 = humann_profile(joinpath(@__DIR__, "../test/files/humann/single_1.tsv"))
@@ -723,23 +842,34 @@ uuid = "3f19e933-33d8-53b3-aaab-bd5110c3b7a0"
 """
 
 # ╔═╡ Cell order:
+# ╠═84470294-5a17-469e-890a-5e2b9f777dbb
 # ╠═161527c0-d2c9-4ef8-a223-4946b5f0e083
 # ╠═19b71044-a0c8-468a-8e13-91b17d336497
 # ╠═599711e7-ee51-4ca0-94ac-8c1a67f6ac8d
-# ╠═84470294-5a17-469e-890a-5e2b9f777dbb
 # ╠═e41a1c8a-e51b-475d-8839-83830059c139
 # ╠═22ef03e5-0e90-466d-9718-a104002b280f
+# ╠═014de4bd-c010-47df-a905-744a5f7a680f
+# ╠═a3bf38ea-55aa-4c38-9878-50c98d7bcab3
+# ╠═38396df8-14f1-4566-8317-b4490b07197f
 # ╠═0219658e-222a-403b-af54-0fbeacec8606
-# ╠═5a17b7af-a266-4733-bba9-c9e4c29ecfd6
-# ╠═6ad723a1-5b19-4ffc-aa7c-1d99449a3e20
+# ╠═1d0762ec-4455-4ceb-86ad-d63cc3e355f0
+# ╠═04382f4a-0f19-42f2-a0bb-bd13295351c9
 # ╠═83e35adc-1edf-4df6-80af-7b065274c176
+# ╠═0d18f0c1-3ac5-47d4-8288-f8f59db43d8e
+# ╠═be6ce920-8594-4de7-b243-762d43246329
+# ╠═e96bb871-5656-4453-b145-0b75b3486ee8
+# ╠═5d52a05f-b7d6-4653-9152-743585cbbe46
+# ╠═a12d01c9-99bc-47d6-ab33-9219760042f5
+# ╠═db27d4cf-5f53-46e5-8e9b-de300e69a449
+# ╠═d559f413-4d11-4fc8-a1cc-8fc0ce3c5c11
+# ╠═5a17b7af-a266-4733-bba9-c9e4c29ecfd6
+# ╠═5a1e76d1-da62-434b-8b6e-f3350b5e43d7
 # ╠═9b1332fd-aceb-4d23-a191-8b0a8123140b
-# ╠═394f8156-e554-44fc-902e-915ee77e91dd
-# ╠═f6d8f919-8a6f-4f0c-8514-cfd7f48d51ee
 # ╠═d0d0eb4d-b30f-4216-841a-82f596d0c0e5
-# ╠═4d77126c-1d93-44a7-981c-608166932d26
-# ╠═c3c896f5-1404-4bef-b054-d9167940d467
 # ╠═b13f7ac4-c847-4e96-84fa-56f03e3e45f5
+# ╠═81c8e2fb-b7bf-4485-aba5-2ab95ca8d5fa
+# ╠═8e2250d8-440b-4e86-87ca-936484e9547e
+# ╠═8e93e880-46ef-44f3-a0b7-c939ece686d9
 # ╠═a1cb3d36-e6fd-4bfe-9441-b3d5e1adc05a
 # ╠═5ff1527e-6746-4137-b4c2-db84589c0fe2
 # ╠═8e4d08db-0c4d-40b4-ae2c-88982e121563
