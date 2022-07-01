@@ -72,6 +72,9 @@ metaphlan_files = [
 "SRS014494-Posterior_fornix_profile.tsv"
 ];
 
+# ╔═╡ 2efe1806-e4fe-4cd6-b694-2c445f7af054
+
+
 # ╔═╡ 38396df8-14f1-4566-8317-b4490b07197f
 md""" 
 
@@ -157,11 +160,21 @@ typeof(metaphlan_files)
 md""" 
 
 #### Merging files
+While metaphlan has a merge function metaphlan_merge, another easy way to merge two files is to load each individual sample as a CommunityProfile, and then merge them with [commjoin](@ref Microbiome.commjoin). One benefit of doing this way is that as we're loading the tables, we can attach some metadata to them.
 
 """
 
 # ╔═╡ 8e93e880-46ef-44f3-a0b7-c939ece686d9
+file_1 = metaphlan_profile(joinpath(@__DIR__, "../test/files/metaphlan/SRS014464-Anterior_nares_profile.tsv");  sample="SRS014464")
 
+# ╔═╡ f92b1e50-c942-423d-8bcf-4c37de2778bb
+file_2 = metaphlan_profile(joinpath(@__DIR__, "../test/files/metaphlan/SRS014472-Buccal_mucosa_profile.tsv");  sample="SRS014472")
+
+# ╔═╡ be298ac9-8ac9-4dc4-afe6-fc6a892a3207
+merged_files = commjoin(file_1, file_2)
+
+# ╔═╡ 8b6f836a-1a58-477d-b48b-758d2db72d83
+metadata(merged_files)
 
 # ╔═╡ a1cb3d36-e6fd-4bfe-9441-b3d5e1adc05a
 md""" 
@@ -433,7 +446,7 @@ genefunction(String(gf1))
 # ╔═╡ ca6b2dde-f7f1-4e4b-8a42-0e73c0123d20
 md"""
 
-### Now on to Microbiome.jl!
+### Now on to Microbiome.jl (2)!
 
 """
 
@@ -887,6 +900,7 @@ uuid = "3f19e933-33d8-53b3-aaab-bd5110c3b7a0"
 # ╠═22ef03e5-0e90-466d-9718-a104002b280f
 # ╠═014de4bd-c010-47df-a905-744a5f7a680f
 # ╠═a3bf38ea-55aa-4c38-9878-50c98d7bcab3
+# ╠═2efe1806-e4fe-4cd6-b694-2c445f7af054
 # ╠═38396df8-14f1-4566-8317-b4490b07197f
 # ╠═0219658e-222a-403b-af54-0fbeacec8606
 # ╠═1d0762ec-4455-4ceb-86ad-d63cc3e355f0
@@ -906,6 +920,9 @@ uuid = "3f19e933-33d8-53b3-aaab-bd5110c3b7a0"
 # ╠═81c8e2fb-b7bf-4485-aba5-2ab95ca8d5fa
 # ╠═8e2250d8-440b-4e86-87ca-936484e9547e
 # ╠═8e93e880-46ef-44f3-a0b7-c939ece686d9
+# ╠═f92b1e50-c942-423d-8bcf-4c37de2778bb
+# ╠═be298ac9-8ac9-4dc4-afe6-fc6a892a3207
+# ╠═8b6f836a-1a58-477d-b48b-758d2db72d83
 # ╠═a1cb3d36-e6fd-4bfe-9441-b3d5e1adc05a
 # ╠═655c0a28-1cad-469c-bbb0-8d83b6b7c79c
 # ╠═32f75e54-2aa9-4701-a1f6-fd57db7208a2
