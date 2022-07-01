@@ -29,7 +29,7 @@ bioBakery workflows is a collection of workflows and tasks for executing common
 microbial community analyses using standardized, validated tools and parameters. These tools include:
 - MetaPhlAn 
 - HUManN
-- Phylophan, etc.
+- Kneadata, etc.
 BiobakeryUtils.jl works mainly with the outputs of MetaPhlAn & HUManN.
 
 If you have any questions or comments,
@@ -71,9 +71,6 @@ metaphlan_files = [
 "SRS014476-Supragingival_plaque_profile.tsv",
 "SRS014494-Posterior_fornix_profile.tsv"
 ];
-
-# ╔═╡ 2efe1806-e4fe-4cd6-b694-2c445f7af054
-
 
 # ╔═╡ 38396df8-14f1-4566-8317-b4490b07197f
 md""" 
@@ -351,104 +348,8 @@ setdiff(features(joined), features(commjoin(h1, h2)))
 # ╔═╡ be9d4c0a-2868-4a97-9718-387882a9919a
 samplenames(joined) == samplenames(commjoin(h1, h2))
 
-# ╔═╡ 51382f79-fc16-440c-bc31-4b6ef9bd4ecd
-md"""
+# ╔═╡ b7c65265-e9cc-4a3c-9abb-c1249dd25a38
 
-## Microbiome.jl (1)
-
-"""
-
-# ╔═╡ ab70be7f-e8a4-409b-a48a-70eeddceb6f0
-taxstring = "k__Archaea|p__Euryarchaeota|c__Methanobacteria|o__Methanobacteriales|f__Methanobacteriaceae|g__Methanobrevibacter|s__Methanobrevibacter_smithii"
-
-
-# ╔═╡ be90290e-772e-4b0b-8713-7cab2b0e8f50
-taxa = parsetaxa(taxstring)
-
-
-# ╔═╡ 73214d22-4c51-4d22-88a3-62f511d77204
-length(taxa)
-
-
-# ╔═╡ c7927710-da14-4c7e-88ea-024623623c63
-k = parsetaxon(taxstring, 1) 
-
-
-# ╔═╡ 29a79779-5c87-428b-95de-3f48e2d65609
-k
-
-# ╔═╡ 3cd557f1-93ae-4b8e-b796-7803d453e6a8
-f = parsetaxon(taxstring, :family)
-
-# ╔═╡ f609ebf4-a905-4478-b305-b839e2a88eec
-s = parsetaxon(taxstring)
-
-# ╔═╡ bb127510-90b2-4fca-ae86-b940defe0ce9
-p = parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria", 2)
-
-# ╔═╡ 39f36910-2a15-4550-b385-9c1141329c90
-c = parsetaxon("k__Archaea|p__Euryarchaeota|c__Methanobacteria") 
-
-# ╔═╡ d4838616-25ea-4c6b-ba4b-8dd92118118f
-uncl = Taxon("Unknown_bug")
-
-# ╔═╡ 1e99bf7e-e2f9-40cf-a551-65afea3ab961
-taxrank(k)
-
-# ╔═╡ cc29462f-be85-4d07-9eca-6e22325b01e2
-taxrank(p)
-
-# ╔═╡ 5688ca22-358e-49fa-812b-83663c20e8a1
-taxrank(c)
-
-# ╔═╡ e263a76d-0ace-41f4-91ab-b6ef9f2e8ea3
-taxrank(s)
-
-# ╔═╡ 65e57025-1543-4410-8adf-a1e4006a05ec
-taxrank(uncl)
-
-# ╔═╡ 0effc59c-c9f0-4c87-8ff9-4c724edbcd9a
-# String 
-
-# ╔═╡ ccf8fd00-befa-4ed5-a132-a01811b81d12
-String(k)
-
-# ╔═╡ 1411c8c3-0b91-43a1-99c9-fd364f53fd62
-String(p)
-
-# ╔═╡ c164595c-6f69-4846-ac2d-d5764a8c796d
-# GeneFunction
-
-# ╔═╡ 9276b202-7b91-4544-a2d6-e6a213eae0eb
-gf1 = GeneFunction("UniRef90_A0A015QIN1", Taxon("Bacteroides_vulgatus",:species))
-
-# ╔═╡ cd8b4b73-73af-493c-88c6-d10e8bdeb206
-gf2 = GeneFunction("UniRef90_A0A015QIN1")
-
-# ╔═╡ 5f3504e3-a448-4ebe-a54b-3fca211772e5
-hastaxon(gf1)
-
-# ╔═╡ f08fac3b-bce3-40cd-bc7f-43c71246b2f6
-hastaxon(gf2)
-
-# ╔═╡ 1cb667e7-756f-4140-b164-fc26eb4e1360
-name(gf1)
-
-# ╔═╡ f9c339bf-8875-4927-bbbe-062c10985270
-taxon(gf1)
-
-# ╔═╡ 0c52cc2e-516c-4874-bf57-480452a511fd
-taxrank(gf1)
-
-# ╔═╡ a32cd602-8f34-4fbb-bd5a-4df27313f877
-genefunction(String(gf1))
-
-# ╔═╡ ca6b2dde-f7f1-4e4b-8a42-0e73c0123d20
-md"""
-
-### Now on to Microbiome.jl (2)!
-
-"""
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -893,102 +794,73 @@ uuid = "3f19e933-33d8-53b3-aaab-bd5110c3b7a0"
 
 # ╔═╡ Cell order:
 # ╠═84470294-5a17-469e-890a-5e2b9f777dbb
-# ╠═161527c0-d2c9-4ef8-a223-4946b5f0e083
+# ╟─161527c0-d2c9-4ef8-a223-4946b5f0e083
 # ╠═19b71044-a0c8-468a-8e13-91b17d336497
 # ╠═599711e7-ee51-4ca0-94ac-8c1a67f6ac8d
-# ╠═e41a1c8a-e51b-475d-8839-83830059c139
-# ╠═22ef03e5-0e90-466d-9718-a104002b280f
+# ╟─e41a1c8a-e51b-475d-8839-83830059c139
+# ╟─22ef03e5-0e90-466d-9718-a104002b280f
 # ╠═014de4bd-c010-47df-a905-744a5f7a680f
 # ╠═a3bf38ea-55aa-4c38-9878-50c98d7bcab3
-# ╠═2efe1806-e4fe-4cd6-b694-2c445f7af054
-# ╠═38396df8-14f1-4566-8317-b4490b07197f
+# ╟─38396df8-14f1-4566-8317-b4490b07197f
 # ╠═0219658e-222a-403b-af54-0fbeacec8606
 # ╠═1d0762ec-4455-4ceb-86ad-d63cc3e355f0
-# ╠═04382f4a-0f19-42f2-a0bb-bd13295351c9
+# ╟─04382f4a-0f19-42f2-a0bb-bd13295351c9
 # ╠═83e35adc-1edf-4df6-80af-7b065274c176
-# ╠═0d18f0c1-3ac5-47d4-8288-f8f59db43d8e
+# ╟─0d18f0c1-3ac5-47d4-8288-f8f59db43d8e
 # ╠═be6ce920-8594-4de7-b243-762d43246329
 # ╠═e96bb871-5656-4453-b145-0b75b3486ee8
 # ╠═a12d01c9-99bc-47d6-ab33-9219760042f5
 # ╠═db27d4cf-5f53-46e5-8e9b-de300e69a449
-# ╠═d559f413-4d11-4fc8-a1cc-8fc0ce3c5c11
+# ╟─d559f413-4d11-4fc8-a1cc-8fc0ce3c5c11
 # ╠═5a17b7af-a266-4733-bba9-c9e4c29ecfd6
-# ╠═5a1e76d1-da62-434b-8b6e-f3350b5e43d7
+# ╟─5a1e76d1-da62-434b-8b6e-f3350b5e43d7
 # ╠═9b1332fd-aceb-4d23-a191-8b0a8123140b
 # ╠═d0d0eb4d-b30f-4216-841a-82f596d0c0e5
 # ╠═b13f7ac4-c847-4e96-84fa-56f03e3e45f5
 # ╠═81c8e2fb-b7bf-4485-aba5-2ab95ca8d5fa
-# ╠═8e2250d8-440b-4e86-87ca-936484e9547e
+# ╟─8e2250d8-440b-4e86-87ca-936484e9547e
 # ╠═8e93e880-46ef-44f3-a0b7-c939ece686d9
 # ╠═f92b1e50-c942-423d-8bcf-4c37de2778bb
 # ╠═be298ac9-8ac9-4dc4-afe6-fc6a892a3207
 # ╠═8b6f836a-1a58-477d-b48b-758d2db72d83
-# ╠═a1cb3d36-e6fd-4bfe-9441-b3d5e1adc05a
+# ╟─a1cb3d36-e6fd-4bfe-9441-b3d5e1adc05a
 # ╠═655c0a28-1cad-469c-bbb0-8d83b6b7c79c
 # ╠═32f75e54-2aa9-4701-a1f6-fd57db7208a2
-# ╠═ba1d9861-9bd6-40c4-8ff0-0d395c2673cd
+# ╟─ba1d9861-9bd6-40c4-8ff0-0d395c2673cd
 # ╠═5ff1527e-6746-4137-b4c2-db84589c0fe2
 # ╠═8e4d08db-0c4d-40b4-ae2c-88982e121563
 # ╠═e1dff065-c9c0-4635-a1a3-c9d3f8c91cb3
 # ╠═cedbbf2c-0ab2-4d93-8b00-6f4244814b09
-# ╠═0cc45959-29c1-43ae-a39e-2c3582e7a2ac
+# ╟─0cc45959-29c1-43ae-a39e-2c3582e7a2ac
 # ╠═47d7d882-c973-4634-824f-8cbc412355d7
 # ╠═f94b7a96-bb46-4717-b246-827b63ed0c7c
 # ╠═bce482e3-437e-4a23-bdc9-c0a51f164166
 # ╠═76f84b04-fc88-4fdb-861b-747d303c4805
-# ╠═202b5a3c-404c-4cbd-9d13-038cca3013a2
+# ╟─202b5a3c-404c-4cbd-9d13-038cca3013a2
 # ╠═c4f810a3-b381-4b53-a1d5-2998bab98655
 # ╠═5a833f79-bad8-48af-b560-48daa0a6eed9
 # ╠═022d7644-04eb-4cca-8af3-595b53de3aed
-# ╠═50d7e330-f906-405f-9fdb-82e5e0cef9b5
+# ╟─50d7e330-f906-405f-9fdb-82e5e0cef9b5
 # ╠═459e351d-7d9e-49ee-96be-bae08f170c50
 # ╠═f3845516-bece-4947-b2bb-dbd177a6805c
 # ╠═0efa8a9b-d987-4e83-ab9b-b04e0eaff4c1
-# ╠═1ac76e74-2f41-4436-9893-472d8f1bcee7
+# ╟─1ac76e74-2f41-4436-9893-472d8f1bcee7
 # ╠═59ee77d9-8d72-41e5-b42e-c4e8bd87ec6b
-# ╠═06067c2b-5b37-47ea-9fea-f805799bc7ca
+# ╟─06067c2b-5b37-47ea-9fea-f805799bc7ca
 # ╠═743b705b-fcd2-49b8-97ce-704908e1d2d5
-# ╠═a38c12ec-1e07-4739-88f7-1d9c02513265
+# ╟─a38c12ec-1e07-4739-88f7-1d9c02513265
 # ╠═d8566a72-a534-4fd5-ba95-93009e3af312
 # ╠═044ceec2-1cd9-4b8a-a4dd-dcc9cc96ac9b
 # ╠═5b0c2b43-9867-4d56-b46f-76c204f6bd49
-# ╠═a480ba1b-809f-4760-9eca-f0bba74d2b4b
+# ╟─a480ba1b-809f-4760-9eca-f0bba74d2b4b
 # ╠═d635ed12-2835-4acd-9589-f7b56a7f54da
 # ╠═5f212e9a-cab4-471f-b61f-663bb8de57ef
 # ╠═876eacb2-f5e8-46aa-b6c3-70c586341abe
-# ╠═ee34cdc2-8c01-469e-9adc-af626ccdab5a
+# ╟─ee34cdc2-8c01-469e-9adc-af626ccdab5a
 # ╠═b7a452ce-59ec-4d09-8011-6535143389ad
 # ╠═7fee874f-644c-452f-8dcf-9f56588adb54
 # ╠═5ea5f854-8fe7-4b9b-b1a2-fa1dc126450a
 # ╠═be9d4c0a-2868-4a97-9718-387882a9919a
-# ╠═51382f79-fc16-440c-bc31-4b6ef9bd4ecd
-# ╠═ab70be7f-e8a4-409b-a48a-70eeddceb6f0
-# ╠═be90290e-772e-4b0b-8713-7cab2b0e8f50
-# ╠═73214d22-4c51-4d22-88a3-62f511d77204
-# ╠═c7927710-da14-4c7e-88ea-024623623c63
-# ╠═29a79779-5c87-428b-95de-3f48e2d65609
-# ╠═3cd557f1-93ae-4b8e-b796-7803d453e6a8
-# ╠═f609ebf4-a905-4478-b305-b839e2a88eec
-# ╠═bb127510-90b2-4fca-ae86-b940defe0ce9
-# ╠═39f36910-2a15-4550-b385-9c1141329c90
-# ╠═d4838616-25ea-4c6b-ba4b-8dd92118118f
-# ╠═1e99bf7e-e2f9-40cf-a551-65afea3ab961
-# ╠═cc29462f-be85-4d07-9eca-6e22325b01e2
-# ╠═5688ca22-358e-49fa-812b-83663c20e8a1
-# ╠═e263a76d-0ace-41f4-91ab-b6ef9f2e8ea3
-# ╠═65e57025-1543-4410-8adf-a1e4006a05ec
-# ╠═0effc59c-c9f0-4c87-8ff9-4c724edbcd9a
-# ╠═ccf8fd00-befa-4ed5-a132-a01811b81d12
-# ╠═1411c8c3-0b91-43a1-99c9-fd364f53fd62
-# ╠═c164595c-6f69-4846-ac2d-d5764a8c796d
-# ╠═9276b202-7b91-4544-a2d6-e6a213eae0eb
-# ╠═cd8b4b73-73af-493c-88c6-d10e8bdeb206
-# ╠═5f3504e3-a448-4ebe-a54b-3fca211772e5
-# ╠═f08fac3b-bce3-40cd-bc7f-43c71246b2f6
-# ╠═1cb667e7-756f-4140-b164-fc26eb4e1360
-# ╠═f9c339bf-8875-4927-bbbe-062c10985270
-# ╠═0c52cc2e-516c-4874-bf57-480452a511fd
-# ╠═a32cd602-8f34-4fbb-bd5a-4df27313f877
-# ╠═ca6b2dde-f7f1-4e4b-8a42-0e73c0123d20
+# ╠═b7c65265-e9cc-4a3c-9abb-c1249dd25a38
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
