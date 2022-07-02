@@ -84,8 +84,8 @@ end
 """
     metaphlan_profile(path::AbstractString, rank::Union{Int, Symbol}=:all; sample::AbstractString=basename(first(splitext(path))))
 
-Combines a MetaPhlAn file into a CommunityProfile.
-Can select data according to taxonomic rank. If rank not given, all data is combined.
+Creates a CommunityProfile from a MetaPhlAn output file.
+Can select data according to taxonomic rank. If rank not given, all data is used.
 `Sample name` of the CommunityProfile can be specified by passing a `sample` argument. If name not given, the name of the file becomes the `Sample name`.
 
 Levels may be given either as numbers or symbols:
@@ -123,8 +123,8 @@ end
 """
     metaphlan_profiles(path::AbstractString, rank::Union{Int, Symbol}=:all; keepunidentified=false)
 
-Combines MetaPhlAn profiles from a merged table into a CommunityProfile.
-Can select data according to taxonomic rank. If rank not given, all data is combined.
+Reads in MetaPhlAn profiles from a merged table into a CommunityProfile.
+Can select data according to taxonomic rank. If rank not given, all data is used.
 Set `keepunidentified` flag to `true` to keep `UNIDENTIFIED` data.
 
 Levels may be given either as numbers or symbols:
