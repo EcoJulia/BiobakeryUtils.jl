@@ -31,7 +31,7 @@ function humann(inputfile, output; kwargs...)
     add_cli_kwargs!(c, kwargs; optunderscores=false)
     
     @info "Running command: $(Cmd(c))"
-    return run(Cmd(c))
+    return CondaPkg.withenv() do; run(Cmd(c)) end
 end
 
 function _gf_parse(gf)
@@ -139,9 +139,12 @@ function humann_rename(comm::CommunityProfile; kind::String="ec")
     ss = samples(comm)
     
     CSV.write(in_path, comm; delim='\t')
-    run(```
-        humann_rename_table -i $in_path -n $kind -o $out_path
-        ```)
+    CondaPkg.withenv() do 
+        run(```
+            humann_rename_table -i $in_path -n $kind -o $out_path
+            ```
+        )
+    end
     
     return humann_profiles(out_path; samples=ss)
 end
@@ -163,9 +166,12 @@ function humann_renorm(comm::CommunityProfile; units="cpm")
     ss = samples(comm)
     
     CSV.write(in_path, comm; delim='\t')
-    run(```
-        humann_renorm_table -i $in_path --units $units -o $out_path
-        ```)
+    CondaPkg.withenv() do 
+        run(```
+            humann_renorm_table -i $in_path --units $units -o $out_path
+            ```
+        )
+    end
     
     return humann_profiles(out_path; samples=ss)
 end
@@ -187,7 +193,7 @@ function humann_join(in_path, out_path; file_name=nothing, search_subdirectories
     search_subdirectories && push!(cmd, "--search-subdirectories")
     verbose && push!(cmd, " --verbose")
 
-    run(Cmd(cmd))
+    CondaPkg.withenv() do; run(Cmd(cmd)) end
 end
 
 """
@@ -272,5 +278,5 @@ function humann_barplot(comm::CommunityProfile, outpath; kwargs...)
             "--last-metadata", string(last(keys(first(metadata(comm)))))]
     
     add_cli_kwargs!(cmd, kwargs; optunderscores=false)
-    run(Cmd(cmd))
+    return CondaPkg.withenv() do; run(Cmd(cmd)) end
 end

@@ -3,13 +3,13 @@ module BiobakeryUtilsTests
 using Random
 using ReTest
 using BiobakeryUtils
-using BiobakeryUtils.Conda
+# using BiobakeryUtils.Conda
 using SparseArrays
 using DelimitedFiles
 using CSV
 
-isdir(Conda.bin_dir(:BiobakeryUtils)) || BiobakeryUtils.install_deps()
-ENV["PATH"] = ENV["PATH"] * ":" * Conda.bin_dir(:BiobakeryUtils)
+# isdir(Conda.bin_dir(:BiobakeryUtils)) || BiobakeryUtils.install_deps()
+# ENV["PATH"] = ENV["PATH"] * ":" * Conda.bin_dir(:BiobakeryUtils)
 
 @testset "CLI" begin
     @testset "Utilities" begin
@@ -23,8 +23,8 @@ ENV["PATH"] = ENV["PATH"] * ":" * Conda.bin_dir(:BiobakeryUtils)
     end
     
     @testset "Metaphlan" begin
-        @test BiobakeryUtils.check_for_install("metaphlan") |> isnothing
-        @test BiobakeryUtils.check_for_install("merge_metaphlan_tables.py") |> isnothing
+        # @test BiobakeryUtils.check_for_install("metaphlan") |> isnothing
+        # @test BiobakeryUtils.check_for_install("merge_metaphlan_tables.py") |> isnothing
         
         @test metaphlan("", ""; help=true).exitcode == 0
 
@@ -33,11 +33,11 @@ ENV["PATH"] = ENV["PATH"] * ":" * Conda.bin_dir(:BiobakeryUtils)
     end
 
     @testset "Humann" begin
-        @test BiobakeryUtils.check_for_install("humann") |> isnothing
-        @test BiobakeryUtils.check_for_install("humann_rename_table") |> isnothing
-        @test BiobakeryUtils.check_for_install("humann_renorm_table") |> isnothing
-        @test BiobakeryUtils.check_for_install("humann_join_tables") |> isnothing
-        @test BiobakeryUtils.check_for_install("humann") |> isnothing
+        # @test BiobakeryUtils.check_for_install("humann") |> isnothing
+        # @test BiobakeryUtils.check_for_install("humann_rename_table") |> isnothing
+        # @test BiobakeryUtils.check_for_install("humann_renorm_table") |> isnothing
+        # @test BiobakeryUtils.check_for_install("humann_join_tables") |> isnothing
+        # @test BiobakeryUtils.check_for_install("humann") |> isnothing
         @test humann("", ""; help=true).exitcode == 0
 
     end

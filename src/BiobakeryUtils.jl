@@ -31,8 +31,8 @@ using Reexport
 using CSV
 using Tables
 using SparseArrays
-using Conda
 using ReTest
+using CondaPkg
 
 include("utils.jl")
 include("metaphlan.jl")
