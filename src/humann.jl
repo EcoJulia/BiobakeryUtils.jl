@@ -231,7 +231,7 @@ from a `CommunityProfile` with metadata attached to the samples.
 or a vector of symbols.
 """
 function write_pcl(path, comm::CommunityProfile; usemetadata=:all)
-    coltab = Tables.columntable(metadata(comm))
+    coltab = Tables.columntable(get(comm))
     if usemetadata == :all
         usemetadata = collect(keys(coltab))
         popfirst!(usemetadata)
@@ -269,7 +269,7 @@ function humann_barplot(comm::CommunityProfile, outpath; kwargs...)
     write_pcl(tmp, comm)
 
     cmd = ["humann_barplot", "--i", tmp, "-o", outpath,
-            "--last-metadata", string(last(keys(first(metadata(comm)))))]
+            "--last-metadata", string(last(keys(first(get(comm)))))]
     
     add_cli_kwargs!(cmd, kwargs; optunderscores=false)
     run(Cmd(cmd))
