@@ -317,7 +317,7 @@ SRS014459, SRS014464, SRS014470...SRS014476, SRS014494
 
 
 
-julia> metadata(mps3)
+julia> get(mps3)
 6-element Vector{NamedTuple{(:sample, :STSite, :filename), Tuple{String, String, String}}}:
  (sample = "SRS014459", STSite = "Stool", filename = "SRS014459-Stool_profile.tsv")
  (sample = "SRS014464", STSite = "Anterior_nares", filename = "SRS014464-Anterior_nares_profile.tsv")
@@ -396,7 +396,7 @@ but there are [many other options](https://juliahub.com/ui/Search?q=plotting&typ
 
 julia> using CairoMakie
 
-julia> sites = [m.STSite for m in metadata(mps3)]
+julia> sites = [m.STSite for m in get(mps3)] # or get(m, :STSite)
 6-element Vector{String}:
  "Stool"
  "Anterior_nares"
