@@ -57,13 +57,13 @@ end
     
     merge_profile_1 = metaphlan_profiles(joinpath(@__DIR__, "files/metaphlan/merged_abundance_table.tsv"))
     @test size(merge_profile_1) == (62, 6)
-    @test merge_profile_1["g__Moraxella", 5] == 97.28734
+    @test merge_profile_1["g__Moraxella", 2] == 97.28734
     merge_profile_2 = metaphlan_profiles(joinpath(@__DIR__, "files/metaphlan/merged_abundance_table.tsv"), :family) 
     @test size(merge_profile_2) == (13, 6)
     @test merge_profile_2["f__Micrococcaceae", "SRS014464-Anterior_nares"] == 0.0
     merge_profile_3 = metaphlan_profiles(joinpath(@__DIR__, "files/metaphlan/merged_abundance_table.tsv"), 7)
     @test size(merge_profile_3) == (16, 6)
-    @test merge_profile_3["s__Haemophilus_haemolyticus", 3] == 1.35528
+    @test merge_profile_3["s__Haemophilus_haemolyticus", 4] == 1.35528
     CSV.write(joinpath(@__DIR__, "files/metaphlan/merged_abundance_table2.csv"), merge_profile_1)
     
     profiles = filter(f-> contains(f, "_profile.tsv"), readdir(joinpath(@__DIR__, "files/metaphlan"), join=true))
