@@ -55,7 +55,7 @@ and can be downloaded using the `Downloads` standard library in julia:
 ```julia-repl
 julia> using Downloads: download
 
-julia> base_url = "https://github.com/biobakery/biobakery/raw/master/demos/biobakery_demos/data/metaphlan3/input/";
+julia> base_url = "https://github.com/biobakery/biobakery/raw/master/test_suite/biobakery_tests/data/metaphlan3/input/";
 
 julia>  files = [
     "SRS014476-Supragingival_plaque.fasta.gz",
