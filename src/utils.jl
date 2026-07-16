@@ -6,7 +6,7 @@ In order to use the commandline tools,
 you must have the conda environment bin directory in `ENV["PATH"]`.
 See "[Using Conda](@ref using-conda)" for more information.
 """
-function install_deps(env=:BiobakeryUtils; force=false)
+function install_deps(env = :BiobakeryUtils; force = false)
     if isdir(Conda.bin_dir(env)) && !force
         @warn """
         You already seem to have an environment, '$env'.
@@ -17,18 +17,18 @@ function install_deps(env=:BiobakeryUtils; force=false)
         Use `force=true` to install anyway"""
         return nothing
     end
-    
+
     Conda.add_channel("bioconda", env)
     Conda.add_channel("conda-forge", env)
     Conda.add_channel("biobakery", env)
-    
+
     Conda.add("humann", env)
     Conda.add("tbb=2020.2", env) # https://www.biostars.org/p/494922/
     Conda.add("kneaddata", env)
 
     @warn """
     Don't forget to add $(Conda.bin_dir(env)) to your PATH!
-    
+
     This can be done in a julia session with:
 
     `ENV["PATH"] = ENV["PATH"] * ":" * "$(Conda.bin_dir(env))"`,
@@ -37,8 +37,8 @@ function install_deps(env=:BiobakeryUtils; force=false)
     return nothing
 end
 
-function add_cli_kwargs!(cmd, kwargs; optunderscores=true, skip = [])
-    for (key,val) in pairs(kwargs)
+function add_cli_kwargs!(cmd, kwargs; optunderscores = true, skip = [])
+    for (key, val) in pairs(kwargs)
         in(key, skip) && continue
         if val isa Bool
             val && push!(cmd, string("--", key))
@@ -48,12 +48,13 @@ function add_cli_kwargs!(cmd, kwargs; optunderscores=true, skip = [])
             append!(cmd, [string("--", key), string(val)])
         end
     end
-    !optunderscores && map!(c-> startswith(c, "--") ? replace(c, "_"=>"-") : c, cmd, cmd)
+    !optunderscores && map!(c -> startswith(c, "--") ? replace(c, "_" => "-") : c, cmd, cmd)
     return cmd
 end
 
 function check_for_install(tool)
-    try run(pipeline(`which $tool`, stdout=devnull))
+    try
+        run(pipeline(`which $tool`, stdout = devnull))
         return nothing
     catch e
         @error """
