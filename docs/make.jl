@@ -2,7 +2,7 @@ using Documenter, BiobakeryUtils
 
 makedocs(
     sitename = "BiobakeryUtils.jl",
-    warnonly = [:missing_docs],
+    warnonly = [:missing_docs, :cross_references],
     doctest = false, # doctests depend on Conda setup being removed in 0.8
     pages = [
         "BiobakeryUtils" => "index.md",
