@@ -41,7 +41,7 @@ function kneaddata(inputs, output; kwargs...)
         length(inputs) > 2 && error("for now, only 2 input files possible")
         append!(c, ["-i", inputs[1], "-i", inputs[2]])
     end
-    
+
     append!(c, ["-o", output])
 
     if !haskey(kwargs, :trimmomatic)
@@ -61,8 +61,8 @@ function kneaddata(inputs, output; kwargs...)
         end
     end
 
-    add_cli_kwargs!(c, kwargs; optunderscores=false, skip=[:reference_db])
-    
+    add_cli_kwargs!(c, kwargs; optunderscores = false, skip = [:reference_db])
+
     @info "Running command: $(Cmd(c))"
     return run(Cmd(c))
 end
@@ -79,7 +79,7 @@ kneaddata_database("human_genome", "bowtie2", "/some/database/dir/")
 function kneaddata_database(db, kind, path)
     check_for_install("kneaddata_database")
     c = ["kneaddata_database", "--download", db, kind, path]
-    
+
     @info "Running command: $(Cmd(c))"
     return run(Cmd(c))
 end
@@ -96,8 +96,7 @@ kneaddata_read_count_table("human_genome", "bowtie2", "/some/database/dir/")
 function kneaddata_read_count_table(input, output)
     check_for_install("kneaddata_read_count_table")
     c = ["kneaddata_read_count_table", "--input", input, "--output", output]
-    
+
     @info "Running command: $(Cmd(c))"
     return run(Cmd(c))
 end
-

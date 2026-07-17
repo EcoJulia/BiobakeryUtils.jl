@@ -33,7 +33,7 @@ function metaphlan(inputfile, output; kwargs...)
     check_for_install("metaphlan")
     cmd = ["metaphlan", inputfile, output]
     add_cli_kwargs!(cmd, kwargs)
-    
+
     if !haskey(kwargs, :bowtie2db) && haskey(ENV, "METAPHLAN_BOWTIE2_DB")
         append!(cmd, ["--bowtie2db", ENV["METAPHLAN_BOWTIE2_DB"]])
     end
@@ -54,17 +54,17 @@ Requires `metaphlan` to be installed and accessible in the `PATH`
 function metaphlan_merge(paths, output; kwargs...)
     check_for_install("merge_metaphlan_tables.py")
     cmd = ["merge_metaphlan_tables.py", "-o", output]
-    for (key,val) in pairs(kwargs)
+    for (key, val) in pairs(kwargs)
         if val isa Bool
-            val && push!(cmd, replace(string("--", key), "_"=>"-"))
+            val && push!(cmd, replace(string("--", key), "_" => "-"))
         elseif val isa AbstractVector
-            append!(cmd, [replace(string("--", key), "_"=>"-"), string.(val)...])
+            append!(cmd, [replace(string("--", key), "_" => "-"), string.(val)...])
         else
-            append!(cmd, [replace(string("--", key), "_"=>"-"), string(val)])
+            append!(cmd, [replace(string("--", key), "_" => "-"), string(val)])
         end
     end
     append!(cmd, paths)
-    run(Cmd(cmd))
+    return run(Cmd(cmd))
 end
 
 
@@ -99,7 +99,7 @@ Levels may be given either as numbers or symbols:
 - `7` = `:species`
 - `8` = `:subspecies`
 """
-function metaphlan_profile(path::AbstractString, rank=:all; sample=basename(first(splitext(path))))
+function metaphlan_profile(path::AbstractString, rank = :all; sample = basename(first(splitext(path))))
     if startswith(first(eachline(path)), "#")
         dr = 5
         hd = ["taxon", "NCBI_taxid", "abundance", "additional_species"]
@@ -107,7 +107,7 @@ function metaphlan_profile(path::AbstractString, rank=:all; sample=basename(firs
         dr = 2
         hd = ["taxon", "abundance"]
     end
-    profile = CSV.read(path, skipto=dr, header=hd, Tables.columntable)
+    profile = CSV.read(path, skipto = dr, header = hd, Tables.columntable)
     taxa = [last(_split_ranks(c)) for c in profile.taxon]
     mat = sparse(reshape(profile.abundance, length(profile.abundance), 1))
     sample = sample isa Microbiome.AbstractSample ? sample : MicrobiomeSample(sample)
@@ -115,9 +115,9 @@ function metaphlan_profile(path::AbstractString, rank=:all; sample=basename(firs
     return CommunityProfile(mat[keep, :], taxa[keep], [sample])
 end
 
-function metaphlan_profile(path::AbstractString, rank::Int; sample=basename(first(splitext(path))))
+function metaphlan_profile(path::AbstractString, rank::Int; sample = basename(first(splitext(path))))
     rank = keys(Microbiome._ranks)[rank]
-    metaphlan_profile(path, rank; sample)
+    return metaphlan_profile(path, rank; sample)
 end
 
 """
@@ -139,12 +139,12 @@ Levels may be given either as numbers or symbols:
 - `8` = `:subspecies`
 
 """
-function metaphlan_profiles(path::AbstractString, rank=:all; samplestart = 2, keepunidentified=false, replace_string="_profile")
-    profiles = CSV.read(path, Tables.columntable; comment="#")
+function metaphlan_profiles(path::AbstractString, rank = :all; samplestart = 2, keepunidentified = false, replace_string = "_profile")
+    profiles = CSV.read(path, Tables.columntable; comment = "#")
     taxa = [last(_split_ranks(c)) for c in profiles[1]]
     mat = reduce(hcat, [sparse(profiles[i]) for i in samplestart:length(profiles)])
-    samples = collect(map(s-> MicrobiomeSample(replace(string(s), replace_string => "")), keys(profiles)[samplestart:end]))
-    
+    samples = collect(map(s -> MicrobiomeSample(replace(string(s), replace_string => "")), keys(profiles)[samplestart:end]))
+
     if rank == :all
         keep = Colon()
     elseif keepunidentified
@@ -157,7 +157,7 @@ end
 
 function metaphlan_profiles(path::AbstractString, rank::Int; kwargs...)
     rank = keys(Microbiome._ranks)[rank + 1]
-    metaphlan_profiles(path, rank; kwargs...)
+    return metaphlan_profiles(path, rank; kwargs...)
 end
 
 """
@@ -165,7 +165,7 @@ end
 
 Combines MetaPhlAn profiles from multiple single tables into a CommunityProfile.
 """
-function metaphlan_profiles(paths::Array{<:AbstractString, 1}, rank=:all; samples=nothing)
+function metaphlan_profiles(paths::Array{<:AbstractString, 1}, rank = :all; samples = nothing)
     if isnothing(samples)
         samples = [first(splitext(basename(f))) for f in paths]
     else
@@ -175,12 +175,12 @@ function metaphlan_profiles(paths::Array{<:AbstractString, 1}, rank=:all; sample
     for (path, sample) in zip(paths, samples)
         push!(profiles, metaphlan_profile(path, rank; sample))
     end
-    commjoin(profiles...)
+    return commjoin(profiles...)
 end
 
-function metaphlan_profiles(paths::Array{<:AbstractString, 1}, rank::Int; samples=nothing)
+function metaphlan_profiles(paths::Array{<:AbstractString, 1}, rank::Int; samples = nothing)
     rank = keys(Microbiome._ranks)[rank + 1]
-    metaphlan_profiles(paths, rank; samples)
+    return metaphlan_profiles(paths, rank; samples)
 end
 
 
@@ -202,13 +202,13 @@ Levels may be given either as numbers or symbols:
 - `7` = `:species`
 - `8` = `:subspecies`
 """
-function parsetaxon(taxstring::AbstractString; throw_error=true)
-    taxa = parsetaxa(taxstring, throw_error=throw_error)
+function parsetaxon(taxstring::AbstractString; throw_error = true)
+    taxa = parsetaxa(taxstring, throw_error = throw_error)
     return last(taxa)
 end
 
-function parsetaxon(taxstring::AbstractString, rank::Int; throw_error=true)
-    taxa = parsetaxa(taxstring, throw_error=throw_error)
+function parsetaxon(taxstring::AbstractString, rank::Int; throw_error = true)
+    taxa = parsetaxa(taxstring, throw_error = throw_error)
     rank <= length(taxa) || throw(ArgumentError("Taxonomy does not contain rank $rank"))
     return taxa[rank]
 end
@@ -221,13 +221,13 @@ parsetaxon(taxstring::AbstractString, rank::Symbol) = parsetaxon(taxstring, Micr
 Given a string representing taxonmic ranks as formatted by MetaPhlAn (eg "k__Bacteria|p__Proteobacteria..."),
 separates taxonomic ranks into elements of type Taxon in a vector.
 """
-function parsetaxa(taxstring::AbstractString; throw_error=true)
+function parsetaxa(taxstring::AbstractString; throw_error = true)
     taxa = split(taxstring, '|')
-    return map(t-> Taxon(t...), _shortname.(taxa, throw_error=throw_error))
+    return map(t -> Taxon(t...), _shortname.(taxa, throw_error = throw_error))
 end
 
-function _shortname(taxon::AbstractString; throw_error=true)
-    m = match(r"^[kpcofgst]__(\w+)$", taxon)  
+function _shortname(taxon::AbstractString; throw_error = true)
+    m = match(r"^[kpcofgst]__(\w+)$", taxon)
     if isnothing(m)
         throw_error ? throw(ArgumentError("Improperly formated taxon $taxon")) : return (string(taxon), :unidentified)
     end
