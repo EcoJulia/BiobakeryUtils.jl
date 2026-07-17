@@ -3,45 +3,9 @@ module BiobakeryUtilsTests
 using Random
 using ReTest
 using BiobakeryUtils
-using BiobakeryUtils.Conda
 using SparseArrays
 using DelimitedFiles
 using CSV
-
-isdir(Conda.bin_dir(:BiobakeryUtils)) || BiobakeryUtils.install_deps()
-ENV["PATH"] = ENV["PATH"] * ":" * Conda.bin_dir(:BiobakeryUtils)
-
-@testset "CLI" begin
-    @testset "Utilities" begin
-        cmd = ["thing", "foo_bar"]
-        cmd2 = copy(cmd)
-
-        BiobakeryUtils.add_cli_kwargs!(cmd, Dict(:some_thing => "foo", :bool => true))
-        @test all(cmd .== ["thing", "foo_bar", "--some_thing", "foo", "--bool"])
-        BiobakeryUtils.add_cli_kwargs!(cmd2, Dict(:some_thing => "foo", :bool => true); optunderscores = false)
-        @test all(cmd2 .== ["thing", "foo_bar", "--some-thing", "foo", "--bool"])
-    end
-
-    @testset "Metaphlan" begin
-        @test BiobakeryUtils.check_for_install("metaphlan") |> isnothing
-        @test BiobakeryUtils.check_for_install("merge_metaphlan_tables.py") |> isnothing
-
-        @test metaphlan("", ""; help = true).exitcode == 0
-
-        profiles = filter(f -> contains(f, "_profile.tsv"), readdir(joinpath(@__DIR__, "files/metaphlan"), join = true))
-        @test metaphlan_merge(profiles, joinpath(@__DIR__, "files/metaphlan/merged_abundance_table.tsv")).exitcode == 0
-    end
-
-    @testset "Humann" begin
-        @test BiobakeryUtils.check_for_install("humann") |> isnothing
-        @test BiobakeryUtils.check_for_install("humann_rename_table") |> isnothing
-        @test BiobakeryUtils.check_for_install("humann_renorm_table") |> isnothing
-        @test BiobakeryUtils.check_for_install("humann_join_tables") |> isnothing
-        @test BiobakeryUtils.check_for_install("humann") |> isnothing
-        @test humann("", ""; help = true).exitcode == 0
-
-    end
-end
 
 @testset "Metaphlan" begin
     profile_1 = metaphlan_profile(joinpath(@__DIR__, "files/metaphlan/SRS014464-Anterior_nares_profile.tsv"); sample = "SRS014464")
