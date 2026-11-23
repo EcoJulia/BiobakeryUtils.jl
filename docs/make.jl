@@ -3,7 +3,7 @@ using Documenter, BiobakeryUtils
 makedocs(
     sitename = "BiobakeryUtils.jl",
     warnonly = [:missing_docs, :cross_references],
-    doctest = false, # doctests depend on Conda setup being removed in 0.8
+    doctest = false,
     pages = [
         "BiobakeryUtils" => "index.md",
         "Getting Started" => "gettingstarted.md",

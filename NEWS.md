@@ -24,6 +24,8 @@
   outputs, and remove tool-running tutorials from the documentation build.
 - Update Documenter to version 1, format source with Runic, and refresh CI and
   coverage reporting. Correct the tutorial data URL and add citation metadata.
+- Use ReTest 0.4.3, Runic 1.13, and Documenter 1.20 for development checks;
+  refresh GitHub Actions and automate action updates with Dependabot.
 
 ## v0.7.0
 

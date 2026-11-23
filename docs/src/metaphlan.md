@@ -172,7 +172,7 @@ see [the Microbiome.jl docs](https://docs.ecojulia.org/Microbiome.jl/latest/prof
 ### Performing PCoA analysis
 
 To demonstrate this, we'll use a couple of other julia packages
-to perform and plot a principal coordinates analysis (PCoA):
+to perform and plot a principal coordinates analysis (PCoA)[^note]:
 [`Distances.jl`](https://github.com/JuliaStats/Distances.jl) and [`MulitvariateStats.jl`](https://github.com/JuliaStats/MulitvariateStats.jl).
 
 (Actually some convenient functions for this are re-exported from `Microbiome.jl`
