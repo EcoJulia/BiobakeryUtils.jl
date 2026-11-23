@@ -283,6 +283,31 @@ julia> fig2
 
 ![Metaphlan stacked bar](img/metaphlan_stack.png)
 
+## Compressed inputs and multiple files
+
+Both single-profile and merged-table readers accept plain, gzip (`.gz`), and XZ
+(`.xz`) paths. A collection of single-sample paths is loaded directly into one
+profile, sharing a feature map during that load:
+
+```julia
+paths = ["sample1.tsv.xz", "sample2.tsv.gz"]
+profile = metaphlan_profiles(paths, :species; samples=["sample1", "sample2"])
+```
+
+Sample columns follow path order; feature rows follow first occurrence. Existing
+sample objects may be supplied to preserve metadata. No persistent cache is needed.
+Single-sample named headers locate `relative_abundance` even when coverage and read
+counts are present. Existing Microbiome rank/SGB representations remain in use.
+
+For raw strings and values without constructing `Taxon` objects or profiles, use
+`read_metaphlan(path)` or `read_metaphlan(io)` on an already decompressed stream.
+The result is a Tables-compatible `(feature=..., abundance=...)` column table;
+features retain their full original clade strings. Supplied streams remain open.
+
+```@docs
+read_metaphlan
+```
+
 ## Functions and Types
 
 ```@autodocs

@@ -267,6 +267,32 @@ For plotting, I tend to use [Makie](https://github.com/JuliaPlots/Makie.jl),
 but there are [many other options](https://juliahub.com/ui/Search?q=plotting&type=packages).
 
 
+## Compressed inputs and multiple files
+
+`humann_profile(path)` reads one sample, `humann_profiles(path)` reads a merged
+table, and `humann_profiles(paths)` combines single-sample files. All accept plain,
+gzip (`.gz`), and XZ (`.xz`) paths. For example:
+
+```julia
+profile = humann_profiles(["one_genefamilies.tsv.xz", "two_genefamilies.tsv.gz"];
+    samples=["one", "two"], stratified=false)
+```
+
+The collection reader shares an in-memory feature map and constructs one final
+profile. It preserves path order, first-occurrence feature order, and zero-only
+features. Names may be replaced with sample objects carrying metadata. Each load
+should contain the same measurement kind and units; this API does not check
+biological provenance compatibility or retain a persistent index.
+
+Use `read_humann(path)` or `read_humann(io)` for a Tables-compatible column table
+with raw `feature` identifiers and Float64 `abundance` values. Stratified identifiers
+are retained unchanged by the raw parser. Streams must already be decompressed and
+remain open. Typed profile builders retain the existing taxon/SGB interpretation.
+
+```@docs
+read_humann
+```
+
 ## Functions and types
 
 ```@autodocs

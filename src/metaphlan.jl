@@ -8,11 +8,13 @@ function _split_ranks(rank_string)
 end
 
 """
-    metaphlan_profile(path::AbstractString, rank::Union{Int, Symbol}=:all; sample::AbstractString=basename(first(splitext(path))))
+    metaphlan_profile(path::AbstractString, rank::Union{Int, Symbol}=:all; sample)
 
 Creates a CommunityProfile from a MetaPhlAn output file.
 Can select data according to taxonomic rank. If rank not given, all data is used.
-`Sample name` of the CommunityProfile can be specified by passing a `sample` argument. If name not given, the name of the file becomes the `Sample name`.
+`sample` may be a name or an existing sample object with metadata. The default name
+is the filename without table/compression suffixes. Plain, gzip, and XZ paths are
+supported. Named headers select relative abundance independently of extra columns.
 
 Levels may be given either as numbers or symbols:
 
@@ -25,23 +27,15 @@ Levels may be given either as numbers or symbols:
 - `7` = `:species`
 - `8` = `:subspecies`
 """
-function metaphlan_profile(path::AbstractString, rank = :all; sample = basename(first(splitext(path))))
-    if startswith(first(eachline(path)), "#")
-        dr = 5
-        hd = ["taxon", "NCBI_taxid", "abundance", "additional_species"]
-    else
-        dr = 2
-        hd = ["taxon", "abundance"]
-    end
-    profile = CSV.read(path, skipto = dr, header = hd, Tables.columntable)
-    taxa = [last(_split_ranks(c)) for c in profile.taxon]
-    mat = sparse(reshape(profile.abundance, length(profile.abundance), 1))
-    sample = sample isa Microbiome.AbstractSample ? sample : MicrobiomeSample(sample)
+function metaphlan_profile(path::AbstractString, rank = :all; sample = _source_name(path))
+    profile = read_metaphlan(path)
+    taxa = _terminal_taxon.(profile.feature)
     keep = rank == :all ? Colon() : [ismissing(c) || c == rank for c in taxrank.(taxa)]
-    return CommunityProfile(mat[keep, :], taxa[keep], [sample])
+    values = profile.abundance[keep]
+    return CommunityProfile(sparse(reshape(values, length(values), 1)), taxa[keep], [_profile_sample(sample)])
 end
 
-function metaphlan_profile(path::AbstractString, rank::Int; sample = basename(first(splitext(path))))
+function metaphlan_profile(path::AbstractString, rank::Int; sample = _source_name(path))
     rank = keys(Microbiome._ranks)[rank]
     return metaphlan_profile(path, rank; sample)
 end
@@ -66,8 +60,10 @@ Levels may be given either as numbers or symbols:
 
 """
 function metaphlan_profiles(path::AbstractString, rank = :all; samplestart = 2, keepunidentified = false, replace_string = "_profile")
-    profiles = CSV.read(path, Tables.columntable; comment = "#")
-    taxa = [last(_split_ranks(c)) for c in profiles[1]]
+    profiles = _csv_profile(path) do source
+        CSV.read(source, Tables.columntable; comment = "#")
+    end
+    taxa = Taxon[_terminal_taxon(key) for key in profiles[1]]
     mat = reduce(hcat, [sparse(profiles[i]) for i in samplestart:length(profiles)])
     samples = collect(map(s -> MicrobiomeSample(replace(string(s), replace_string => "")), keys(profiles)[samplestart:end]))
 
@@ -87,24 +83,19 @@ function metaphlan_profiles(path::AbstractString, rank::Int; kwargs...)
 end
 
 """
-    metaphlan_profiles(paths::Array{<:AbstractString, 1}, rank::Union{Int, Symbol}=:all)
+    metaphlan_profiles(paths::AbstractVector{<:AbstractString}, rank::Union{Int, Symbol}=:all)
 
 Combines MetaPhlAn profiles from multiple single tables into a CommunityProfile.
+Samples follow path order, and features follow first occurrence. `samples` may
+supply names or sample objects. Plain, gzip, and XZ files may be mixed. A shared
+in-memory feature map builds one Float64 profile without intermediate profiles
+or a persistent index. Missing-rank features remain included when filtering rank.
 """
-function metaphlan_profiles(paths::Array{<:AbstractString, 1}, rank = :all; samples = nothing)
-    if isnothing(samples)
-        samples = [first(splitext(basename(f))) for f in paths]
-    else
-        length(samples) == length(paths) || throw(ArgumentError("Number of paths ($(length(paths))) and number of samples ($(length(samples))) does not match"))
-    end
-    profiles = []
-    for (path, sample) in zip(paths, samples)
-        push!(profiles, metaphlan_profile(path, rank; sample))
-    end
-    return commjoin(profiles...)
+function metaphlan_profiles(paths::AbstractVector{<:AbstractString}, rank = :all; samples = nothing)
+    return _load_profiles(paths, MetaPhlAnFormat(rank); samples)
 end
 
-function metaphlan_profiles(paths::Array{<:AbstractString, 1}, rank::Int; samples = nothing)
+function metaphlan_profiles(paths::AbstractVector{<:AbstractString}, rank::Int; samples = nothing)
     rank = keys(Microbiome._ranks)[rank + 1]
     return metaphlan_profiles(paths, rank; samples)
 end

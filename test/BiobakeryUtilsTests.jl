@@ -78,4 +78,6 @@ end
     CSV.write(joinpath(@__DIR__, "files/humann/joined_roundtrip.tsv"), pj_strat; delim = '\t')
 end
 
+include("readers.jl")
+
 end # module

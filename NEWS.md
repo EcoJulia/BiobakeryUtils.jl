@@ -1,5 +1,12 @@
 # News for BioakeryUtils.jl
 
+## Unreleased
+
+- Add `read_metaphlan` and `read_humann` raw table readers for paths and decompressed IO.
+- Support gzip and XZ paths in MetaPhlAn and HUMAnN profile readers.
+- Add `humann_profiles(paths)` and construct multi-file profiles directly using a shared feature map.
+- Build merged HUMAnN sparse matrices in bulk and preserve supplied sample metadata.
+
 ## v0.5.0 Major overhaul
 
 This version brings a whole host of developments that should make it actually usable.
