@@ -4,3 +4,10 @@ updates:
     directory: /
     schedule:
       interval: weekly
+  - package-ecosystem: julia
+    directories:
+      - /
+      - /docs
+      - /test
+    schedule:
+      interval: weekly
