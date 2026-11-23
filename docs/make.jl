@@ -21,6 +21,6 @@ makedocs(
 
 deploydocs(
     repo = "github.com/EcoJulia/BiobakeryUtils.jl.git",
-    push_preview=true,
-    devbranch="main"
+    push_preview = true,
+    devbranch = "main"
 )

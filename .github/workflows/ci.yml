@@ -13,8 +13,9 @@ jobs:
       - uses: julia-actions/setup-julia@v3
         with:
           version: '1'
-      - run: julia --project=dev -e 'using Pkg; Pkg.instantiate()'
-      - run: julia --project=dev -m Runic --check src/ test/
+      - uses: fredrikekre/runic-action@v1
+        with:
+          version: '1'
   test:
     name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }} - ${{ github.event_name }}
     runs-on: ${{ matrix.os }}
