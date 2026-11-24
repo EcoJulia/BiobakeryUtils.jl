@@ -60,7 +60,7 @@ which currently uses `Conda.jl` under the hood.
 BiobakeryUtils.install_deps()
 
 # ╔═╡ 30a4255b-e147-4c97-8c90-030e55a37d4d
-ENV["PATH"] = ENV["PATH"] * ":" *  Conda.bin_dir(:BiobakeryUtils);
+ENV["PATH"] = ENV["PATH"] * ":" * Conda.bin_dir(:BiobakeryUtils);
 
 # ╔═╡ a7f41ae3-d9b2-4180-bcfb-1edffff7e307
 md"""
@@ -89,9 +89,11 @@ The same command using `BiobakeryUtils.jl` is the following.
 """
 
 # ╔═╡ 5c74e2c2-e4ba-4ee3-a3c9-1c333185a155
-metaphlan("../test/files/kneaddata/seq1.fastq", "./seq1_profile.tsv";
-		  input_type="fastq",
-		  nproc = 8)
+metaphlan(
+    "../test/files/kneaddata/seq1.fastq", "./seq1_profile.tsv";
+    input_type = "fastq",
+    nproc = 8
+)
 
 # ╔═╡ 0a77263c-b2fd-4d72-8f73-013294674c53
 md"""
@@ -147,11 +149,11 @@ to merge files from within julia.
 """
 
 # ╔═╡ 1ffb9ee7-8962-4020-a483-7f0e51736f4f
-mp_files = readdir("../test/files/metaphlan/", join=true)
+mp_files = readdir("../test/files/metaphlan/", join = true)
 
 # ╔═╡ f92b1e50-c942-423d-8bcf-4c37de2778bb
 mp_joined = commjoin(
-	(metaphlan_profile(f) for f in mp_files)...
+    (metaphlan_profile(f) for f in mp_files)...
 )
 
 # ╔═╡ b0cac714-4eb8-43f2-9537-3b39a51507ca
@@ -169,7 +171,7 @@ This can be over-ridden by passing the `stratified=true` kwarg.
 """
 
 # ╔═╡ c4f810a3-b381-4b53-a1d5-2998bab98655
-h1_strat = humann_profile("../test/files/humann/single_1.tsv", stratified=true)
+h1_strat = humann_profile("../test/files/humann/single_1.tsv", stratified = true)
 
 # ╔═╡ da6e7095-75bc-4100-a634-de6d2d1c7fb7
 md"""
@@ -193,7 +195,7 @@ If we want to renormalize your table into relative abundance, you could use `hum
 abundances(h1_strat[1:5, 1])
 
 # ╔═╡ d8566a72-a534-4fd5-ba95-93009e3af312
-h1_renormed = humann_renorm(h1_strat; units="relab")
+h1_renormed = humann_renorm(h1_strat; units = "relab")
 
 # ╔═╡ 5b0c2b43-9867-4d56-b46f-76c204f6bd49
 abundances(h1_renormed[1:5, 1])
@@ -209,7 +211,7 @@ If we want to regroup our uniref90s into another gene function category like ECs
 """
 
 # ╔═╡ d635ed12-2835-4acd-9589-f7b56a7f54da
-h1_rxn = humann_regroup(h1_strat, inkind="uniref90", outkind="rxn")
+h1_rxn = humann_regroup(h1_strat, inkind = "uniref90", outkind = "rxn")
 
 # ╔═╡ b7c65265-e9cc-4a3c-9abb-c1249dd25a38
 

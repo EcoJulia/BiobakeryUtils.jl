@@ -3,11 +3,10 @@ using Documenter, BiobakeryUtils
 makedocs(
     sitename = "BiobakeryUtils.jl",
     warnonly = [:missing_docs, :cross_references],
-    doctest = false, # doctests depend on Conda setup being removed in 0.8
+    doctest = false,
     pages = [
         "BiobakeryUtils" => "index.md",
         "Getting Started" => "gettingstarted.md",
-        "Working with KneadData" => "kneaddata.md",
         "Working with MetaPhlAn" => "metaphlan.md",
         "Working with HUMAnN" => "humann.md",
         "Microbiome.jl Docstrings" => "microbiome.md",
@@ -22,6 +21,6 @@ makedocs(
 
 deploydocs(
     repo = "github.com/EcoJulia/BiobakeryUtils.jl.git",
-    push_preview=true,
-    devbranch="main"
+    push_preview = true,
+    devbranch = "main"
 )
