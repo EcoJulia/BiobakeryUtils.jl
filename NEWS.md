@@ -10,6 +10,8 @@
 
 ### Readers and performance
 
+- Support CSV 1.3, including PCL metadata loading with its supported parsing keywords.
+
 - Add `read_metaphlan` and `read_humann` raw table readers for paths and decompressed IO.
 - Support gzip and XZ paths in MetaPhlAn and HUMAnN profile readers.
 - Select MetaPhlAn relative abundance by its named header, supporting tables with
