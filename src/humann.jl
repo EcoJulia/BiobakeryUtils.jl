@@ -92,7 +92,7 @@ function read_pcl(infile; last_metadata = 2)
         end
     end
 
-    md_rows = CSV.File(infile, limit = lr - 1, threaded = false)
+    md_rows = CSV.File(infile, limit = lr - 1, ntasks = 1)
     cols = keys(first(md_rows))[2:end]
     gfs = humann_profiles(infile; stratified = true, skipto = lr + 1)
     for row in md_rows

@@ -1,3 +1,27 @@
+@testset "PCL metadata round-trip" begin
+    mktempdir() do dir
+        profile = CommunityProfile(
+            sparse([1.0 0.0; 0.5 2.0; 0.0 0.0]),
+            [GeneFunction("A"), GeneFunction("B", Taxon("Bug", :species)), GeneFunction("ZERO")],
+            [MicrobiomeSample("s1"; group = "ROC", subject = "one"), MicrobiomeSample("s2"; group = "OOM", subject = "two")]
+        )
+        path = joinpath(dir, "profile.pcl")
+        write_pcl(path, profile; usemetadata = [:group, :subject])
+        for last_metadata in (3, "subject")
+            restored = read_pcl(path; last_metadata)
+            @test samplenames(restored) == samplenames(profile)
+            @test features(restored) == features(profile)
+            @test abundances(restored) == abundances(profile)
+            @test get(restored) == get(profile)
+        end
+
+        write_pcl(path, profile; usemetadata = [:group])
+        restored = read_pcl(path)
+        @test abundances(restored) == abundances(profile)
+        @test get(restored, :group) == get(profile, :group)
+    end
+end
+
 _reader_bytes(text, ::Val{:plain}) = Vector{UInt8}(text)
 _reader_bytes(text, ::Val{:gz}) = BiobakeryUtils.transcode(BiobakeryUtils.GzipCompressor, text)
 _reader_bytes(text, ::Val{:xz}) = BiobakeryUtils.transcode(BiobakeryUtils.XzCompressor, text)
